@@ -4,25 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tools Reference · DSCC Docs</title>
-<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="stylesheet" href="../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../">DSCC</a>
+    <a class="brand" href="../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../docs/">Docs</a>
       <a href="../../docs/cookbook/">Cookbook</a>
       <a href="../../docs/reference/cli.html">CLI</a>
       <a href="../../docs/verification/registry.html">Verification</a>
-      <a href="../../" class="back-home">← Home</a>
+      <a href="../../docs/zh/reference/tools.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/reference/">reference</a> / <span>tools</span></div>
+<div class="doc-crumb"><a href="../../en/">home</a> / <a href="../../docs/reference/">reference</a> / <span>tools</span></div>
 <h1 id="tools-reference">Tools Reference</h1>
 <p>19 built-in tools. Source: <code>crates/tools/src/lib.rs</code> (4645
 lines). Dispatcher <code>execute_tool(name, input)</code> at
@@ -263,230 +263,12 @@ one.</p>
 </tr>
 </tbody>
 </table>
-<hr />
-<h3 id="中文">中文</h3>
-<p>19 个内置工具。源头：<code>crates/tools/src/lib.rs</code>（4645
-行）。分发入口 <code>execute_tool(name, input)</code> 在
-<code>tools.rs:548–573</code>；注册表 <code>ToolRegistry</code> 在
-<code>tools.rs:35–49</code>。</p>
-<h2 id="工具清单">工具清单</h2>
-<table>
-<thead>
-<tr>
-<th>工具</th>
-<th>作用</th>
-<th>权限</th>
-<th>关键入参</th>
-<th>副作用</th>
-<th>Cite</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bash</code></td>
-<td>执行 shell 命令</td>
-<td><code>DangerFullAccess</code></td>
-<td><code>command</code>、<code>timeout?</code>、<code>description?</code>、<code>run_in_background?</code>、<code>dangerouslyDisableSandbox?</code></td>
-<td>子进程、文件、网络</td>
-<td>tools.rs:228–243</td>
-</tr>
-<tr>
-<td><code>read_file</code></td>
-<td>读文本文件</td>
-<td><code>ReadOnly</code></td>
-<td><code>path</code>、<code>offset?</code>、<code>limit?</code></td>
-<td>文件读</td>
-<td>tools.rs:245–258</td>
-</tr>
-<tr>
-<td><code>write_file</code></td>
-<td>写文本文件</td>
-<td><code>WorkspaceWrite</code></td>
-<td><code>path</code>、<code>content</code></td>
-<td>文件写（自动建父目录）</td>
-<td>tools.rs:260–272</td>
-</tr>
-<tr>
-<td><code>edit_file</code></td>
-<td>文件内查找替换</td>
-<td><code>WorkspaceWrite</code></td>
-<td><code>path</code>、<code>old_string</code>、<code>new_string</code>、<code>replace_all?</code></td>
-<td>文件读+写</td>
-<td>tools.rs:274–288</td>
-</tr>
-<tr>
-<td><code>glob_search</code></td>
-<td>Glob 找文件</td>
-<td><code>ReadOnly</code></td>
-<td><code>pattern</code>、<code>path?</code></td>
-<td>文件读</td>
-<td>tools.rs:290–302</td>
-</tr>
-<tr>
-<td><code>grep_search</code></td>
-<td>正则搜内容</td>
-<td><code>ReadOnly</code></td>
-<td><code>pattern</code>、<code>path?</code>、<code>glob?</code>、<code>-A</code>/<code>-B</code>/<code>-C</code>、<code>-n</code>/<code>-i</code>、<code>type?</code>、<code>head_limit?</code>、<code>multiline?</code>、<code>output_mode?</code></td>
-<td>文件读</td>
-<td>tools.rs:304–328</td>
-</tr>
-<tr>
-<td><code>WebFetch</code></td>
-<td>抓 URL，HTML 转文本后回答 prompt</td>
-<td><code>ReadOnly</code></td>
-<td><code>url</code>、<code>prompt</code></td>
-<td>网络；20 秒超时，最多 10 次跳转，除 localhost 外自动升级到
-https</td>
-<td>tools.rs:330–343</td>
-</tr>
-<tr>
-<td><code>WebSearch</code></td>
-<td>DuckDuckGo 搜索</td>
-<td><code>ReadOnly</code></td>
-<td><code>query</code>（至少 2
-字符）、<code>allowed_domains?</code>、<code>blocked_domains?</code></td>
-<td>网络；可用 <code>DSCC_WEB_SEARCH_BASE_URL</code> 覆盖，20
-秒超时，最多 8 条结果</td>
-<td>tools.rs:345–364</td>
-</tr>
-<tr>
-<td><code>TodoWrite</code></td>
-<td>更新会话任务列表</td>
-<td><code>WorkspaceWrite</code></td>
-<td><code>todos[]</code>（每项含
-<code>content</code>、<code>activeForm</code>、<code>status: pending|in_progress|completed</code>）</td>
-<td>写 <code>.dscc-todos.json</code> 或
-<code>DSCC_TODO_STORE</code></td>
-<td>tools.rs:366–392</td>
-</tr>
-<tr>
-<td><code>Skill</code></td>
-<td>加载 skill 定义</td>
-<td><code>ReadOnly</code></td>
-<td><code>skill</code>、<code>args?</code></td>
-<td>文件读</td>
-<td>tools.rs:394–406</td>
-</tr>
-<tr>
-<td><code>Agent</code></td>
-<td>启动子 agent</td>
-<td><code>DangerFullAccess</code></td>
-<td><code>description</code>、<code>prompt</code>、<code>subagent_type?</code>、<code>name?</code>、<code>model?</code></td>
-<td>后台线程、API 调用、<code>.dscc-agents/</code> 产物</td>
-<td>tools.rs:408–423</td>
-</tr>
-<tr>
-<td><code>ToolSearch</code></td>
-<td>查找延迟加载的工具</td>
-<td><code>ReadOnly</code></td>
-<td><code>query</code>、<code>max_results?</code></td>
-<td>文件读</td>
-<td>tools.rs:425–437</td>
-</tr>
-<tr>
-<td><code>NotebookEdit</code></td>
-<td>替换 / 插入 / 删除 Jupyter cell</td>
-<td><code>WorkspaceWrite</code></td>
-<td><code>notebook_path</code>、<code>cell_id?</code>、<code>new_source?</code>、<code>cell_type?</code>、<code>edit_mode?</code></td>
-<td>文件读+写</td>
-<td>tools.rs:439–454</td>
-</tr>
-<tr>
-<td><code>Sleep</code></td>
-<td>阻塞 sleep</td>
-<td><code>ReadOnly</code></td>
-<td><code>duration_ms</code></td>
-<td>线程 sleep</td>
-<td>tools.rs:456–467</td>
-</tr>
-<tr>
-<td><code>SendUserMessage</code> / <code>Brief</code></td>
-<td>发送带附件的消息</td>
-<td><code>ReadOnly</code></td>
-<td><code>message</code>、<code>attachments?</code>、<code>status?</code></td>
-<td>文件读</td>
-<td>tools.rs:469–488</td>
-</tr>
-<tr>
-<td><code>Config</code></td>
-<td>读写 DSCC 设置</td>
-<td><code>WorkspaceWrite</code></td>
-<td><code>setting</code>、<code>value?</code></td>
-<td>文件读+写（<code>~/.dscc/settings.json</code> 或
-<code>.dscc/settings.local.json</code>）</td>
-<td>tools.rs:490–504</td>
-</tr>
-<tr>
-<td><code>StructuredOutput</code></td>
-<td>返回任意结构化 JSON</td>
-<td><code>ReadOnly</code></td>
-<td>任意对象</td>
-<td>无</td>
-<td>tools.rs:506–513</td>
-</tr>
-<tr>
-<td><code>REPL</code></td>
-<td>子进程跑代码</td>
-<td><code>DangerFullAccess</code></td>
-<td><code>code</code>、<code>language</code>（python/node/bash/sh）、<code>timeout_ms?</code></td>
-<td>子进程</td>
-<td>tools.rs:515–528</td>
-</tr>
-<tr>
-<td><code>PowerShell</code></td>
-<td>执行 PowerShell</td>
-<td><code>DangerFullAccess</code></td>
-<td><code>command</code>、<code>timeout?</code>、<code>description?</code>、<code>run_in_background?</code></td>
-<td>子进程（Windows）</td>
-<td>tools.rs:530–544</td>
-</tr>
-</tbody>
-</table>
-<h2 id="agent-子类型">Agent 子类型</h2>
-<p>定义在 <code>tools.rs:1687–1766</code>，通过 <code>Agent</code>
-工具的 <code>subagent_type?</code> 选择。</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>工具白名单</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Explore</code></td>
-<td><code>read_file</code>、<code>glob_search</code>、<code>grep_search</code>、<code>WebFetch</code>、<code>WebSearch</code>、<code>ToolSearch</code>、<code>Skill</code>、<code>StructuredOutput</code></td>
-</tr>
-<tr>
-<td><code>Plan</code></td>
-<td><code>Explore</code> 集合 + <code>TodoWrite</code> +
-<code>SendUserMessage</code>（不含 <code>bash</code> /
-<code>edit</code>）</td>
-</tr>
-<tr>
-<td><code>Verification</code></td>
-<td><code>bash</code>、<code>PowerShell</code>、<code>TodoWrite</code>、<code>SendUserMessage</code>、读类工具</td>
-</tr>
-<tr>
-<td><code>dscc-guide</code></td>
-<td><code>Explore</code> 集合 + <code>SendUserMessage</code></td>
-</tr>
-<tr>
-<td><code>statusline-setup</code></td>
-<td><code>bash</code>、<code>read_file</code>、<code>write_file</code>、<code>edit_file</code>、<code>glob_search</code>、<code>grep_search</code>、<code>ToolSearch</code></td>
-</tr>
-<tr>
-<td><code>general-purpose</code> <em>（默认）</em></td>
-<td>全部工具</td>
-</tr>
-</tbody>
-</table>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../en/">home</a> · <a href="../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

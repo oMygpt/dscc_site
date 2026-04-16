@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>配置文件 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/guides/config-files.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/guides/">guides</a> / <span>config-files</span></div>
+<h1 id="配置文件">配置文件</h1>
+<p>DSCC 会从多个位置读取 JSON 配置与 Markdown 指令文件并合并。</p>
+<h1 id="配置优先级">配置优先级</h1>
+<p>自低到高（冲突时高优先级生效），来自
+<code>crates/runtime/src/config.rs:197–259</code>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>路径</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>~/.dscc.json</code></td>
+<td>用户，旧版</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>~/.dscc/settings.json</code></td>
+<td>用户，新版</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>./.dscc.json</code></td>
+<td>项目，旧版</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>./.dscc/settings.json</code></td>
+<td>项目，新版</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>./.dscc/settings.local.json</code></td>
+<td>本地覆盖（最高）</td>
+</tr>
+</tbody>
+</table>
+<h1 id="指令文件">指令文件</h1>
+<p>合并进系统 prompt 的实现在
+<code>crates/runtime/src/prompt.rs:202–223</code>，从 <code>cwd</code>
+向上递归查找。识别的文件名：</p>
+<ul>
+<li><code>DSCC.md</code></li>
+<li><code>DSCC.local.md</code></li>
+<li><code>.dscc/DSCC.md</code></li>
+<li><code>.dscc/instructions.md</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>限制</th>
+<th>数值</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单文件上限</td>
+<td>4000 字符</td>
+<td>prompt.rs:40–41</td>
+</tr>
+<tr>
+<td>总上限</td>
+<td>12000 字符</td>
+<td>prompt.rs:40–41</td>
+</tr>
+<tr>
+<td>去重</td>
+<td>按内容哈希</td>
+<td>prompt.rs</td>
+</tr>
+</tbody>
+</table>
+<h1 id="顶层配置键">顶层配置键</h1>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>默认模型 id</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>注入工具调用的环境变量</td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td><code>PreToolUse</code> / <code>PostToolUse</code> 命令数组</td>
+</tr>
+<tr>
+<td><code>permissions</code></td>
+<td><code>defaultMode</code> 与每工具规则</td>
+</tr>
+<tr>
+<td><code>permissionMode</code></td>
+<td>默认模式的简写</td>
+</tr>
+<tr>
+<td><code>mcpServers</code></td>
+<td>具名 MCP 服务器定义</td>
+</tr>
+<tr>
+<td><code>plugins</code></td>
+<td>插件定义</td>
+</tr>
+<tr>
+<td><code>enabledPlugins</code></td>
+<td>启用的插件列表</td>
+</tr>
+<tr>
+<td><code>sandbox</code></td>
+<td>沙箱开关</td>
+</tr>
+<tr>
+<td><code>oauth</code></td>
+<td>OAuth 客户端配置</td>
+</tr>
+</tbody>
+</table>
+<p>完整 schema 见 <code>docs/reference/config-schema.md</code>。</p>
+<h1 id="相关">相关</h1>
+<ul>
+<li><a href="hooks.html">hooks.md</a> <code>hooks</code> 语义。</li>
+<li><a href="mcp-servers.html">mcp-servers.md</a>
+<code>mcpServers</code>。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

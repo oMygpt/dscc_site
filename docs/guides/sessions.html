@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sessions · 会话管理 · DSCC Docs</title>
-<link rel="stylesheet" href="../../styles.css?v=6">
+<title>Sessions · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../">DSCC</a>
+    <a class="brand" href="../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../docs/">Docs</a>
       <a href="../../docs/cookbook/">Cookbook</a>
       <a href="../../docs/reference/cli.html">CLI</a>
       <a href="../../docs/verification/registry.html">Verification</a>
-      <a href="../../" class="back-home">← Home</a>
+      <a href="../../docs/zh/guides/sessions.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/guides/">guides</a> / <span>sessions</span></div>
+<div class="doc-crumb"><a href="../../en/">home</a> / <a href="../../docs/guides/">guides</a> / <span>sessions</span></div>
 <h1 id="sessions--会话管理">Sessions · 会话管理</h1>
 <p>DSCC persists every interactive run to disk so you can inspect,
 resume, or compact it later.</p>
@@ -117,102 +117,12 @@ least 10,000 estimated tokens</strong>
 <li><a href="config-files.html">config-files.md</a> for where session
 defaults come from.</li>
 </ul>
-<h3 id="中文">中文</h3>
-<p>DSCC 会把所有交互会话落盘，便于之后查看、恢复或压缩。</p>
-<h2 id="存储">存储</h2>
-<table>
-<thead>
-<tr>
-<th>项</th>
-<th>取值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>目录</td>
-<td><code>.dscc/sessions/</code></td>
-</tr>
-<tr>
-<td>文件名</td>
-<td><code>session-{timestamp_millis}.json</code></td>
-</tr>
-<tr>
-<td>结构体</td>
-<td><code>Session { version, messages[] }</code>，位于
-<code>runtime/src/session.rs:46–50</code></td>
-</tr>
-<tr>
-<td>消息</td>
-<td><code>{ role, blocks[], usage? }</code></td>
-</tr>
-<tr>
-<td>Block 类型</td>
-<td><code>text</code>、<code>tool_use</code>、<code>tool_result</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="命令">命令</h2>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/session list</code></td>
-<td>列出本地会话</td>
-</tr>
-<tr>
-<td><code>/session switch &lt;id&gt;</code></td>
-<td>切换到已有会话</td>
-</tr>
-<tr>
-<td><code>/resume &lt;session-path&gt;</code></td>
-<td>从路径恢复会话（slash 形式）</td>
-</tr>
-<tr>
-<td><code>--resume &lt;file.json&gt; [/cmd...]</code></td>
-<td>CLI 参数，恢复后可选执行斜杠命令（main.rs:301–302, 490–506）</td>
-</tr>
-<tr>
-<td><code>/export [file]</code></td>
-<td>将当前对话写盘</td>
-</tr>
-<tr>
-<td><code>/compact</code></td>
-<td>用摘要替换历史</td>
-</tr>
-</tbody>
-</table>
-<h2 id="压缩">压缩</h2>
-<p>实现位于
-<code>crates/commands/src/lib.rs:1756–1770</code>。默认触发条件：消息数
-<strong>大于 4 且估算 token 数 ≥
-10,000</strong>（<code>compact.rs:14–20</code>）。</p>
-<p>摘要包含（<code>compact.rs:143–227</code>）：</p>
-<ul>
-<li>按角色统计</li>
-<li>使用过的工具</li>
-<li>近期用户请求</li>
-<li>待办事项</li>
-<li>关键文件</li>
-<li>时间线</li>
-</ul>
-<h2 id="相关">相关</h2>
-<ul>
-<li><a href="slash-commands.html">slash-commands.md</a>
-<code>/session</code> 完整参数形式。</li>
-<li><a href="config-files.html">config-files.md</a>
-会话默认值的来源。</li>
-</ul>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../en/">home</a> · <a href="../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code Review — run artifact · DSCC 文档</title>
+<link rel="stylesheet" href="../../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../../docs/zh/">文档</a>
+      <a href="../../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../../docs/cookbook/01-code-review/report_dscc.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/01-code-review/">01-code-review</a> / <span>report_dscc</span></div>
+<h1 id="code-review--run-artifact">Code Review — run artifact</h1>
+<p>2026-04-16 真机运行捕获。完整日志见 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型</td>
+<td><code>doubao-seed-2.0-code</code>（Volces ARK，走通用 OpenAI
+兼容路径）</td>
+</tr>
+<tr>
+<td>权限模式</td>
+<td><code>read-only</code></td>
+</tr>
+<tr>
+<td>实际调用的工具</td>
+<td><code>bash</code>（一次
+<code>ls -la</code>）、<code>read_file</code>、<code>StructuredOutput</code></td>
+</tr>
+<tr>
+<td>改动</td>
+<td>无（<code>git diff</code> 为空；read-only 生效）</td>
+</tr>
+</tbody>
+</table>
+<h1 id="模型返回的审阅表">模型返回的审阅表</h1>
+<table>
+<thead>
+<tr>
+<th>严重度</th>
+<th>行号</th>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>high</td>
+<td>5</td>
+<td>切片区间错误，把空格也包进来</td>
+<td><code>first_word</code> 返回的是“单词 +
+空格“；<code>&amp;s[0..i + 1]</code> 把索引 <code>i</code>
+处的空格一起截进去。</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>10</td>
+<td>对 <code>std::env::var()</code> 用 <code>unwrap()</code></td>
+<td><code>PORT</code> 未设置时直接 panic，程序变脆、不可配置。</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>11</td>
+<td>对 <code>parse()</code> 用 <code>unwrap()</code></td>
+<td><code>PORT</code> 值无法解析为 <code>u16</code> 时
+panic，缺少容错。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>总评</strong>（模型）：<em><code>first_word</code>
+存在致命逻辑 bug，且 <code>unwrap()</code>
+用得过度，不宜上生产。</em></p>
+<h1 id="对照验收标准">对照验收标准</h1>
+<ul>
+<li>两处预埋 bug 都被找到。</li>
+<li>每行都有严重度。</li>
+<li>未尝试任何写类工具；<code>read-only</code> 权限生效。</li>
+</ul>
+<h1 id="模型选择说明">模型选择说明</h1>
+<p>README 里建议 <code>claude-sonnet-4-6</code>；真实运行因手头 key
+限制，改用 <code>doubao-seed-2.0-code</code>。行为与预期一致：同时返回
+<code>StructuredOutput</code> 和 Markdown 表。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../../">home</a> · <a href="../../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

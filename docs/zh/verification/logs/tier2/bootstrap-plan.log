@@ -1,0 +1,18 @@
+# reference/cli.md — dscc bootstrap-plan
+$ dscc bootstrap-plan
+- CliEntry
+- FastPathVersion
+- StartupProfiler
+- SystemPromptFastPath
+- ChromeMcpFastPath
+- DaemonWorkerFastPath
+- BridgeFastPath
+- DaemonFastPath
+- BackgroundSessionFastPath
+- TemplateFastPath
+- EnvironmentRunnerFastPath
+- MainRuntime
+---
+exit: 0
+verdict: PASS
+notes: all 12 bootstrap phases listed

@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>验证登记簿 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/verification/registry.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/verification/">verification</a> / <span>registry</span></div>
+<h1 id="verification-registry--验证登记簿">Verification Registry ·
+验证登记簿</h1>
+<p>Each row below corresponds to a <code># [待验证]</code> marker that
+has been resolved. See <a href="../verification.html">verification.md</a>
+for tier definitions. 每条记录对应一个已处置的 <code># [待验证]</code>
+标记。层级定义见 <a href="../verification.html">verification.md</a>。</p>
+<h2 id="schema--字段">Schema · 字段</h2>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doc</td>
+<td>File where the command lives</td>
+</tr>
+<tr>
+<td>Tier</td>
+<td>1 / 2 / 3 / 4</td>
+</tr>
+<tr>
+<td>Verdict</td>
+<td>PASS / FAIL / INTERACTIVE</td>
+</tr>
+<tr>
+<td>Evidence</td>
+<td>Log path or <code>file:line</code> source citation</td>
+</tr>
+<tr>
+<td>Notes</td>
+<td>One-liner</td>
+</tr>
+</tbody>
+</table>
+<h2 id="entries--条目">Entries · 条目</h2>
+<h3 id="run-2026-04-16">Run 2026-04-16</h3>
+<table>
+<thead>
+<tr>
+<th>Doc</th>
+<th>Tier</th>
+<th>Verdict</th>
+<th>Evidence</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/getting-started/installation.md</code> —
+<code>cargo install --path …</code>, <code>cargo build --release</code>,
+<code>cargo run --bin dscc</code></td>
+<td>1</td>
+<td>PASS</td>
+<td><code>README.md:65-90</code></td>
+<td>Idiomatic cargo.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/installation.md</code> —
+<code>dscc --version</code>, <code>dscc --help</code></td>
+<td>2</td>
+<td>PASS</td>
+<td><code>logs/tier2/version.log</code>,
+<code>logs/tier2/help.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>docs/getting-started/authentication.md</code> —
+<code>export *_API_KEY</code>, <code>export *_BASE_URL</code>
+(Anthropic, xAI, DeepSeek, generic)</td>
+<td>1</td>
+<td>PASS</td>
+<td><code>crates/api/src/providers/mod.rs</code>,
+<code>crates/dscc-cli/src/main.rs:195-216</code></td>
+<td>Env-var names read verbatim at launch.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/authentication.md</code> —
+<code>dscc logout</code></td>
+<td>2</td>
+<td>PASS</td>
+<td><code>logs/tier2/logout.log</code></td>
+<td>Exit 0 on fresh env.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/authentication.md</code> —
+<code>dscc login</code></td>
+<td>4</td>
+<td>INTERACTIVE</td>
+<td><code>crates/runtime/src/oauth.rs:474</code></td>
+<td>Marked <code># [交互]</code>; browser OAuth on port 4545.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/authentication.md</code> —
+<code>dscc --model doubao-seed-1-6-250615 prompt "summarize this workspace"</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>logs/tier3/smoke.log</code> Run 2</td>
+<td>Command form proven via doubao-seed-2.0-code on Volces ARK. Doc also
+corrected to include the <code>prompt</code> subcommand keyword.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/model-selection.md</code> — four examples
+(REPL × 2, one-shot × 2)</td>
+<td>3+4</td>
+<td>PASS / INTERACTIVE</td>
+<td><code>logs/tier3/smoke.log</code> Run 2,
+<code>logs/tier3/one-shot-json.log</code></td>
+<td>One-shot forms stripped (form proven); REPL forms marked
+<code># [交互]</code>.</td>
+</tr>
+<tr>
+<td><code>docs/getting-started/first-session.md</code> — REPL × 2,
+one-shot × 2, JSON × 2</td>
+<td>3+4</td>
+<td>PASS / INTERACTIVE</td>
+<td><code>logs/tier3/one-shot-json.log</code> (JSON form),
+<code>logs/tier3/smoke.log</code> (one-shot form)</td>
+<td>Same treatment as model-selection.md.</td>
+</tr>
+<tr>
+<td><code>docs/guides/one-shot-mode.md</code> —
+<code>dscc --model … prompt … --output-format json</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>logs/tier3/one-shot-json.log</code></td>
+<td>JSON envelope returned; one marker stripped.</td>
+</tr>
+<tr>
+<td><code>docs/reference/cli.md</code> —
+<code>dscc system-prompt …</code></td>
+<td>2</td>
+<td>PASS</td>
+<td><code>logs/tier2/system-prompt.log</code></td>
+<td>Prints composed system prompt.</td>
+</tr>
+<tr>
+<td><code>docs/reference/cli.md</code> —
+<code>dscc --model &lt;id&gt;</code> REPL launch</td>
+<td>4</td>
+<td>INTERACTIVE</td>
+<td><code>main.rs:291-296</code></td>
+<td><code># [交互]</code>.</td>
+</tr>
+<tr>
+<td><code>docs/reference/cli.md</code> —
+<code>dscc prompt "…" --output-format json --allowed-tools …</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>logs/tier3/one-shot-json.log</code> (JSON),
+<code>logs/tier2/agents.log</code> / clap parser for
+<code>--allowed-tools</code> shape</td>
+<td></td>
+</tr>
+<tr>
+<td><code>docs/reference/cli.md</code> —
+<code>dscc --resume &lt;file&gt; /&lt;cmd&gt;</code></td>
+<td>3</td>
+<td>BLOCKED</td>
+<td>—</td>
+<td>Marker kept; requires a pre-existing session file, which needs a
+prior REPL run to create.</td>
+</tr>
+<tr>
+<td><code>docs/extending/agents.md</code> — <code>/agents</code></td>
+<td>4</td>
+<td>INTERACTIVE</td>
+<td><code>commands/lib.rs:73-300</code></td>
+<td><code># [交互]</code> REPL slash command; CLI equivalent
+<code>dscc agents</code> is Tier 2 PASS.</td>
+</tr>
+<tr>
+<td><code>docs/extending/skills.md</code> — <code>/skills</code></td>
+<td>4</td>
+<td>INTERACTIVE</td>
+<td>same</td>
+<td><code># [交互]</code>; CLI equivalent <code>dscc skills</code> is
+Tier 2 PASS.</td>
+</tr>
+<tr>
+<td><code>docs/extending/plugins.md</code> —
+<code>dscc plugin install ./…</code></td>
+<td>—</td>
+<td>FIXED</td>
+<td><code>commands/lib.rs:692-801</code></td>
+<td>Command did not exist as CLI subcommand; rewritten to
+<code>/plugin install &lt;path&gt;</code> and marked
+<code># [交互]</code>.</td>
+</tr>
+<tr>
+<td><code>docs/cookbook/01-code-review/README.md</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>docs/cookbook/01-code-review/dscc_run.log</code>, <a
+href="../cookbook/01-code-review/report_dscc.html"><code>report_dscc.md</code></a></td>
+<td>Both planted bugs found; no writes under
+<code>read-only</code>.</td>
+</tr>
+<tr>
+<td><code>docs/cookbook/02-test-generation/README.md</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>docs/cookbook/02-test-generation/dscc_run.log</code>, <a
+href="../cookbook/02-test-generation/report_dscc.html"><code>report_dscc.md</code></a>,
+<a
+href="../cookbook/02-test-generation/generated_utils_test.rs"><code>generated_utils_test.rs</code></a></td>
+<td><code>cargo test</code> green; 19 cases; <code>src/utils.rs</code>
+sha unchanged. Ran under <code>danger-full-access</code> to avoid
+approval prompt on the model’s <code>cargo test</code> bash call.</td>
+</tr>
+<tr>
+<td><code>docs/cookbook/03-refactor-rename/README.md</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>docs/cookbook/03-refactor-rename/dscc_run.log</code>, <a
+href="../cookbook/03-refactor-rename/report_dscc.html"><code>report_dscc.md</code></a>,
+<a
+href="../cookbook/03-refactor-rename/diff.patch"><code>diff.patch</code></a></td>
+<td><code>git grep load_config</code> empty post-run; 4 files, 7/7
+lines.</td>
+</tr>
+<tr>
+<td><code>docs/cookbook/04-web-research/README.md</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>docs/cookbook/04-web-research/dscc_run.log</code>, <a
+href="../cookbook/04-web-research/report_dscc.html"><code>report_dscc.md</code></a></td>
+<td>Three tables returned; source URL at top; no writes.</td>
+</tr>
+<tr>
+<td><code>docs/cookbook/05-data-analysis/README.md</code></td>
+<td>3</td>
+<td>PASS</td>
+<td><code>docs/cookbook/05-data-analysis/dscc_run.log</code>, <a
+href="../cookbook/05-data-analysis/report_dscc.html"><code>report_dscc.md</code></a></td>
+<td>Mirror of the shipped demo artifacts under
+<code>demo/social_media_analysis/</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supporting-tier-2-smoke-logs">Supporting Tier 2 smoke logs</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Verdict</th>
+<th>Log</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dscc init</code></td>
+<td>PASS</td>
+<td><code>logs/tier2/init.log</code></td>
+</tr>
+<tr>
+<td><code>dscc agents</code></td>
+<td>PASS</td>
+<td><code>logs/tier2/agents.log</code></td>
+</tr>
+<tr>
+<td><code>dscc skills</code></td>
+<td>PASS</td>
+<td><code>logs/tier2/skills.log</code></td>
+</tr>
+<tr>
+<td><code>dscc bootstrap-plan</code></td>
+<td>PASS</td>
+<td><code>logs/tier2/bootstrap-plan.log</code></td>
+</tr>
+<tr>
+<td><code>dscc dump-manifests</code></td>
+<td>FAIL</td>
+<td><code>logs/tier2/dump-manifests.log</code> — dev-only; requires
+upstream TS workspace (<code>main.rs:508-522</code>). Not exposed in
+docs.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tier-3-runs">Tier 3 runs</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Verdict</th>
+<th>Log</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>smoke prompt (Run 1)</td>
+<td>FAIL</td>
+<td><code>logs/tier3/smoke.log</code></td>
+<td>Bad key format (7-char first segment).</td>
+</tr>
+<tr>
+<td>smoke prompt (Run 2)</td>
+<td>PASS</td>
+<td><code>logs/tier3/smoke.log</code></td>
+<td>Good key; form
+<code>dscc --model &lt;id&gt; prompt "&lt;text&gt;"</code> proven.</td>
+</tr>
+<tr>
+<td><code>--output-format json</code></td>
+<td>PASS</td>
+<td><code>logs/tier3/one-shot-json.log</code></td>
+<td>JSON envelope with <code>message</code>, <code>model</code>,
+<code>iterations</code>, <code>tool_uses</code>,
+<code>tool_results</code>, <code>usage</code>.</td>
+</tr>
+<tr>
+<td>cookbook 01 (read-only)</td>
+<td>PASS</td>
+<td><code>docs/cookbook/01-code-review/dscc_run.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td>cookbook 02 (danger-full-access)</td>
+<td>PASS</td>
+<td><code>docs/cookbook/02-test-generation/dscc_run.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td>cookbook 03 (danger-full-access)</td>
+<td>PASS</td>
+<td><code>docs/cookbook/03-refactor-rename/dscc_run.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td>cookbook 04 (read-only)</td>
+<td>PASS</td>
+<td><code>docs/cookbook/04-web-research/dscc_run.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td>cookbook 05 (danger-full-access, via shipped demo)</td>
+<td>PASS</td>
+<td><code>demo/social_media_analysis/dscc_run.log</code> (mirrored into
+<code>docs/cookbook/05-data-analysis/</code>)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="still-open-markers">Still-open markers</h3>
+<table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Reason</th>
+<th>Next action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/reference/cli.md:48</code> and <code>:104</code> —
+<code>dscc --resume &lt;file.json&gt; /&lt;cmd&gt;</code></td>
+<td>Needs a saved <code>.json</code> session file, which requires a
+prior REPL run to produce. Deferred rather than stripped.</td>
+<td>Capture a small session via <code>/export</code> then re-run and
+strip.</td>
+</tr>
+</tbody>
+</table>
+<!--
+Runs are appended in chronological order by date.
+运行结果按日期顺序追加。
+-->
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

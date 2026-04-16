@@ -1,0 +1,97 @@
+# docs/getting-started/installation.md — dscc --help
+$ dscc --help
+DSCC CLI v0.1.0
+  Interactive coding assistant for the current workspace.
+
+Quick start
+  dscc                                  Start the interactive REPL
+  dscc "summarize this repo"            Run one prompt and exit
+  dscc prompt "explain src/main.rs"     Explicit one-shot prompt
+  dscc --resume SESSION.json /status    Inspect a saved session
+
+Interactive essentials
+  /help                                 Browse the full slash command map
+  /status                               Inspect session + workspace state
+  /model <name>                         Switch models mid-session
+  /permissions <mode>                   Adjust tool access
+  Tab                                   Complete slash commands
+  /vim                                  Toggle modal editing
+  Shift+Enter / Ctrl+J                  Insert a newline
+
+Commands
+  dscc dump-manifests                   Read upstream TS sources and print extracted counts
+  dscc bootstrap-plan                   Print the bootstrap phase skeleton
+  dscc agents                           List configured agents
+  dscc skills                           List installed skills
+  dscc system-prompt [--cwd PATH] [--date YYYY-MM-DD]
+  dscc login                            Start the OAuth login flow
+  dscc logout                           Clear saved OAuth credentials
+  dscc init                             Scaffold DSCC.md + local files
+
+Flags
+  --model MODEL                         Override the active model
+  --api-key KEY                         API key for any OpenAI-compatible endpoint
+  --base-url URL                        Base URL for any OpenAI-compatible endpoint
+  --output-format FORMAT                Non-interactive output: text or json
+  --permission-mode MODE                Set read-only, workspace-write, or danger-full-access
+  --dangerously-skip-permissions        Skip all permission checks
+  --allowedTools TOOLS                  Restrict enabled tools (repeatable; comma-separated aliases supported)
+  --version, -V                         Print version and build information
+
+Slash command reference
+Slash commands
+  Tab completes commands inside the REPL.
+  [resume] = also available via dscc --resume SESSION.json
+
+Core flow
+  /help                                          Show available slash commands [resume]
+  /status                                        Show current session status [resume]
+  /compact                                       Compact local session history [resume]
+  /model [model]                                 Show or switch the active model
+  /permissions [read-only|workspace-write|danger-full-access] Show or switch the active permission mode
+  /cost                                          Show cumulative token usage for this session [resume]
+
+Workspace & memory
+  /config [env|hooks|model|plugins]              Inspect DSCC config files or merged sections [resume]
+  /memory                                        Inspect loaded DSCC instruction memory files [resume]
+  /init                                          Create a starter DSCC.md for this repo [resume]
+  /diff                                          Show git diff for current workspace changes [resume]
+  /version                                       Show CLI version and build information [resume]
+  /teleport <symbol-or-path>                     Jump to a file or symbol by searching the workspace
+
+Sessions & output
+  /clear [--confirm]                             Start a fresh local session [resume]
+  /resume <session-path>                         Load a saved session into the REPL
+  /export [file]                                 Export the current conversation to a file [resume]
+  /session [list|switch <session-id>]            List or switch managed local sessions
+
+Git & GitHub
+  /branch [list|create <name>|switch <name>]     List, create, or switch git branches
+  /worktree [list|add <path> [branch]|remove <path>|prune] List, add, remove, or prune git worktrees
+  /commit                                        Generate a commit message and create a git commit
+  /commit-push-pr [context]                      Commit workspace changes, push the branch, and open a PR
+  /pr [context]                                  Draft or create a pull request from the conversation
+  /issue [context]                               Draft or create a GitHub issue from the conversation
+
+Automation & discovery
+  /bughunter [scope]                             Inspect the codebase for likely bugs
+  /ultraplan [task]                              Run a deep planning prompt with multi-step reasoning
+  /debug-tool-call                               Replay the last tool call with debug details
+  /plugin [list|install <path>|enable <name>|disable <name>|uninstall <id>|update <id>] Manage DSCC plugins (aliases: /plugins, /marketplace)
+  /agents                                        List configured agents [resume]
+  /skills                                        List available skills [resume]
+
+Resume-safe commands: /help, /status, /compact, /clear [--confirm], /cost, /config [env|hooks|model|plugins], /memory, /init, /diff, /version, /export [file], /agents, /skills
+Examples
+  dscc --model opus "summarize this repo"
+  dscc --output-format json prompt "explain src/main.rs"
+  dscc --allowedTools read,glob "summarize Cargo.toml"
+  dscc --resume session.json /status /diff /export notes.txt
+  dscc agents
+  dscc /skills
+  dscc login
+  dscc init
+---
+exit: 0
+verdict: PASS
+notes: full subcommand + slash-command map printed

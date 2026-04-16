@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Skills · 编写 Skill · DSCC Docs</title>
-<link rel="stylesheet" href="../../styles.css?v=6">
+<title>Skills · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../">DSCC</a>
+    <a class="brand" href="../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../docs/">Docs</a>
       <a href="../../docs/cookbook/">Cookbook</a>
       <a href="../../docs/reference/cli.html">CLI</a>
       <a href="../../docs/verification/registry.html">Verification</a>
-      <a href="../../" class="back-home">← Home</a>
+      <a href="../../docs/zh/extending/skills.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/extending/">extending</a> / <span>skills</span></div>
+<div class="doc-crumb"><a href="../../en/">home</a> / <a href="../../docs/extending/">extending</a> / <span>skills</span></div>
 <h1 id="skills--编写-skill">Skills · 编写 Skill</h1>
 <p>A skill is a Markdown file with YAML frontmatter. When the model
 invokes a skill, DSCC injects the Markdown body into the conversation —
@@ -182,164 +182,12 @@ work should run on its own thread with a different tool allowlist.</p>
 <li><a href="../guides/slash-commands.html">guides/slash-commands.md</a> —
 how <code>/skills</code> and related commands are discovered.</li>
 </ul>
-<hr />
-<h3 id="中文">中文</h3>
-<p>Skill 是带 YAML frontmatter 的 Markdown 文件。模型调用某个 skill
-时，DSCC 会把 Markdown 正文注入会话 —— 用 skill 打包可复用的
-prompt、清单和领域知识。</p>
-<h2 id="发现路径">发现路径</h2>
-<p>由 <code>crates/commands/src/lib.rs:1306–1391</code> 的
-<code>discover_skill_roots</code> 解析。兼容历史的
-<code>commands/</code> 目录。</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>来源</th>
-<th>路径</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>项目祖先目录</td>
-<td><code>.codex/skills/</code>、<code>.dscc/skills/</code>、<code>.codex/commands/</code>（legacy）、<code>.dscc/commands/</code>（legacy）</td>
-</tr>
-<tr>
-<td>2</td>
-<td><code>$CODEX_HOME</code></td>
-<td><code>$CODEX_HOME/skills/</code>、<code>$CODEX_HOME/commands/</code></td>
-</tr>
-<tr>
-<td>3</td>
-<td>用户 home</td>
-<td><code>~/.codex/skills/</code>、<code>~/.codex/commands/</code>、<code>~/.dscc/skills/</code>、<code>~/.dscc/commands/</code></td>
-</tr>
-<tr>
-<td>4</td>
-<td>Bundled</td>
-<td><code>$DSCC_BUNDLED_SKILLS</code> 指向的目录</td>
-</tr>
-</tbody>
-</table>
-<h2 id="文件布局">文件布局</h2>
-<table>
-<thead>
-<tr>
-<th>Origin</th>
-<th>布局</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SkillsDir</code></td>
-<td><code>&lt;root&gt;/&lt;skill-name&gt;/SKILL.md</code></td>
-</tr>
-<tr>
-<td><code>LegacyCommandsDir</code></td>
-<td>单个 <code>.md</code> 文件，或目录内含 <code>SKILL.md</code>（标记为
-<code>SkillOrigin::LegacyCommandsDir</code>）</td>
-</tr>
-</tbody>
-</table>
-<h2 id="schemamarkdown-frontmatter">Schema（Markdown frontmatter）</h2>
-<pre class="markdown"><code>---
-name: my-skill
-description: Brief one-line purpose
----
-
-## Instructions
-（模型在 skill 被调用时拿到的自由 Markdown）</code></pre>
-<p>由 <code>parse_skill_frontmatter</code> 解析。<code>name</code> 和
-<code>description</code> 都可省；<code>name</code> 缺省时回退到文件名
-stem（或目录名）。</p>
-<h2 id="最小可用示例">最小可用示例</h2>
-<p><code>.dscc/skills/commit-msg/SKILL.md</code>：</p>
-<pre class="markdown"><code>---
-name: commit-msg
-description: Write a Conventional Commit message for the current diff
----
-
-## Instructions
-
-1. Run `git diff --staged`.
-2. Summarise the change in one line using `type(scope): subject`.
-3. Print the message only, no extra commentary.</code></pre>
-<h2 id="调用">调用</h2>
-<table>
-<thead>
-<tr>
-<th>方式</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/skills</code>（斜杠）</td>
-<td>列出已发现的 skill</td>
-</tr>
-<tr>
-<td>模型调用 <code>Skill</code>
-工具（<code>tools.rs:394–406</code>）</td>
-<td>把 Markdown 注入当前上下文；参数
-<code>skill: &lt;name&gt;</code>，可选
-<code>args: &lt;string&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="验证发现">验证发现</h2>
-<p>在 DSCC 中运行
-<code>/skills</code>，看列表是否出现。<code># [交互]</code>（REPL
-斜杠命令；等价的 <code>dscc skills</code> CLI
-子命令可脚本化、无需标记。）</p>
-<h2 id="skill-对比-agent">Skill 对比 Agent</h2>
-<table>
-<thead>
-<tr>
-<th>方面</th>
-<th>Skill</th>
-<th>Agent</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>来源</td>
-<td>带 frontmatter 的 Markdown</td>
-<td>TOML 预设</td>
-</tr>
-<tr>
-<td>调用</td>
-<td><code>Skill</code> 工具 —— 把 prompt 片段加到当前会话</td>
-<td><code>Agent</code> 工具 —— 开新线程，带自己的 prompt + 工具集 +
-模型</td>
-</tr>
-<tr>
-<td>状态</td>
-<td>共用调用方的模型与工具</td>
-<td>有自己 subagent-type 的工具白名单</td>
-</tr>
-<tr>
-<td>输出</td>
-<td>内联响应</td>
-<td><code>.dscc-agents/</code> 下单独的运行产物</td>
-</tr>
-</tbody>
-</table>
-<p>经验法则：当前这轮需要“加知识或流程“用
-<strong>skill</strong>；工作应该跑在独立线程、用不同工具白名单，用
-<strong>agent</strong>。</p>
-<h2 id="另见">另见</h2>
-<ul>
-<li><a href="agents.html">agents.md</a> —— 子进程式 agent。</li>
-<li><a href="../guides/slash-commands.html">guides/slash-commands.md</a>
-—— <code>/skills</code> 等命令的发现机制。</li>
-</ul>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../en/">home</a> · <a href="../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

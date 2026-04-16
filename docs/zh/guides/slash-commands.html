@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>斜杠命令 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/guides/slash-commands.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/guides/">guides</a> / <span>slash-commands</span></div>
+<h1 id="斜杠命令">斜杠命令</h1>
+<p>斜杠命令以 <code>/</code> 开头，在 REPL 中输入。完整注册表是
+<code>crates/commands/src/lib.rs:73–300</code> 的编译期静态数组
+<code>SLASH_COMMAND_SPECS</code>，由
+<code>SlashCommand::parse()</code>（commands/lib.rs:376–462）解析。</p>
+<h1 id="分类">分类</h1>
+<p>定义在 <code>crates/commands/src/lib.rs:43–60</code>。</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core</td>
+<td><code>/help</code>、<code>/model</code>、<code>/vim</code>、<code>/clear</code></td>
+</tr>
+<tr>
+<td>Workspace</td>
+<td><code>/permissions</code>、<code>/add-dir</code></td>
+</tr>
+<tr>
+<td>Session</td>
+<td><code>/session</code>、<code>/resume</code>、<code>/export</code>、<code>/compact</code></td>
+</tr>
+<tr>
+<td>Git</td>
+<td><code>/branch</code>、<code>/worktree</code></td>
+</tr>
+<tr>
+<td>Automation</td>
+<td><code>/plugin</code>、自定义钩子</td>
+</tr>
+</tbody>
+</table>
+<h1 id="发现命令">发现命令</h1>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>按分类列出全部命令</td>
+</tr>
+<tr>
+<td>REPL 中按 <code>Tab</code></td>
+<td>循环补全已知命令（input.rs:689–746）</td>
+</tr>
+<tr>
+<td><code>docs/reference/slash-commands.md</code></td>
+<td>含参数的完整表</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参数风格">参数风格</h1>
+<ul>
+<li><strong>位置参数</strong> —
+常规场景：<code>/model [model]</code>、<code>/permissions [mode]</code>、<code>/branch [action] [target]</code>、<code>/worktree [action] [path] [branch]</code>、<code>/session [action] [target]</code>、<code>/plugin [action] [target]</code>。</li>
+<li><strong>flag 风格</strong> — 仅 <code>/clear --confirm</code> 接受
+flag（commands/lib.rs:425–426）。</li>
+</ul>
+<h1 id="别名">别名</h1>
+<p><code>/plugins</code> 与 <code>/marketplace</code> 都映射到
+<code>/plugin</code>，其他命令无别名。</p>
+<h1 id="相关">相关</h1>
+<ul>
+<li><a href="sessions.html">sessions.md</a>
+<code>/session</code>、<code>/resume</code>、<code>/export</code>、<code>/compact</code>。</li>
+<li><code>docs/reference/slash-commands.md</code>
+完整的单命令参数表。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

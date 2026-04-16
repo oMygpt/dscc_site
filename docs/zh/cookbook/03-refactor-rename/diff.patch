@@ -1,0 +1,38 @@
+diff --git a/src/bin/app.rs b/src/bin/app.rs
+index 5c1a811..68ea71a 100644
+--- a/src/bin/app.rs
++++ b/src/bin/app.rs
+@@ -1,2 +1,2 @@
+-use refactor_demo::load_config;
+-fn main() { println!("{}", load_config()); }
++use refactor_demo::load_settings;
++fn main() { println!("{}", load_settings()); }
+diff --git a/src/config.rs b/src/config.rs
+index da81e37..ce2068b 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -1 +1 @@
+-pub fn load_config() -> String { "default".into() }
++pub fn load_settings() -> String { "default".into() }
+diff --git a/src/lib.rs b/src/lib.rs
+index bcf9629..3f83f40 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -1,6 +1,6 @@
+ pub mod config;
+-pub use config::load_config;
++pub use config::load_settings;
+ 
+ pub fn describe() -> String {
+-    format!("cfg={}", load_config())
++    format!("cfg={}", load_settings())
+ }
+diff --git a/tests/smoke.rs b/tests/smoke.rs
+index 4d86086..ebf7113 100644
+--- a/tests/smoke.rs
++++ b/tests/smoke.rs
+@@ -1,2 +1,2 @@
+-use refactor_demo::load_config;
+-#[test] fn it_loads() { assert_eq!(load_config(), "default"); }
++use refactor_demo::load_settings;
++#[test] fn it_loads() { assert_eq!(load_settings(), "default"); }

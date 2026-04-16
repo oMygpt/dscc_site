@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>04 · Web Research · DSCC Docs</title>
-<link rel="stylesheet" href="../../../styles.css?v=6">
+<title>04 · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../../">DSCC</a>
+    <a class="brand" href="../../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../../docs/">Docs</a>
       <a href="../../../docs/cookbook/">Cookbook</a>
       <a href="../../../docs/reference/cli.html">CLI</a>
       <a href="../../../docs/verification/registry.html">Verification</a>
-      <a href="../../../" class="back-home">← Home</a>
+      <a href="../../../docs/zh/cookbook/04-web-research/index.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <span>04-web-research</span></div>
+<div class="doc-crumb"><a href="../../../en/">home</a> / <a href="../../../docs/cookbook/">cookbook</a> / <span>04-web-research</span></div>
 <h1 id="04--web-research">04 · Web Research</h1>
 <p>Sometimes the question is not “what’s in this repo” but “what does
 the upstream docs page say today”. This case sends DSCC out to the web,
@@ -73,56 +73,12 @@ rate-limit headers.</li>
 <code>message_stop</code>.</li>
 <li>A source URL appears at the top.</li>
 </ul>
-<h3 id="中文">中文</h3>
-<p>有时候问题不是“仓库里是什么“，而是“上游文档当前怎么写“。本案例让 DSCC
-上网抓 Anthropic Messages API 参考页，压缩成 3 张表。权限保持
-<code>read-only</code>，agent 只读不写。</p>
-<h2 id="演示能力">演示能力</h2>
-<ul>
-<li><code>WebSearch</code> 定位权威页面。</li>
-<li><code>WebFetch</code> 抓取并解析。</li>
-<li><code>StructuredOutput</code>（或 Markdown 表格）统一输出形状。</li>
-<li><code>ReadOnly</code> 权限：本地不写入。</li>
-</ul>
-<h2 id="准备">准备</h2>
-<p>无。任意工作区都行，agent 不动文件。</p>
-<p>确认环境能出站 HTTPS，并且没有 hook 拦截 <code>WebFetch</code>（见 <a
-href="../../guides/hooks.html">guides/hooks.md</a>）。</p>
-<h2 id="运行命令">运行命令</h2>
-<pre class="bash"><code>dscc --model claude-sonnet-4-6 \
-  --permission-mode read-only \
-  prompt &quot;$(cat docs/cookbook/04-web-research/PROMPT.md)&quot;</code></pre>
-<p>真实运行产物见 <a
-href="report_dscc.html"><code>report_dscc.md</code></a> / <a
-href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
-<h2 id="预期行为">预期行为</h2>
-<p>模型通常会：</p>
-<ol type="1">
-<li><code>WebSearch</code> 搜
-<code>anthropic messages api reference</code>。</li>
-<li><code>WebFetch</code> 抓第一个结果（官方文档页）。</li>
-<li>可能再 <code>WebFetch</code> 一次子页（streaming 事件或 error
-码）。</li>
-<li>输出 3 张 Markdown 表 + 一行来源 URL。</li>
-</ol>
-<p>不应出现 <code>edit_file</code> / <code>write_file</code> /
-<code>bash</code>。</p>
-<h2 id="验收">验收</h2>
-<ul>
-<li>输出含 3 张表：请求体、流式事件、限流头。</li>
-<li>请求体表涵盖
-<code>model</code>、<code>messages</code>、<code>max_tokens</code>。</li>
-<li>流式事件表至少出现
-<code>message_start</code>、<code>content_block_delta</code>、<code>message_stop</code>
-之一。</li>
-<li>顶部有一行来源 URL。</li>
-</ul>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../../en/">home</a> · <a href="../../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authentication · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/getting-started/authentication.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/getting-started/">getting-started</a> / <span>authentication</span></div>
+<h1 id="authentication">Authentication</h1>
+<p>DSCC 在启动时从环境变量读取 provider 凭据。每个 provider 都有自己的
+key 变量和可选的 base URL 覆盖项。除非使用
+OAuth，否则凭据不会写入磁盘。</p>
+<h2 id="provider-key">Provider key</h2>
+<h3 id="anthropic">Anthropic</h3>
+<pre class="bash"><code>export ANTHROPIC_API_KEY=&quot;sk-ant-...&quot;
+export ANTHROPIC_BASE_URL=&quot;https://api.anthropic.com&quot;  # 可选</code></pre>
+<p>所有 <code>claude-*</code> 模型走这一路。</p>
+<h3 id="xai--grok">xAI / Grok</h3>
+<pre class="bash"><code>export XAI_API_KEY=&quot;xai-...&quot;
+export XAI_BASE_URL=&quot;https://api.x.ai/v1&quot;             # 可选</code></pre>
+<p>所有 <code>grok-*</code> 模型走这一路。</p>
+<h3 id="deepseek">DeepSeek</h3>
+<pre class="bash"><code>export DEEPSEEK_API_KEY=&quot;...&quot;
+export DEEPSEEK_BASE_URL=&quot;https://api.deepseek.com/v1&quot;  # 可选</code></pre>
+<p>所有 <code>deepseek-*</code> 模型走这一路。</p>
+<h3 id="通用-openai-兼容">通用 OpenAI 兼容</h3>
+<p>面向其他 OpenAI 兼容 provider（豆包/ARK、自托管 vLLM、OpenAI
+本身等）：</p>
+<pre class="bash"><code>export DSCC_API_KEY=&quot;...&quot;
+export DSCC_BASE_URL=&quot;https://ark.cn-beijing.volces.com/api/v3&quot;
+dscc --model doubao-seed-1-6-250615 prompt &quot;summarize this workspace&quot;</code></pre>
+<p>使用通用 provider 时，<code>DSCC_API_KEY</code> 和
+<code>DSCC_BASE_URL</code> 必须同时设置。</p>
+<h2 id="oauth">OAuth</h2>
+<p>对 Anthropic 而言，OAuth 是 <code>ANTHROPIC_API_KEY</code>
+的替代方案。</p>
+<pre class="bash"><code>dscc login     # [交互] 启动浏览器 OAuth 流程，无法端到端脚本化
+dscc logout</code></pre>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子命令入口</td>
+<td><code>crates/dscc-cli/src/main.rs:315</code></td>
+</tr>
+<tr>
+<td>默认回调端口</td>
+<td><code>4545</code>（<code>crates/runtime/src/oauth.rs:474</code>）</td>
+</tr>
+<tr>
+<td>回调 URI</td>
+<td><code>http://127.0.0.1:4545/...</code> loopback</td>
+</tr>
+</tbody>
+</table>
+<p><code>login</code> 唤起浏览器完成登录并把 token
+写入本地凭据存储；<code>logout</code> 清除凭据。</p>
+<h2 id="环境变量总表">环境变量总表</h2>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>用途</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ANTHROPIC_API_KEY</code></td>
+<td>Anthropic provider key</td>
+<td>使用 Anthropic 模型时必填</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_BASE_URL</code></td>
+<td>覆盖 Anthropic endpoint</td>
+<td><code>https://api.anthropic.com</code></td>
+</tr>
+<tr>
+<td><code>XAI_API_KEY</code></td>
+<td>xAI / Grok key</td>
+<td>使用 Grok 模型时必填</td>
+</tr>
+<tr>
+<td><code>XAI_BASE_URL</code></td>
+<td>覆盖 xAI endpoint</td>
+<td><code>https://api.x.ai/v1</code></td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>DeepSeek key</td>
+<td>使用 DeepSeek 模型时必填</td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_BASE_URL</code></td>
+<td>覆盖 DeepSeek endpoint</td>
+<td><code>https://api.deepseek.com/v1</code></td>
+</tr>
+<tr>
+<td><code>DSCC_API_KEY</code></td>
+<td>通用 OpenAI 兼容 key</td>
+<td>使用通用 provider 时必填</td>
+</tr>
+<tr>
+<td><code>DSCC_BASE_URL</code></td>
+<td>通用 OpenAI 兼容 endpoint</td>
+<td>使用通用 provider 时必填</td>
+</tr>
+<tr>
+<td><code>DSCC_MODEL</code></td>
+<td>未传 <code>--model</code> 时的后备模型 id</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>DSCC_PERMISSION_MODE</code></td>
+<td>启动时的默认权限模式</td>
+<td><code>danger-full-access</code>（<code>main.rs:447-452</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>完整变量清单见 <a
+href="../reference/env-vars.html">reference/env-vars.md</a>。</p>
+<h2 id="下一步">下一步</h2>
+<ul>
+<li><a href="model-selection.html">model-selection.md</a> —
+选择路由到刚刚配置好的 provider 的模型 id。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

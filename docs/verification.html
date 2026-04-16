@@ -3,34 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Verification Standard · 文档命令验证规范 · DSCC Docs</title>
-<link rel="stylesheet" href="../styles.css?v=6">
+<title>Verification Standard · DSCC Docs</title>
+<link rel="stylesheet" href="../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../">DSCC</a>
+    <a class="brand" href="../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../docs/">Docs</a>
       <a href="../docs/cookbook/">Cookbook</a>
       <a href="../docs/reference/cli.html">CLI</a>
       <a href="../docs/verification/registry.html">Verification</a>
-      <a href="../" class="back-home">← Home</a>
+      <a href="../docs/zh/verification.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../">home</a> / <a href="../docs/">docs</a> / <span>verification</span></div>
-<h1 id="verification-standard--文档命令验证规范">Verification Standard ·
-文档命令验证规范</h1>
+<div class="doc-crumb"><a href="../en/">home</a> / <span>verification</span></div>
+<h1 id="verification-standard">Verification Standard</h1>
 <p>This document defines how shell commands in the DSCC docs are
-verified and how the <code># [待验证]</code> marker is lifted.
-本文件规定了 DSCC 文档中 shell 命令的验证流程与 <code># [待验证]</code>
-标记的去除规则。</p>
+verified and how the <code># [待验证]</code> marker is lifted.</p>
 <hr />
-<h2 id="tiers--分层">Tiers · 分层</h2>
+<h2 id="tiers">Tiers</h2>
 <table>
 <thead>
 <tr>
@@ -79,8 +76,7 @@ one-line human instruction.</td>
 </tbody>
 </table>
 <hr />
-<h2 id="lifecycle-of-a-marker--标记的生命周期">Lifecycle of a marker ·
-标记的生命周期</h2>
+<h2 id="lifecycle-of-a-marker">Lifecycle of a marker</h2>
 <ol type="1">
 <li><strong>Author</strong> writes a command with
 <code># [待验证]</code>.</li>
@@ -94,7 +90,7 @@ fix the doc (either the command or its surrounding claim).</li>
 <code># [交互]</code>.</li>
 </ol>
 <hr />
-<h2 id="log-format--日志格式">Log format · 日志格式</h2>
+<h2 id="log-format">Log format</h2>
 <p>Each Tier 2/3 log file contains:</p>
 <pre><code># &lt;file-relative-path&gt;:&lt;line&gt; — &lt;short description&gt;
 $ &lt;exact command invoked&gt;
@@ -107,10 +103,9 @@ verdict: PASS | FAIL
 notes: &lt;one-line explanation&gt;</code></pre>
 <p>API keys and URLs are <strong>never</strong> written to logs. Redact
 them with <code>&lt;REDACTED&gt;</code> when they appear in commands or
-stderr. API key 与敏感 URL <strong>禁止</strong>落盘。日志里出现时以
-<code>&lt;REDACTED&gt;</code> 替换。</p>
+stderr.</p>
 <hr />
-<h2 id="directory-layout--目录结构">Directory layout · 目录结构</h2>
+<h2 id="directory-layout">Directory layout</h2>
 <pre><code>docs/
 ├── verification.md           # this file
 └── verification/
@@ -118,33 +113,12 @@ stderr. API key 与敏感 URL <strong>禁止</strong>落盘。日志里出现时
     └── logs/
         ├── tier2/&lt;slug&gt;.log
         └── tier3/&lt;slug&gt;.log</code></pre>
-<hr />
-<h3 id="中文">中文</h3>
-<p>本文件已定义四层验证分级与标记去除规则。译文与上文结构一一对应：</p>
-<ul>
-<li><strong>Tier 1 —
-代码自证</strong>：命令形态可由源码推断，运行只是复现 clap/bash
-已保证的行为。证据是 <code>file:line</code>。</li>
-<li><strong>Tier 2 — 本机 smoke</strong>：无网络、无凭据，能退出码
-0。证据是
-<code>docs/verification/logs/tier2/&lt;slug&gt;.log</code>。</li>
-<li><strong>Tier 3 — 依赖 API</strong>：需真实 provider。证据是
-<code>docs/verification/logs/tier3/&lt;slug&gt;.log</code>，日志需包含退出码
-0、模型返回非空，以及 tool 调用轨迹与 cookbook 预期一致。</li>
-<li><strong>Tier 4 —
-交互式</strong>：无法脚本化（REPL、<code>dscc login</code>）。标记改为
-<code># [交互]</code> 并附人工操作说明。</li>
-</ul>
-<p>PASS 后再去 <code># [待验证]</code> 并在
-<code>docs/verification/registry.md</code> 留一行。FAIL
-保留标记，把原因写进 registry 并修文档。日志里禁止出现 API key 与敏感
-URL，用 <code>&lt;REDACTED&gt;</code> 替代。</p>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../">home</a> · <a href="../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../en/">home</a> · <a href="../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

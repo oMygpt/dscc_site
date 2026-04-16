@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCP 服务器 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/guides/mcp-servers.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/guides/">guides</a> / <span>mcp-servers</span></div>
+<h1 id="mcp-服务器">MCP 服务器</h1>
+<p>DSCC 通过 MCP（Model Context Protocol）服务器扩展工具面。在
+<code>settings.mcpServers.&lt;name&gt;</code>
+下配置（<code>crates/runtime/src/config.rs:531–550</code>）。</p>
+<h1 id="传输类型">传输类型</h1>
+<p>支持的传输（<code>config.rs:75–83</code>、<code>mcp_client.rs:7–46</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stdio</code></td>
+<td>拉起本地命令，走 stdin/stdout</td>
+</tr>
+<tr>
+<td><code>sse</code></td>
+<td>服务器推送事件（远程）</td>
+</tr>
+<tr>
+<td><code>http</code></td>
+<td>HTTP 远程</td>
+</tr>
+<tr>
+<td><code>ws</code></td>
+<td>WebSocket 远程</td>
+</tr>
+<tr>
+<td><code>sdk</code></td>
+<td>进程内 SDK 服务器</td>
+</tr>
+<tr>
+<td><code>managed-proxy</code></td>
+<td>DSCC 托管代理</td>
+</tr>
+</tbody>
+</table>
+<h1 id="stdio-示例">Stdio 示例</h1>
+<pre class="json"><code>{
+  &quot;mcpServers&quot;: {
+    &quot;my-server&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;/usr/local/bin/my-mcp&quot;,
+      &quot;args&quot;: [&quot;--port&quot;, &quot;8080&quot;],
+      &quot;env&quot;: {&quot;MY_VAR&quot;: &quot;value&quot;}
+    }
+  }
+}</code></pre>
+<h1 id="远程字段">远程字段</h1>
+<p>适用于 <code>sse</code>、<code>http</code>、<code>ws</code>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>服务器端点</td>
+</tr>
+<tr>
+<td><code>headers</code></td>
+<td>静态头部映射</td>
+</tr>
+<tr>
+<td><code>headersHelper</code></td>
+<td>调用时产出头部的命令</td>
+</tr>
+<tr>
+<td><code>oauth</code></td>
+<td>可选的每服务器 OAuth 配置块</td>
+</tr>
+</tbody>
+</table>
+<p><code>oauth</code> 块支持通过
+<code>oauth.authServerMetadataUrl</code> 做 OIDC metadata 发现，并指定
+callback 端口和 client id。</p>
+<h1 id="工具名归一化">工具名归一化</h1>
+<p>来自 <code>crates/runtime/src/mcp.rs:6–37</code>：</p>
+<ol type="1">
+<li>服务器名中的非字母数字字符全部替换为 <code>_</code>。</li>
+<li>暴露给模型的工具名为
+<code>mcp__&lt;server&gt;__&lt;tool&gt;</code>。</li>
+</ol>
+<h1 id="作用域与覆盖">作用域与覆盖</h1>
+<p>每个服务器记录作用域（User / Project /
+Local）。后加载的作用域覆盖先加载的（<code>mcp.rs:84</code>），与 <a
+href="config-files.html">config-files.md</a> 中的配置优先级一致。</p>
+<h1 id="相关">相关</h1>
+<ul>
+<li><a href="config-files.html">config-files.md</a> 配置优先级。</li>
+<li><code>docs/reference/config-schema.md</code> 完整的
+<code>mcpServers</code> schema。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

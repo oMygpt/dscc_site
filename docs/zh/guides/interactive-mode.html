@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交互模式 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/guides/interactive-mode.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/guides/">guides</a> / <span>interactive-mode</span></div>
+<h1 id="交互模式">交互模式</h1>
+<p>交互 REPL 是 DSCC 的默认模式。在 TTY 环境下运行
+<code>dscc</code>（不带子命令）即可进入。输入编辑器位于
+<code>crates/dscc-cli/src/input.rs</code>（1193 行）。</p>
+<h1 id="编辑器模式">编辑器模式</h1>
+<p>DSCC 自带编辑器，支持可选的 vim 绑定。运行时用 <code>/vim</code> 切换
+vim 开关（input.rs:549–553）。</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>进入</th>
+<th>退出</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain</td>
+<td>vim 关闭</td>
+<td><code>/vim</code></td>
+<td>单一模式，无动作键</td>
+</tr>
+<tr>
+<td>Insert</td>
+<td>vim 开启（默认）</td>
+<td><code>Esc</code></td>
+<td>普通文本输入</td>
+</tr>
+<tr>
+<td>Normal</td>
+<td>在 Insert 中按 <code>Esc</code></td>
+<td><code>i</code> 回到 Insert</td>
+<td><code>h j k l</code> 移动，<code>d y</code>
+算子，<code>dd</code>、<code>yy</code>、<code>p</code></td>
+</tr>
+<tr>
+<td>Visual</td>
+<td>在 Normal 中按 <code>v</code></td>
+<td><code>Esc</code></td>
+<td><code>h j k l</code> 选择，删除/复制选区</td>
+</tr>
+<tr>
+<td>Command</td>
+<td>在 Normal 中按 <code>:</code></td>
+<td><code>Esc</code></td>
+<td>ex 风格命令行</td>
+</tr>
+</tbody>
+</table>
+<h1 id="按键绑定">按键绑定</h1>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>场景</th>
+<th>行为</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>输入非空</td>
+<td>取消当前输入</td>
+<td>input.rs:375–380</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>输入为空</td>
+<td>退出 DSCC</td>
+<td>input.rs:375–380</td>
+</tr>
+<tr>
+<td><code>Ctrl+D</code></td>
+<td>输入为空</td>
+<td>退出 DSCC</td>
+<td>input.rs:388–391</td>
+</tr>
+<tr>
+<td><code>Ctrl+J</code></td>
+<td>Insert</td>
+<td>插入换行</td>
+<td>input.rs:382–386</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>任意</td>
+<td>提交 prompt</td>
+<td>input.rs:400–406</td>
+</tr>
+<tr>
+<td><code>Shift+Enter</code></td>
+<td>任意</td>
+<td>插入换行</td>
+<td>input.rs:400–406</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td>以 <code>/</code> 开头</td>
+<td>循环补全斜杠命令</td>
+<td>input.rs:689–746</td>
+</tr>
+<tr>
+<td><code>Up</code> / <code>Down</code></td>
+<td>任意</td>
+<td>遍历输入历史</td>
+<td>input.rs:748–789</td>
+</tr>
+<tr>
+<td><code>Left</code> / <code>Right</code> / <code>Home</code> /
+<code>End</code></td>
+<td>任意</td>
+<td>光标移动</td>
+<td>input.rs:416–439</td>
+</tr>
+</tbody>
+</table>
+<h1 id="非-tty-回退">非 TTY 回退</h1>
+<p>当 stdin 不是终端（管道、CI、重定向）时，DSCC
+退化为逐行读取，无提示符、无历史、无补全（input.rs:334–366）。脚本场景建议改用
+<code>dscc prompt ...</code>。</p>
+<h1 id="相关">相关</h1>
+<ul>
+<li><a href="one-shot-mode.html">one-shot-mode.md</a> 非交互调用。</li>
+<li><a href="slash-commands.html">slash-commands.md</a> <code>Tab</code>
+可补全的命令。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your first session · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/getting-started/first-session.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/getting-started/">getting-started</a> / <span>first-session</span></div>
+<h1 id="your-first-session">Your first session</h1>
+<p>装好 <code>dscc</code>、导出 provider key、选好模型 id 之后，DSCC
+可以以两种模式启动：交互式 REPL 和单次
+prompt。两种模式共用同一个可执行文件和 <a
+href="model-selection.html">model-selection.md</a> 中的模型选择规则。</p>
+<h2 id="交互式-repl">交互式 REPL</h2>
+<p>启动会话：</p>
+<pre class="bash"><code>cargo run --bin dscc -- --model claude-sonnet-4-6   # [交互] 进入 REPL
+# 或安装后直接
+dscc --model claude-sonnet-4-6                      # [交互] 进入 REPL</code></pre>
+<p>第一个会话常用的斜杠命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>列出当前会话可用的所有斜杠命令</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>显示当前模型、provider、权限模式、cwd</td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>显示累计 token 用量和成本</td>
+</tr>
+<tr>
+<td><code>/exit</code></td>
+<td>退出 REPL（或按 <code>Ctrl+C</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>完整斜杠命令参考：<a
+href="../reference/slash-commands.html">reference/slash-commands.md</a>。</p>
+<h2 id="单次-prompt">单次 prompt</h2>
+<p>跑一条 prompt 后直接退出：</p>
+<pre class="bash"><code>dscc --model claude-sonnet-4-6 prompt &quot;summarize this workspace&quot;</code></pre>
+<p><code>prompt</code> 子命令把剩余位置参数拼成 prompt。DSCC
+执行完输出最终回答并以退出码 0 结束（失败时非零）。</p>
+<h2 id="脚本化与-json-输出">脚本化与 JSON 输出</h2>
+<p>供 pipeline 或脚本使用时，请求结构化输出：</p>
+<pre class="bash"><code>dscc --model claude-sonnet-4-6 \
+     --output-format json \
+     prompt &quot;list every crate under crates/&quot;</code></pre>
+<p>JSON 模式向 stdout 写入一份 JSON 文档，可直接接 <code>jq</code>
+等下游工具。schema 和退出码约定见 <a
+href="../guides/one-shot-mode.html">guides/one-shot-mode.md</a>。</p>
+<h2 id="下一步">下一步</h2>
+<ul>
+<li><a
+href="../guides/interactive-mode.html">guides/interactive-mode.md</a> ——
+键位、vim 模式、历史记录、补全。</li>
+<li><a href="../guides/one-shot-mode.html">guides/one-shot-mode.md</a> ——
+脚本化、JSON 输出、允许工具过滤。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

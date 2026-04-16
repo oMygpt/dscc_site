@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文档命令验证规范 · DSCC 文档</title>
+<link rel="stylesheet" href="../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/zh/">文档</a>
+      <a href="../../docs/zh/cookbook/">案例</a>
+      <a href="../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../docs/verification.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">主页</a> / <span>verification</span></div>
+<h1 id="文档命令验证规范">文档命令验证规范</h1>
+<p>本文件规定了 DSCC 文档中 shell 命令的验证流程与
+<code># [待验证]</code> 标记的去除规则。</p>
+<hr />
+<h2 id="分层">分层</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>含义</th>
+<th>所需证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tier 1 — 代码自证</strong></td>
+<td>命令形态由源码可确认；运行只是复现 clap/bash 已保证的行为。如
+<code>dscc --help</code>、<code>dscc --version</code>、<code>export ANTHROPIC_API_KEY=...</code>、<code>cargo build</code>。</td>
+<td>指向相应解析器或 README 行号的 <code>file:line</code> 引用。</td>
+</tr>
+<tr>
+<td><strong>Tier 2 — 本机 smoke</strong></td>
+<td>无网络、无凭据、在沙箱中退出码 0。如
+<code>dscc init</code>、<code>dscc agents</code>、<code>dscc skills</code>、<code>dscc system-prompt</code>、<code>dscc dump-manifests</code>、<code>dscc bootstrap-plan</code>。</td>
+<td><code>docs/verification/logs/tier2/&lt;slug&gt;.log</code>，含
+<code>exit: 0</code> 和关键输出片段。</td>
+</tr>
+<tr>
+<td><strong>Tier 3 — 依赖 API</strong></td>
+<td>需要真实 provider。如
+<code>dscc --model &lt;id&gt; prompt "..."</code> 与全部 cookbook
+案例。</td>
+<td><code>docs/verification/logs/tier3/&lt;slug&gt;.log</code>，含退出码
+0、非空模型返回，以及与 cookbook 预期一致的工具调用轨迹。</td>
+</tr>
+<tr>
+<td><strong>Tier 4 — 仅交互</strong></td>
+<td>无法脚本化：REPL
+会话、OAuth（<code>dscc login</code>）、需要加载后再输入 <code>/</code>
+命令的场景。</td>
+<td><code># [待验证]</code> 改写为
+<code># [交互]</code>，并补一行人工操作说明。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="标记的生命周期">标记的生命周期</h2>
+<ol type="1">
+<li><strong>作者</strong> 编写命令时加 <code># [待验证]</code>。</li>
+<li><strong>验证者</strong> 按上表层级执行。</li>
+<li>PASS：去掉标记，把日志路径（Tier 2/3）或代码引用（Tier 1）记入
+<code>docs/verification/registry.md</code>。</li>
+<li>FAIL：保留标记，把失败原因写入
+registry，并修正文档（命令本身或周围的说法）。</li>
+<li><strong>Tier 4</strong> 永远不去标记，而是改写为
+<code># [交互]</code>。</li>
+</ol>
+<hr />
+<h2 id="日志格式">日志格式</h2>
+<p>每条 Tier 2/3 日志包含：</p>
+<pre><code># &lt;file-relative-path&gt;:&lt;line&gt; — &lt;short description&gt;
+$ &lt;exact command invoked&gt;
+&lt;stdout + stderr as captured&gt;
+---
+exit: &lt;code&gt;
+duration: &lt;seconds&gt;s
+model: &lt;model id, Tier 3 only&gt;
+verdict: PASS | FAIL
+notes: &lt;one-line explanation&gt;</code></pre>
+<p>API key 与敏感 URL <strong>禁止</strong> 落盘。日志里出现时以
+<code>&lt;REDACTED&gt;</code> 替换。</p>
+<hr />
+<h2 id="目录结构">目录结构</h2>
+<pre><code>docs/
+├── verification.md           # 本文件
+└── verification/
+    ├── registry.md           # PASS/FAIL 索引，每条命令一行
+    └── logs/
+        ├── tier2/&lt;slug&gt;.log
+        └── tier3/&lt;slug&gt;.log</code></pre>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

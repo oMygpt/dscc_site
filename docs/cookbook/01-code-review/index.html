@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>01 · Code Review (read-only) · DSCC Docs</title>
-<link rel="stylesheet" href="../../../styles.css?v=6">
+<title>01 · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../../">DSCC</a>
+    <a class="brand" href="../../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../../docs/">Docs</a>
       <a href="../../../docs/cookbook/">Cookbook</a>
       <a href="../../../docs/reference/cli.html">CLI</a>
       <a href="../../../docs/verification/registry.html">Verification</a>
-      <a href="../../../" class="back-home">← Home</a>
+      <a href="../../../docs/zh/cookbook/01-code-review/index.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <span>01-code-review</span></div>
+<div class="doc-crumb"><a href="../../../en/">home</a> / <a href="../../../docs/cookbook/">cookbook</a> / <span>01-code-review</span></div>
 <h1 id="01--code-review-read-only">01 · Code Review (read-only)</h1>
 <p>A teammate drops a short Rust file in front of you and asks “anything
 obviously wrong?”. This case plants two or three issues in a small file
@@ -85,69 +85,12 @@ slice in <code>first_word</code> and the <code>.unwrap()</code> calls in
 <code>read_port</code>.</li>
 <li>Severity labels are populated for every row.</li>
 </ul>
-<h3 id="中文">中文</h3>
-<p>同事丢给你一段 Rust 代码问“有啥明显问题？“。本案例预先埋 2-3 处
-bug，让 DSCC 在不改动仓库的前提下找出来。这是试用 DSCC
-的最低风险方式：权限模式禁止写入，最坏情况只是消耗 token。</p>
-<h2 id="演示能力">演示能力</h2>
-<ul>
-<li><code>grep_search</code> + <code>read_file</code>
-定位并阅读目标文件。</li>
-<li><code>StructuredOutput</code>（或纯 Markdown
-表格）返回结构一致的结论。</li>
-<li><code>ReadOnly</code> 权限模式，见 <a
-href="../../guides/permissions.html">guides/permissions.md</a>。</li>
-</ul>
-<h2 id="准备">准备</h2>
-<p>在仓库根目录创建一个带已知问题的小文件：</p>
-<pre class="bash"><code>mkdir -p src
-cat &gt; src/foo.rs &lt;&lt;&#39;RS&#39;
-pub fn first_word(s: &amp;str) -&gt; &amp;str {
-    let bytes = s.as_bytes();
-    for i in 0..bytes.len() {
-        if bytes[i] == b&#39; &#39; {
-            return &amp;s[0..i + 1];   // off-by-one: includes the space
-        }
-    }
-    &amp;s[..]
-}
-
-pub fn read_port() -&gt; u16 {
-    let raw = std::env::var(&quot;PORT&quot;).unwrap();
-    raw.parse().unwrap()
-}
-RS</code></pre>
-<h2 id="运行命令">运行命令</h2>
-<pre class="bash"><code>dscc --model claude-sonnet-4-6 \
-  --permission-mode read-only \
-  prompt &quot;$(cat docs/cookbook/01-code-review/PROMPT.md)&quot;</code></pre>
-<p>针对 <code>doubao-seed-2.0-code</code> 的真实运行产物见 <a
-href="report_dscc.html"><code>report_dscc.md</code></a> / <a
-href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
-<h2 id="预期行为">预期行为</h2>
-<p>模型通常会：</p>
-<ol type="1">
-<li>用 <code>glob_search</code> 或 <code>grep_search</code> 确认
-<code>src/foo.rs</code> 存在。</li>
-<li><code>read_file</code> 读取内容。</li>
-<li>返回一张 Markdown 表格加一行总评。</li>
-</ol>
-<p>不应出现 <code>edit_file</code> / <code>write_file</code> /
-<code>bash</code>。若模型尝试写入，<code>ReadOnly</code>
-权限会拒绝。</p>
-<h2 id="验收">验收</h2>
-<ul>
-<li><code>git diff</code> 为空。</li>
-<li>表格覆盖两处预埋问题：<code>first_word</code>
-的越界切片、<code>read_port</code> 里的 <code>.unwrap()</code>。</li>
-<li>每行都有严重度标签。</li>
-</ul>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../../en/">home</a> · <a href="../../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

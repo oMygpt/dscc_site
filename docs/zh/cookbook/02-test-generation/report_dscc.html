@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test Generation — run artifact · DSCC 文档</title>
+<link rel="stylesheet" href="../../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../../docs/zh/">文档</a>
+      <a href="../../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../../docs/cookbook/02-test-generation/report_dscc.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/02-test-generation/">02-test-generation</a> / <span>report_dscc</span></div>
+<h1 id="test-generation--run-artifact">Test Generation — run
+artifact</h1>
+<p>2026-04-16 真机捕获。完整日志见 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>，生成的测试文件原样镜像在
+<a
+href="generated_utils_test.rs"><code>generated_utils_test.rs</code></a>。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型</td>
+<td><code>doubao-seed-2.0-code</code>（Volces ARK）</td>
+</tr>
+<tr>
+<td>权限模式</td>
+<td><code>danger-full-access</code> —— 比 README 推荐的
+<code>workspace-write</code> 放宽，因为模型要跑
+<code>cargo test</code>，而 <code>workspace-write</code> 会对
+<code>bash</code> 请求弹审批。生产 CI 里应保留
+<code>workspace-write</code>，并用 <code>PreToolUse</code> 钩子自动放行
+<code>cargo *</code>。</td>
+</tr>
+<tr>
+<td>实际调用的工具</td>
+<td><code>read_file</code>（src/lib.rs、src/utils.rs）、<code>glob_search</code>（<code>tests/**/*.rs</code>）、<code>write_file</code>（<code>tests/utils_test.rs</code>）、<code>bash</code>（<code>cargo test</code>）</td>
+</tr>
+<tr>
+<td><code>src/utils.rs</code> sha256</td>
+<td><code>7e9e2f8bc83b60e916383f485fd369c86f12c1c3</code> ——
+前后一致</td>
+</tr>
+<tr>
+<td>新增文件</td>
+<td><code>tests/utils_test.rs</code>（2627 B，19 条用例，1 个
+<code>#[test]</code>，共享表格）</td>
+</tr>
+</tbody>
+</table>
+<h1 id="验证">验证</h1>
+<pre class="text"><code>$ cargo test
+... Running tests/utils_test.rs ... ok (1 passed)</code></pre>
+<h1 id="三段覆盖">三段覆盖</h1>
+<table>
+<thead>
+<tr>
+<th>分段</th>
+<th>生成表格中的 case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正常</td>
+<td><code>"10s"</code>、<code>"2m"</code>、<code>"1h"</code></td>
+</tr>
+<tr>
+<td>边界—零</td>
+<td><code>"0s"</code>、<code>"0m"</code>、<code>"0h"</code></td>
+</tr>
+<tr>
+<td>边界—空白</td>
+<td><code>"  5s  "</code>、<code>"\t3m\n"</code></td>
+</tr>
+<tr>
+<td>边界—极大</td>
+<td><code>"18446744073709551615s"</code>（<code>u64::MAX</code>）</td>
+</tr>
+<tr>
+<td>错误—空串</td>
+<td><code>""</code>、<code>"   "</code></td>
+</tr>
+<tr>
+<td>错误—未知单位</td>
+<td><code>"5d"</code>、<code>"10ms"</code></td>
+</tr>
+<tr>
+<td>错误—负数</td>
+<td><code>"-5s"</code>、<code>"-10m"</code></td>
+</tr>
+<tr>
+<td>错误—非数字前缀</td>
+<td><code>"abc123s"</code></td>
+</tr>
+<tr>
+<td>错误—仅单位</td>
+<td><code>"s"</code>、<code>"m"</code>、<code>"h"</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="对照验收标准">对照验收标准</h1>
+<ul>
+<li><code>cargo test</code> 通过。</li>
+<li><code>tests/utils_test.rs</code> 存在，表驱动 19 行（要求 ≥
+5）。</li>
+<li><code>git diff src/utils.rs</code> 为空（sha 一致）。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../../">home</a> · <a href="../../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

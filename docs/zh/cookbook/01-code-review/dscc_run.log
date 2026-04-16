@@ -1,0 +1,64 @@
+=== cookbook-01 code-review run ===
+2026-04-16T11:56:23+0800
+model=doubao-seed-2.0-code permission=read-only
+---
+7⠋ 🦀 Thinking...8Let’s start by exploring the current directory structure and then read the `src/foo.rs` file.
+╭─ bash ─╮
+│  $ ls -la 
+╰────────────╯
+
+╭─ read_file ─╮
+│ 📄 Reading src/foo.rs…
+╰─────────────────╯
+✓ 📄 Read /private/tmp/dscc-cookbook-01/src/foo.rs (lines 1-14 of 14)
+pub fn first_word(s: &str) -> &str {
+let bytes = s.as_bytes();
+for i in 0..bytes.len() {
+if bytes[i] == b’ ’ {
+return &s[0..i + 1];
+}
+}
+&s[..]
+}
+
+pub fn read_port() -> u16 {
+let raw = std::env::var(“PORT”).unwrap();
+raw.parse().unwrap()
+}
+Let me analyze the code and prepare the review report.
+╭─ StructuredOutput ─╮
+│ {"findings":[{"line":5,"problem":"Incorrect slice range returns space character","severity":"hig…
+╰────────────────────────╯
+✓ StructuredOutput
+{
+“data”: “Structured output provided successfully”,
+“structured_output”: {
+“findings”: [
+{
+“line”: 5,
+“problem”: “Incorrect slice range returns space character”,
+“severity”: “high”,
+“why_it_matters”: “Function named `first_word` returns the first word including the trailing space character instead of just the word. The range `0..i + 1` includes the space at index `i`.”
+},
+{
+“line”: 10,
+“problem”: “Uses `unwrap()` on `std::env::var()`”,
+“severity”: “medium”,
+“why_it_matters”: “Will panic if the `PORT` environment variable is not set, making the program fragile and unconfigurable.”
+},
+{
+“line”: 11,
+“problem”: “Uses `unwrap()` on `parse()` result”,
+“severity”: “medium”,
+“why_it_matters”: “Will panic if the `PORT` environment variable value cannot be parsed as a `u16`, providing no graceful error handling.”
+}
+],
+“overall_verdict”: “Critical logic bug in `first_word` and excessive `unwrap()` usage make this code unsuitable for production.”
+}
+}
+│ Severity │ Line │ Problem                                       │ Why It Matters                                                                                                                                                            │
+│──────────┼──────┼───────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────│
+│ high     │ 5    │ Incorrect slice range returns space character │ Function named `first_word` returns the first word including the trailing space character instead of just the word. The range `0..i + 1` includes the space at index `i`. │
+│ medium   │ 10   │ Uses `unwrap()` on `std::env::var()`          │ Will panic if the `PORT` environment variable is not set, making the program fragile and unconfigurable.                                                                  │
+│ medium   │ 11   │ Uses `unwrap()` on `parse()` result           │ Will panic if the `PORT` environment variable value cannot be parsed as a `u16`, providing no graceful error handling.                                                    │Overall verdict: Critical logic bug in `first_word` and excessive `unwrap()` usage make this code unsuitable for production.✔ ✨ Done
+

@@ -1,0 +1,22 @@
+# docs/reference/cli.md — dscc init
+$ dscc init (in empty dir /tmp/dscc-init-test)
+Init
+  Project          /private/tmp/dscc-init-test
+  .dscc/           created
+  .dscc.json       created
+  .gitignore       created
+  DSCC.md          created
+  Next step        Review and tailor the generated guidance
+---
+exit: 0
+files created:
+total 24
+drwxr-xr-x@  6 alone  wheel   192 Apr 16 11:32 .
+drwxrwxrwt  32 root   wheel  1024 Apr 16 11:32 ..
+drwxr-xr-x@  2 alone  wheel    64 Apr 16 11:32 .dscc
+-rw-r--r--@  1 alone  wheel    56 Apr 16 11:32 .dscc.json
+-rw-r--r--@  1 alone  wheel    65 Apr 16 11:32 .gitignore
+-rw-r--r--@  1 alone  wheel   686 Apr 16 11:32 DSCC.md
+
+verdict: PASS
+notes: scaffolded .dscc/, .dscc.json, DSCC.md, .gitignore in empty dir

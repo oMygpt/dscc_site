@@ -4,41 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>guides · DSCC Docs</title>
-<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="stylesheet" href="../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../">DSCC</a>
+    <a class="brand" href="../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../docs/">Docs</a>
       <a href="../../docs/cookbook/">Cookbook</a>
       <a href="../../docs/reference/cli.html">CLI</a>
       <a href="../../docs/verification/registry.html">Verification</a>
-      <a href="../../" class="back-home">← Home</a>
+      <a href="../../docs/zh/guides/" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body doc-index">
-<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <span>guides</span></div>
+<div class="doc-crumb"><a href="../../en/">home</a> / <span>guides</span></div>
 <h1>guides/</h1>
 <ul class="doc-index-list">
-<li><span class="kind">doc</span><a href="config-files.html">Config Files · 配置文件</a><span class="desc">DSCC reads JSON settings and Markdown instruction files from multiple locations and merges them.</span></li>
-<li><span class="kind">doc</span><a href="hooks.html">Hooks · 钩子</a><span class="desc">Hooks are shell commands DSCC runs around tool calls. Declare them in settings.hooks.PreToolUse[] and settings.hooks.PostToolUse[] (arrays of shell commands, config.rs:568–572).</span></li>
-<li><span class="kind">doc</span><a href="interactive-mode.html">Interactive Mode · 交互模式</a><span class="desc">The interactive REPL is the default DSCC experience. Start it with dscc (no subcommand) on any TTY. The input editor lives at crates/dscc-cli/src/input.rs (1193 lines).</span></li>
-<li><span class="kind">doc</span><a href="mcp-servers.html">MCP Servers · MCP 服务器</a><span class="desc">DSCC talks to MCP (Model Context Protocol) servers to expand its tool surface. Configure servers under settings.mcpServers.&lt;name&gt; (crates/runtime/src/config.rs:531–550).</span></li>
-<li><span class="kind">doc</span><a href="one-shot-mode.html">One-Shot Mode · 单次执行</a><span class="desc">One-shot mode runs a single prompt and exits. Use it for scripting, CI, and piping DSCC into other tools. Entry point: dscc prompt &lt;text&gt; (main.rs:318).</span></li>
-<li><span class="kind">doc</span><a href="permissions.html">Permissions · 权限体系</a><span class="desc">DSCC gates every tool call through a permission mode. Modes are defined at crates/runtime/src/permissions.rs:4–23.</span></li>
-<li><span class="kind">doc</span><a href="sessions.html">Sessions · 会话管理</a><span class="desc">DSCC persists every interactive run to disk so you can inspect, resume, or compact it later.</span></li>
-<li><span class="kind">doc</span><a href="slash-commands.html">Slash Commands · 斜杠命令</a><span class="desc">Slash commands are typed into the REPL starting with /. The full registry is a compile-time static array SLASH_COMMAND_SPECS at crates/commands/src/lib.rs:73–300, parsed by SlashCo…</span></li>
+<li><span class="kind">doc</span><a href="config-files.html">Config Files</a><span class="desc">DSCC reads JSON settings and Markdown instruction files from multiple locations and merges them.</span></li>
+<li><span class="kind">doc</span><a href="hooks.html">Hooks</a><span class="desc">Hooks are shell commands DSCC runs around tool calls. Declare them in settings.hooks.PreToolUse[] and settings.hooks.PostToolUse[] (arrays of shell commands, config.rs:568–572).</span></li>
+<li><span class="kind">doc</span><a href="interactive-mode.html">Interactive Mode</a><span class="desc">The interactive REPL is the default DSCC experience. Start it with dscc (no subcommand) on any TTY. The input editor lives at crates/dscc-cli/src/input.rs (1193 lines).</span></li>
+<li><span class="kind">doc</span><a href="mcp-servers.html">MCP Servers</a><span class="desc">DSCC talks to MCP (Model Context Protocol) servers to expand its tool surface. Configure servers under settings.mcpServers.&lt;name&gt; (crates/runtime/src/config.rs:531–550).</span></li>
+<li><span class="kind">doc</span><a href="one-shot-mode.html">One-Shot Mode</a><span class="desc">One-shot mode runs a single prompt and exits. Use it for scripting, CI, and piping DSCC into other tools. Entry point: dscc prompt &lt;text&gt; (main.rs:318).</span></li>
+<li><span class="kind">doc</span><a href="permissions.html">Permissions</a><span class="desc">DSCC gates every tool call through a permission mode. Modes are defined at crates/runtime/src/permissions.rs:4–23.</span></li>
+<li><span class="kind">doc</span><a href="sessions.html">Sessions</a><span class="desc">DSCC persists every interactive run to disk so you can inspect, resume, or compact it later.</span></li>
+<li><span class="kind">doc</span><a href="slash-commands.html">Slash Commands</a><span class="desc">Slash commands are typed into the REPL starting with /. The full registry is a compile-time static array SLASH_COMMAND_SPECS at crates/commands/src/lib.rs:73–300, parsed by SlashCo…</span></li>
 </ul>
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../en/">home</a> · <a href="../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>

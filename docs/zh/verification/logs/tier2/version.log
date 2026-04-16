@@ -1,0 +1,15 @@
+# docs/getting-started/installation.md — dscc --version
+$ dscc --version
+DSCC
+  Version          0.1.0
+  Git SHA          unknown
+  Target           unknown
+  Build date       2026-03-31
+
+Support
+  Help             dscc --help
+  REPL             /help
+---
+exit: 0
+verdict: PASS
+notes: upstream clap version block

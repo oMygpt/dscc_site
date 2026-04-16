@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web Research — run artifact · DSCC 文档</title>
+<link rel="stylesheet" href="../../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../../docs/zh/">文档</a>
+      <a href="../../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../../docs/cookbook/04-web-research/report_dscc.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/04-web-research/">04-web-research</a> / <span>report_dscc</span></div>
+<h1 id="web-research--run-artifact">Web Research — run artifact</h1>
+<p>2026-04-16 真机捕获。原始日志见 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型</td>
+<td><code>doubao-seed-2.0-code</code>（Volces ARK）</td>
+</tr>
+<tr>
+<td>权限模式</td>
+<td><code>read-only</code></td>
+</tr>
+<tr>
+<td>实际调用的工具</td>
+<td><code>WebSearch</code>、<code>WebFetch</code>（5
+次），无磁盘写入</td>
+</tr>
+<tr>
+<td>引用源</td>
+<td><code>https://docs.anthropic.com/en/api/messages</code></td>
+</tr>
+</tbody>
+</table>
+<p>模型按 prompt 要求返回三张表（Request Body / Streaming Event /
+Rate-Limit Headers），次序与要求一致；<code>model</code> /
+<code>messages</code> / <code>max_tokens</code> 均在；流式事件包含
+<code>message_start</code> / <code>content_block_delta</code> /
+<code>message_stop</code> 全套；一行 source URL
+置顶；未触发任何写操作，<code>read-only</code> 生效。</p>
+<p>运行过程中模型多次 <code>WebFetch</code>
+不同路径（<code>.../streaming</code>、<code>.../api-reference/messages</code>、OpenAPI
+路径、<code>api.anthropic.com/</code>），部分 404 或返回 JS 外壳，但
+streaming 页加模型自身知识已足以凑齐三张表。总用时约 30
+秒，工具轨迹见原始日志。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../../">home</a> · <a href="../../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/getting-started/installation.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/getting-started/">getting-started</a> / <span>installation</span></div>
+<h1 id="installation">Installation</h1>
+<p>DSCC 以 Rust workspace 形式发布。<code>dscc</code>
+可执行文件需从源码构建或安装；<code>0.1.x</code>
+版本不提供预编译二进制。</p>
+<h2 id="前置条件">前置条件</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rust stable toolchain</td>
+<td>通过 <a href="https://rustup.rs">rustup</a> 安装</td>
+</tr>
+<tr>
+<td>Cargo</td>
+<td>随 Rust 一起安装</td>
+</tr>
+<tr>
+<td>Provider 凭据</td>
+<td>运行时需要对应模型的密钥，详见 <a
+href="authentication.html">authentication.md</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="安装方式">安装方式</h2>
+<p>三种方式产出同一个 <code>dscc</code> 可执行文件，任选其一即可。</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>命令</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本地安装（推荐）</td>
+<td><code>cargo install --path crates/dscc-cli --locked</code></td>
+<td><code>~/.cargo/bin/dscc</code>，自动进 <code>$PATH</code></td>
+</tr>
+<tr>
+<td>发布构建</td>
+<td><code>cargo build --release -p dscc-cli</code></td>
+<td><code>./target/release/dscc</code></td>
+</tr>
+<tr>
+<td>开发运行</td>
+<td><code>cargo run --bin dscc -- &lt;args&gt;</code></td>
+<td>直接在源码树中运行</td>
+</tr>
+</tbody>
+</table>
+<p>以上命令都在仓库根目录执行。来源：<code>README.md:65-90</code>。</p>
+<pre class="bash"><code># 安装到 PATH
+cargo install --path crates/dscc-cli --locked
+
+# 或构建优化版二进制
+cargo build --release -p dscc-cli
+./target/release/dscc --help
+
+# 或直接在源码中迭代
+cargo run --bin dscc -- --help</code></pre>
+<h2 id="验证">验证</h2>
+<pre class="bash"><code>dscc --version
+dscc --help</code></pre>
+<p><code>--help</code> 会列出所有顶层参数和子命令。若
+<code>cargo install</code> 后找不到 <code>dscc</code>，请确认
+<code>~/.cargo/bin</code> 已在 <code>$PATH</code> 中。</p>
+<h2 id="平台说明">平台说明</h2>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td>支持，发布 CI 覆盖</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>支持，发布 CI 覆盖</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>支持，发布 CI 覆盖（<code>README.md:12</code>）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="下一步">下一步</h2>
+<ul>
+<li><a href="authentication.html">authentication.md</a> — 配置运行时读取的
+API key。</li>
+<li><a href="model-selection.html">model-selection.md</a> —
+选择一个模型，否则启动会报错。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

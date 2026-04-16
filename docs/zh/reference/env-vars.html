@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Environment Variables · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/reference/env-vars.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/reference/">reference</a> / <span>env-vars</span></div>
+<h1 id="environment-variables">Environment Variables</h1>
+<p>DSCC 读取的所有环境变量。Cite 列指向实际消费这个变量的代码位置。</p>
+<h1 id="变量列表">变量列表</h1>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用</th>
+<th>File:line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DSCC_MODEL</code></td>
+<td>未指定 <code>--model</code> 时使用的默认模型</td>
+<td>main.rs:391</td>
+</tr>
+<tr>
+<td><code>DSCC_PERMISSION_MODE</code></td>
+<td>默认权限模式</td>
+<td>main.rs:448–452</td>
+</tr>
+<tr>
+<td><code>DSCC_API_KEY</code></td>
+<td>通用 OpenAI 兼容接口的 API Key</td>
+<td>main.rs:195–205</td>
+</tr>
+<tr>
+<td><code>DSCC_BASE_URL</code></td>
+<td>通用 OpenAI 兼容接口的 endpoint</td>
+<td>main.rs:207–216</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_API_KEY</code></td>
+<td>Anthropic 鉴权</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_BASE_URL</code></td>
+<td>Anthropic endpoint 覆盖</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>XAI_API_KEY</code></td>
+<td>xAI / Grok 鉴权</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>XAI_BASE_URL</code></td>
+<td>xAI endpoint（默认 <code>https://api.x.ai/v1</code>）</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>DeepSeek 鉴权</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_BASE_URL</code></td>
+<td>DeepSeek endpoint（默认
+<code>https://api.deepseek.com/v1</code>）</td>
+<td>api providers</td>
+</tr>
+<tr>
+<td><code>DSCC_WEB_SEARCH_BASE_URL</code></td>
+<td>覆盖 web-search 端点</td>
+<td>tools.rs <code>WebSearch</code></td>
+</tr>
+<tr>
+<td><code>DSCC_TODO_STORE</code></td>
+<td><code>TodoWrite</code> 存储路径覆盖</td>
+<td>tools.rs <code>TodoWrite</code></td>
+</tr>
+<tr>
+<td><code>DSCC_AGENT_STORE</code></td>
+<td>Agent 产物路径覆盖</td>
+<td>tools.rs <code>Agent</code></td>
+</tr>
+<tr>
+<td><code>DSCC_BUNDLED_SKILLS</code></td>
+<td>打包 skill 所在目录</td>
+<td>commands/lib.rs skill discovery</td>
+</tr>
+<tr>
+<td><code>DSCC_CONFIG_HOME</code></td>
+<td>用户配置根目录覆盖（默认 <code>~/.dscc/</code>）</td>
+<td>runtime config</td>
+</tr>
+<tr>
+<td><code>CODEX_HOME</code></td>
+<td>兼容旧字段：用户指令 / skill 目录</td>
+<td>tools.rs:1473；commands/lib.rs:642</td>
+</tr>
+</tbody>
+</table>
+<h1 id="优先级说明">优先级说明</h1>
+<ul>
+<li><code>--api-key</code> 与 <code>--base-url</code>
+会在其他读取方看到之前，分别写入 <code>DSCC_API_KEY</code> 与
+<code>DSCC_BASE_URL</code>（main.rs:195–216）。</li>
+<li><code>--permission-mode</code> 优先级高于
+<code>DSCC_PERMISSION_MODE</code>；两者都未设置时，默认
+<code>danger-full-access</code>（main.rs:428–452）。</li>
+<li>带 provider 前缀的
+Key（<code>ANTHROPIC_API_KEY</code>、<code>XAI_API_KEY</code>、<code>DEEPSEEK_API_KEY</code>）只被对应
+provider 适配器读取；DSCC 不会在 provider 之间回退。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

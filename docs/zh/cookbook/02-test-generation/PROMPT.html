@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMPT · DSCC 文档</title>
+<link rel="stylesheet" href="../../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../../docs/zh/">文档</a>
+      <a href="../../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../../docs/cookbook/02-test-generation/PROMPT.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/02-test-generation/">02-test-generation</a> / <span>PROMPT</span></div>
+<!-- cookbook case: 02-test-generation -->
+
+<p>Read <code>src/utils.rs</code>. Generate table-driven unit tests for
+<code>parse_duration</code> covering:</p>
+<ul>
+<li>happy path (<code>"10s"</code>, <code>"2m"</code>,
+<code>"1h"</code>)</li>
+<li>edge cases (zero, whitespace, unit-only, very large numbers)</li>
+<li>error cases (empty string, unknown unit, negative values,
+non-numeric prefix)</li>
+</ul>
+<p>Write the tests to <code>tests/utils_test.rs</code>. Use
+<code>#[test]</code> functions and a single shared test table. Do not
+modify <code>src/utils.rs</code>.</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../../">home</a> · <a href="../../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

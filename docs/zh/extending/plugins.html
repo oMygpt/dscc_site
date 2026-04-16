@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>编写插件 · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/extending/plugins.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/extending/">extending</a> / <span>plugins</span></div>
+<h1 id="编写插件">编写插件</h1>
+<p>插件把工具、钩子、生命周期脚本打包在一个 <code>plugin.json</code>
+背后。DSCC 启动时发现插件，把它们的工具并入 agent
+工具面，并把钩子与用户钩子一起执行。</p>
+<h1 id="清单位置">清单位置</h1>
+<table>
+<thead>
+<tr>
+<th>布局</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平铺</td>
+<td>插件根目录的 <code>plugin.json</code></td>
+</tr>
+<tr>
+<td>打包</td>
+<td><code>./.dscc-plugin/plugin.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>解析位置：<code>crates/plugins/src/lib.rs:107–122</code>。</p>
+<h1 id="清单-schema">清单 schema</h1>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string（必填）</td>
+<td>插件 id</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string（必填）</td>
+<td>Semver</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>一行描述</td>
+</tr>
+<tr>
+<td><code>permissions</code></td>
+<td>string[]</td>
+<td>声明 <code>read</code>/<code>write</code>/<code>execute</code></td>
+</tr>
+<tr>
+<td><code>defaultEnabled</code></td>
+<td>bool</td>
+<td>安装后是否默认启用（默认 <code>false</code>）</td>
+</tr>
+<tr>
+<td><code>hooks.PreToolUse</code></td>
+<td>string[]</td>
+<td>钩子脚本路径</td>
+</tr>
+<tr>
+<td><code>hooks.PostToolUse</code></td>
+<td>string[]</td>
+<td>钩子脚本路径</td>
+</tr>
+<tr>
+<td><code>lifecycle.Init</code></td>
+<td>string[]</td>
+<td>启用时运行</td>
+</tr>
+<tr>
+<td><code>lifecycle.Shutdown</code></td>
+<td>string[]</td>
+<td>停用时运行</td>
+</tr>
+<tr>
+<td><code>tools[]</code></td>
+<td>object[]</td>
+<td>贡献给 agent 的工具</td>
+</tr>
+<tr>
+<td><code>commands[]</code></td>
+<td>object[]</td>
+<td>具名 shell 命令</td>
+</tr>
+</tbody>
+</table>
+<h1 id="工具条目">工具条目</h1>
+<pre class="json"><code>{
+  &quot;name&quot;: &quot;my-tool&quot;,
+  &quot;description&quot;: &quot;...&quot;,
+  &quot;inputSchema&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {}},
+  &quot;command&quot;: &quot;/absolute/path/to/executable&quot;,
+  &quot;args&quot;: [&quot;--flag&quot;],
+  &quot;requiredPermission&quot;: &quot;read-only&quot;
+}</code></pre>
+<p>合法
+<code>requiredPermission</code>：<code>read-only</code>、<code>workspace-write</code>、<code>danger-full-access</code>。</p>
+<h1 id="插件种类">插件种类</h1>
+<p>来自 <code>plugins/lib.rs:25–50</code>。</p>
+<table>
+<thead>
+<tr>
+<th>种类</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>builtin</code></td>
+<td>随 DSCC 一起编译</td>
+</tr>
+<tr>
+<td><code>bundled</code></td>
+<td>随发行包分发，同步到 install root</td>
+</tr>
+<tr>
+<td><code>external</code></td>
+<td>用户通过 <code>/plugin install</code> 安装</td>
+</tr>
+</tbody>
+</table>
+<h1 id="发现">发现</h1>
+<p>由 <code>plugins/lib.rs:1097–1150</code> 解析：</p>
+<ol type="1">
+<li>扫描 <code>install_root</code>（默认
+<code>~/.dscc/plugins/</code>）找合法清单。</li>
+<li>从 <code>installed.json</code> 注册表加载；失效条目标记为
+stale。</li>
+<li>从配置中的 <code>plugins.externalDirectories</code> 加载。</li>
+<li>按插件 id 去重。</li>
+</ol>
+<h1 id="生命周期-cli">生命周期 CLI</h1>
+<p>来自 <code>commands/lib.rs:692–801</code>。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/plugin list</code>（别名
+<code>/plugins</code>、<code>/marketplace</code>）</td>
+<td>列出已安装插件</td>
+</tr>
+<tr>
+<td><code>/plugin install &lt;path&gt;</code></td>
+<td>从本地路径安装</td>
+</tr>
+<tr>
+<td><code>/plugin enable &lt;name&gt;</code></td>
+<td>启用</td>
+</tr>
+<tr>
+<td><code>/plugin disable &lt;name&gt;</code></td>
+<td>停用</td>
+</tr>
+<tr>
+<td><code>/plugin uninstall &lt;id&gt;</code></td>
+<td>卸载</td>
+</tr>
+<tr>
+<td><code>/plugin update &lt;id&gt;</code></td>
+<td>从源更新</td>
+</tr>
+</tbody>
+</table>
+<h1 id="钩子">钩子</h1>
+<p>定义于 <code>plugins/hooks.rs:11–22</code>。事件、stdin
+负载、环境变量与运行时钩子一致（见 <a
+href="../guides/hooks.html">guides/hooks.md</a>）。</p>
+<table>
+<thead>
+<tr>
+<th>行为</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>顺序</td>
+<td>多个插件的钩子按顺序合并</td>
+</tr>
+<tr>
+<td>Deny</td>
+<td>第一个 <code>exit 2</code> 拒绝这次工具调用</td>
+</tr>
+<tr>
+<td>其它非零</td>
+<td>告警，但允许通过</td>
+</tr>
+</tbody>
+</table>
+<h1 id="最小可用示例">最小可用示例</h1>
+<p><code>./my-plugin/plugin.json</code>：</p>
+<pre class="json"><code>{
+  &quot;name&quot;: &quot;hello-plugin&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;description&quot;: &quot;Adds a greet tool and a PreToolUse audit hook&quot;,
+  &quot;defaultEnabled&quot;: true,
+  &quot;tools&quot;: [
+    {&quot;name&quot;: &quot;greet&quot;, &quot;description&quot;: &quot;Print hello&quot;, &quot;command&quot;: &quot;./bin/greet.sh&quot;, &quot;requiredPermission&quot;: &quot;read-only&quot;}
+  ],
+  &quot;hooks&quot;: {&quot;PreToolUse&quot;: [&quot;./hooks/audit.sh&quot;]}
+}</code></pre>
+<p>脚本用相对路径时，以插件根目录为基准解析。</p>
+<h1 id="测试你的插件">测试你的插件</h1>
+<p>插件安装走 REPL 斜杠命令，<strong>没有</strong>
+<code>dscc plugin …</code> CLI 子命令（见
+<code>crates/commands/src/lib.rs:692-801</code>）。</p>
+<pre class="text"><code>/plugin install ./my-plugin/   # [交互] 在 REPL 内执行</code></pre>
+<p>在 DSCC 中：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>检查点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/plugin list</code></td>
+<td><code>hello-plugin</code> 出现并已启用</td>
+</tr>
+<tr>
+<td>让模型调用 <code>greet</code></td>
+<td>工具运行，<code>audit.sh</code> 在 <code>PreToolUse</code> 触发</td>
+</tr>
+<tr>
+<td><code>/plugin disable hello-plugin</code></td>
+<td>工具从工具面消失</td>
+</tr>
+</tbody>
+</table>
+<h1 id="另见">另见</h1>
+<ul>
+<li><a href="../guides/hooks.html">guides/hooks.md</a> ——
+钩子完整契约（stdin、env、exit）。</li>
+<li><a href="../guides/slash-commands.html">guides/slash-commands.md</a>
+—— <code>/plugin</code> 等命令。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Config Schema · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/reference/config-schema.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/reference/">reference</a> / <span>config-schema</span></div>
+<h1 id="config-schema">Config Schema</h1>
+<p><code>.dscc.json</code> / <code>.dscc/settings.json</code> /
+<code>.dscc/settings.local.json</code> 的完整
+schema。源头：<code>crates/runtime/src/config.rs</code>（1294 行）。</p>
+<h1 id="顶层字段">顶层字段</h1>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>类型</th>
+<th>默认</th>
+<th>作用</th>
+<th>Cite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>string</td>
+<td>—</td>
+<td>覆盖默认模型</td>
+<td>config.rs:552–557</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>注入的环境变量</td>
+<td>config.rs</td>
+</tr>
+<tr>
+<td><code>hooks.PreToolUse</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>每次工具调用前执行的 shell 命令</td>
+<td>config.rs:568</td>
+</tr>
+<tr>
+<td><code>hooks.PostToolUse</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>每次工具调用后执行的 shell 命令</td>
+<td>config.rs:570</td>
+</tr>
+<tr>
+<td><code>permissions.defaultMode</code></td>
+<td>string</td>
+<td><code>"default"</code></td>
+<td>取值：<code>default</code> / <code>plan</code> /
+<code>read-only</code>、<code>acceptEdits</code> / <code>auto</code> /
+<code>workspace-write</code>、<code>dontAsk</code> /
+<code>danger-full-access</code></td>
+<td>config.rs:618</td>
+</tr>
+<tr>
+<td><code>permissionMode</code></td>
+<td>string</td>
+<td>—</td>
+<td>扁平写法，等同于 <code>permissions.defaultMode</code></td>
+<td>config.rs:611</td>
+</tr>
+<tr>
+<td><code>mcpServers.&lt;name&gt;</code></td>
+<td>object</td>
+<td>—</td>
+<td>每个 MCP server 的配置（见下）</td>
+<td>config.rs:531–550</td>
+</tr>
+<tr>
+<td><code>plugins.enabled</code></td>
+<td><code>{[id]: bool}</code></td>
+<td><code>{}</code></td>
+<td>每个插件启用状态</td>
+<td>config.rs:590–591</td>
+</tr>
+<tr>
+<td><code>plugins.externalDirectories</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>额外插件搜索目录</td>
+<td>config.rs:593–595</td>
+</tr>
+<tr>
+<td><code>plugins.installRoot</code></td>
+<td>string</td>
+<td>—</td>
+<td>插件安装目录覆盖</td>
+<td>config.rs:596–597</td>
+</tr>
+<tr>
+<td><code>plugins.registryPath</code></td>
+<td>string</td>
+<td>—</td>
+<td>插件注册表文件覆盖</td>
+<td>config.rs:598–599</td>
+</tr>
+<tr>
+<td><code>plugins.bundledRoot</code></td>
+<td>string</td>
+<td>—</td>
+<td>打包插件目录</td>
+<td>config.rs:600–601</td>
+</tr>
+<tr>
+<td><code>enabledPlugins</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>扁平写法的启用表</td>
+<td>config.rs:581–582</td>
+</tr>
+<tr>
+<td><code>sandbox.enabled</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>开启沙箱</td>
+<td>config.rs:651</td>
+</tr>
+<tr>
+<td><code>sandbox.namespaceRestrictions</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>命名空间隔离</td>
+<td>config.rs:652–655</td>
+</tr>
+<tr>
+<td><code>sandbox.networkIsolation</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>屏蔽网络</td>
+<td>config.rs:657</td>
+</tr>
+<tr>
+<td><code>sandbox.filesystemMode</code></td>
+<td><code>"off"|"workspace-only"|"allow-list"</code></td>
+<td><code>"workspace-only"</code></td>
+<td>文件系统模式</td>
+<td>config.rs:647–649</td>
+</tr>
+<tr>
+<td><code>sandbox.allowedMounts</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>文件系统挂载白名单</td>
+<td>config.rs:659–660</td>
+</tr>
+<tr>
+<td><code>oauth.clientId</code></td>
+<td>string</td>
+<td>—</td>
+<td>OAuth client id</td>
+<td>config.rs:683</td>
+</tr>
+<tr>
+<td><code>oauth.authorizeUrl</code></td>
+<td>string</td>
+<td>—</td>
+<td>Auth endpoint</td>
+<td>config.rs:684</td>
+</tr>
+<tr>
+<td><code>oauth.tokenUrl</code></td>
+<td>string</td>
+<td>—</td>
+<td>Token endpoint</td>
+<td>config.rs:685</td>
+</tr>
+<tr>
+<td><code>oauth.callbackPort</code></td>
+<td>number</td>
+<td>—</td>
+<td>回调端口</td>
+<td>config.rs:686</td>
+</tr>
+<tr>
+<td><code>oauth.manualRedirectUrl</code></td>
+<td>string</td>
+<td>—</td>
+<td>手动跳转备用地址</td>
+<td>config.rs:687–688</td>
+</tr>
+<tr>
+<td><code>oauth.scopes</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>OAuth scopes</td>
+<td>config.rs:689</td>
+</tr>
+</tbody>
+</table>
+<h1 id="mcpserversname-字段"><code>mcpServers.&lt;name&gt;</code>
+字段</h1>
+<p>结构体定义在 <code>config.rs:75–127</code>，加载器
+<code>config.rs:700–735</code>。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>适用类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>全部</td>
+<td><code>stdio</code> | <code>sse</code> | <code>http</code> |
+<code>ws</code> | <code>sdk</code> | <code>managed-proxy</code></td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>stdio</td>
+<td>可执行文件</td>
+</tr>
+<tr>
+<td><code>args</code></td>
+<td>stdio</td>
+<td>命令行参数</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>stdio</td>
+<td>环境变量</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>sse / http / ws / managed-proxy</td>
+<td>endpoint</td>
+</tr>
+<tr>
+<td><code>headers</code></td>
+<td>远程</td>
+<td>HTTP headers</td>
+</tr>
+<tr>
+<td><code>headersHelper</code></td>
+<td>远程</td>
+<td>动态 headers 脚本路径</td>
+</tr>
+<tr>
+<td><code>oauth.clientId</code></td>
+<td>远程</td>
+<td>该 server 专用 OAuth client id</td>
+</tr>
+<tr>
+<td><code>oauth.callbackPort</code></td>
+<td>远程</td>
+<td>回调端口</td>
+</tr>
+<tr>
+<td><code>oauth.authServerMetadataUrl</code></td>
+<td>远程</td>
+<td>OIDC metadata URL</td>
+</tr>
+<tr>
+<td><code>oauth.xaa</code></td>
+<td>远程</td>
+<td>扩展属性标志</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>sdk</td>
+<td>SDK server id</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>managed-proxy</td>
+<td>代理 server id</td>
+</tr>
+</tbody>
+</table>
+<h1 id="优先级">优先级</h1>
+<p>由低到高：</p>
+<ol type="1">
+<li><code>~/.dscc.json</code></li>
+<li><code>~/.dscc/settings.json</code></li>
+<li><code>./.dscc.json</code></li>
+<li><code>./.dscc/settings.json</code></li>
+<li><code>./.dscc/settings.local.json</code></li>
+</ol>
+<p>后者按 key 覆盖前者。</p>
+<h1 id="完整示例">完整示例</h1>
+<p>参见上方英文小节的 JSON 示例；所有字段都在此文档表格中列出，示例覆盖
+hooks、permissions、mcpServers、plugins、sandbox、oauth。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

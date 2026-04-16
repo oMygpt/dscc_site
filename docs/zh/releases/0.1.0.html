@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DSCC 0.1.0 版本说明（草稿） · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/releases/0.1.0.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/releases/">releases</a> / <span>0.1.0</span></div>
+<h1 id="dscc-010-版本说明草稿">DSCC 0.1.0 版本说明（草稿）</h1>
+<h1 id="概述">概述</h1>
+<p>DSCC <code>0.1.0</code> 是从 clean-room Claw Code Rust
+实现分叉并重新品牌化后的首个公开发布版本。DSCC 在线协议上与 Anthropic
+Messages API（<code>anthropic-version: 2023-06-01</code>）及 OpenAI 兼容
+provider 保持兼容，但品牌层面——路径、环境变量、配置键、CLI
+二进制、提示词文本——已完整迁移到 <code>dscc</code> /
+<code>DSCC.md</code> / <code>DSCC_*</code>。</p>
+<p>本次发布聚焦可用的本地 CLI 体验：交互式会话、非交互
+prompt、工作区工具、配置加载、会话、插件，以及本地 agent / skill
+发现。</p>
+<h1 id="亮点">亮点</h1>
+<ul>
+<li>DSCC 从 <code>oMygpt/dscc</code> 源码树发出的首个公开
+<code>0.1.0</code> 版本</li>
+<li>以 safe-Rust 实现作为主要产品面</li>
+<li><code>dscc</code> CLI 支持交互式与单次 coding-agent 工作流</li>
+<li><strong>模型由用户指定</strong>：通过 <code>--model</code> 或
+<code>DSCC_MODEL</code>
+传入——没有硬编码默认值，未设置时会返回双语（EN/中文）错误</li>
+<li>内置工作区工具：shell、文件操作、搜索、web fetch / search、todo
+追踪、notebook 更新</li>
+<li>斜杠命令面覆盖状态查看、上下文压缩、配置检查、会话、diff /
+导出、版本信息</li>
+<li>本地 plugin、agent、skill 的发现与管理面</li>
+<li>OAuth 登录 / 登出，以及模型 / provider 选择</li>
+</ul>
+<h1 id="安装与运行">安装与运行</h1>
+<p>源码构建：</p>
+<pre class="bash"><code>cargo install --path crates/dscc-cli --locked
+# or
+cargo build --release -p dscc-cli</code></pre>
+<p>运行：</p>
+<pre class="bash"><code>dscc --model claude-opus-4-6
+dscc --model claude-sonnet-4-6 prompt &quot;summarize this repository&quot;</code></pre>
+<p>OpenAI 兼容 provider（例如 doubao / ARK）：</p>
+<pre class="bash"><code>export DSCC_API_KEY=&quot;...&quot;
+export DSCC_BASE_URL=&quot;https://ark.cn-beijing.volces.com/api/v3&quot;
+dscc --model doubao-seed-1-6-250615 prompt &quot;hi&quot;</code></pre>
+<h1 id="已知限制">已知限制</h1>
+<ul>
+<li>目前分发方式为源码构建加多平台发布归档；尚未配置 crates.io 发布</li>
+<li>部分集成测试为可选项，因为需要真实 provider 凭据与网络访问</li>
+<li><code>0.x</code> 版本线期间，公开接口可能继续演进</li>
+</ul>
+<h1 id="许可">许可</h1>
+<p>DSCC 自 <code>0.1.0</code> 起采用双重许可：</p>
+<ul>
+<li>开源：AGPL-3.0-only（<code>LICENSE</code>）</li>
+<li>商用：通过 <code>oMygpt/dscc</code> 上的 GitHub Issues
+申请（<code>LICENSE-COMMERCIAL.md</code>）</li>
+</ul>
+<h1 id="本草稿使用的核对方式">本草稿使用的核对方式</h1>
+<ul>
+<li>工作区版本号核对自 <code>Cargo.toml</code></li>
+<li><code>dscc</code> 二进制 / 包路径核对自
+<code>cargo metadata</code></li>
+<li>CLI 命令面核对自
+<code>cargo run --quiet --bin dscc -- --help</code></li>
+<li>CI 覆盖核对自 <code>.github/workflows/</code></li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

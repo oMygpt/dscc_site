@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Refactor — Rename Across Files · DSCC 文档</title>
+<link rel="stylesheet" href="../../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../../docs/zh/">文档</a>
+      <a href="../../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../../docs/cookbook/03-refactor-rename/index.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <span>03-refactor-rename</span></div>
+<h1 id="refactor--rename-across-files">Refactor — Rename Across
+Files</h1>
+<p>重命名函数是多文件重构的范式。本案例构造一个小项目：<code>load_config</code>
+出现在 4 个文件里，让 DSCC 全部改成
+<code>load_settings</code>，不碰无关代码。</p>
+<h1 id="演示能力">演示能力</h1>
+<ul>
+<li><code>grep_search</code> 在改之前先枚举调用点。</li>
+<li><code>edit_file</code>（<code>replace_all</code>
+或精确行替换）跨多个文件修改。</li>
+<li><code>WorkspaceWrite</code> 权限模式。</li>
+</ul>
+<h1 id="准备">准备</h1>
+<p>在空目录里：</p>
+<pre class="bash"><code>git init refactor-demo &amp;&amp; cd refactor-demo
+cargo init --lib
+mkdir -p src/bin
+
+cat &gt; src/config.rs &lt;&lt;&#39;RS&#39;
+pub fn load_config() -&gt; String { &quot;default&quot;.into() }
+RS
+
+cat &gt; src/lib.rs &lt;&lt;&#39;RS&#39;
+pub mod config;
+pub use config::load_config;
+
+pub fn describe() -&gt; String {
+    format!(&quot;cfg={}&quot;, load_config())
+}
+RS
+
+cat &gt; src/bin/app.rs &lt;&lt;&#39;RS&#39;
+use refactor_demo::load_config;
+fn main() { println!(&quot;{}&quot;, load_config()); }
+RS
+
+cat &gt; tests/smoke.rs &lt;&lt;&#39;RS&#39;
+use refactor_demo::load_config;
+#[test] fn it_loads() { assert_eq!(load_config(), &quot;default&quot;); }
+RS
+
+git add -A &amp;&amp; git commit -m &quot;initial&quot;</code></pre>
+<h1 id="运行命令">运行命令</h1>
+<pre class="bash"><code>dscc --model claude-sonnet-4-6 \
+  --permission-mode workspace-write \
+  prompt &quot;$(cat ../dscc_cli/docs/cookbook/03-refactor-rename/PROMPT.md)&quot;</code></pre>
+<p>真实运行产物见 <a
+href="report_dscc.html"><code>report_dscc.md</code></a>，最终 diff 见 <a
+href="diff.patch"><code>diff.patch</code></a>。</p>
+<blockquote>
+<p>注：模型会用 <code>git grep</code> 自查，因此无人值守运行请用
+<code>--permission-mode danger-full-access</code> 或用
+<code>PreToolUse</code> 钩子自动放行 <code>git *</code>。</p>
+</blockquote>
+<h1 id="预期行为">预期行为</h1>
+<p>模型通常会：</p>
+<ol type="1">
+<li><code>grep_search</code> 搜 <code>load_config</code>，列出 4
+个文件。</li>
+<li>对每个文件一次 <code>edit_file</code>（或
+<code>replace_all: true</code>）。</li>
+<li>可能再跑一次 <code>bash</code> <code>cargo check</code>
+确认构建。</li>
+</ol>
+<p>不应出现无关改动。</p>
+<h1 id="验收">验收</h1>
+<ul>
+<li><code>git grep load_config</code> 无匹配。</li>
+<li><code>git grep load_settings</code> 出现 4 处（定义 + 3
+个调用）。</li>
+<li><code>cargo build</code> 通过。</li>
+<li><code>git diff --stat</code> 只动了那 4 个文件。</li>
+</ul>
+<p>权限选择依据见 <a
+href="../../guides/permissions.html">guides/permissions.md</a>。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../../">home</a> · <a href="../../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

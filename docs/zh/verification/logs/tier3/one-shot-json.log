@@ -1,0 +1,20 @@
+# one-shot-json — Tier 3 verification of `--output-format json`
+
+$ DSCC_API_KEY=<REDACTED> DSCC_BASE_URL=<REDACTED>
+$ dscc --model doubao-seed-2.0-code --permission-mode read-only \
+    prompt "Reply with exactly: ok" --output-format json
+
+{"iterations":1,"message":"ok","model":"doubao-seed-2.0-code","tool_results":[],"tool_uses":[],"usage":{"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"input_tokens":0,"output_tokens":0}}
+
+---
+exit: 0
+duration: ~3s
+model: doubao-seed-2.0-code
+verdict: PASS
+notes:
+  - `--output-format json` returns a single JSON envelope with `message`, `model`,
+    `iterations`, `tool_uses`, `tool_results`, `usage`.
+  - Proves the command form used in docs/guides/one-shot-mode.md and
+    docs/reference/cli.md — the model swap (claude-sonnet-4-6 → doubao-seed-2.0-code)
+    does not change the wire shape because `--output-format json` is a DSCC-side
+    flag, not provider-specific.

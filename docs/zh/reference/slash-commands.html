@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Slash Commands Reference · DSCC 文档</title>
+<link rel="stylesheet" href="../../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/zh/">文档</a>
+      <a href="../../../docs/zh/cookbook/">案例</a>
+      <a href="../../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../../docs/reference/slash-commands.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">主页</a> / <a href="../../../docs/zh/reference/">reference</a> / <span>slash-commands</span></div>
+<h1 id="slash-commands-reference">Slash Commands Reference</h1>
+<p>全部 31
+个斜杠命令。注册表：<code>crates/commands/src/lib.rs:73–300</code>；解析器
+<code>SlashCommand::parse()</code> 位于
+<code>commands/lib.rs:376–462</code>。“Resume”
+列表示能否在恢复会话后无需模型一轮直接执行。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>别名</th>
+<th>参数</th>
+<th>分类</th>
+<th>Resume</th>
+<th>作用</th>
+<th>Cite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>—</td>
+<td>—</td>
+<td>Core</td>
+<td>✓</td>
+<td>列出所有命令</td>
+<td>commands/lib.rs:75</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>—</td>
+<td>—</td>
+<td>Core</td>
+<td>✓</td>
+<td>会话上下文与成本摘要</td>
+<td>commands/lib.rs:82</td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>—</td>
+<td>—</td>
+<td>Core</td>
+<td>✓</td>
+<td>压缩历史（handler 在 1756）</td>
+<td>commands/lib.rs:91</td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>—</td>
+<td><code>[model]</code></td>
+<td>Core</td>
+<td>✗</td>
+<td>查看或切换模型</td>
+<td>commands/lib.rs:99</td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>—</td>
+<td><code>[mode]</code></td>
+<td>Core</td>
+<td>✗</td>
+<td>查看或切换权限模式</td>
+<td>commands/lib.rs:107</td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>—</td>
+<td><code>[--confirm]</code></td>
+<td>Session</td>
+<td>✓</td>
+<td>清空本地会话</td>
+<td>commands/lib.rs:115</td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>—</td>
+<td>—</td>
+<td>Core</td>
+<td>✓</td>
+<td>Token 用量汇总</td>
+<td>commands/lib.rs:123</td>
+</tr>
+<tr>
+<td><code>/resume</code></td>
+<td>—</td>
+<td><code>&lt;path&gt;</code></td>
+<td>Session</td>
+<td>✗</td>
+<td>加载已保存会话</td>
+<td>commands/lib.rs:131</td>
+</tr>
+<tr>
+<td><code>/config</code></td>
+<td>—</td>
+<td><code>[env|hooks|model|plugins]</code></td>
+<td>Workspace</td>
+<td>✓</td>
+<td>查看已加载配置</td>
+<td>commands/lib.rs:139</td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>—</td>
+<td>—</td>
+<td>Workspace</td>
+<td>✓</td>
+<td>列出指令记忆文件</td>
+<td>commands/lib.rs:147</td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>—</td>
+<td>—</td>
+<td>Workspace</td>
+<td>✓</td>
+<td>生成起始 <code>DSCC.md</code></td>
+<td>commands/lib.rs:155</td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>—</td>
+<td>—</td>
+<td>Workspace</td>
+<td>✓</td>
+<td>Git diff</td>
+<td>commands/lib.rs:163</td>
+</tr>
+<tr>
+<td><code>/version</code></td>
+<td>—</td>
+<td>—</td>
+<td>Workspace</td>
+<td>✓</td>
+<td>版本信息</td>
+<td>commands/lib.rs:171</td>
+</tr>
+<tr>
+<td><code>/bughunter</code></td>
+<td>—</td>
+<td><code>[scope]</code></td>
+<td>Automation</td>
+<td>✗</td>
+<td>扫描潜在 bug</td>
+<td>commands/lib.rs:179</td>
+</tr>
+<tr>
+<td><code>/branch</code></td>
+<td>—</td>
+<td><code>[list|create NAME|switch NAME]</code></td>
+<td>Git</td>
+<td>✗</td>
+<td>分支管理</td>
+<td>commands/lib.rs:187</td>
+</tr>
+<tr>
+<td><code>/worktree</code></td>
+<td>—</td>
+<td><code>[list|add PATH [BRANCH]|remove PATH|prune]</code></td>
+<td>Git</td>
+<td>✗</td>
+<td>Worktree 管理</td>
+<td>commands/lib.rs:195</td>
+</tr>
+<tr>
+<td><code>/commit</code></td>
+<td>—</td>
+<td>—</td>
+<td>Git</td>
+<td>✗</td>
+<td>生成并创建 commit</td>
+<td>commands/lib.rs:203</td>
+</tr>
+<tr>
+<td><code>/commit-push-pr</code></td>
+<td>—</td>
+<td><code>[context]</code></td>
+<td>Git</td>
+<td>✗</td>
+<td>提交、推送、开 PR</td>
+<td>commands/lib.rs:211</td>
+</tr>
+<tr>
+<td><code>/pr</code></td>
+<td>—</td>
+<td><code>[context]</code></td>
+<td>Git</td>
+<td>✗</td>
+<td>起草 PR</td>
+<td>commands/lib.rs:219</td>
+</tr>
+<tr>
+<td><code>/issue</code></td>
+<td>—</td>
+<td><code>[context]</code></td>
+<td>Git</td>
+<td>✗</td>
+<td>起草 GitHub issue</td>
+<td>commands/lib.rs:227</td>
+</tr>
+<tr>
+<td><code>/ultraplan</code></td>
+<td>—</td>
+<td><code>[task]</code></td>
+<td>Automation</td>
+<td>✗</td>
+<td>深度规划</td>
+<td>commands/lib.rs:235</td>
+</tr>
+<tr>
+<td><code>/teleport</code></td>
+<td>—</td>
+<td><code>&lt;symbol-or-path&gt;</code></td>
+<td>Workspace</td>
+<td>✗</td>
+<td>跳转到符号 / 文件</td>
+<td>commands/lib.rs:243</td>
+</tr>
+<tr>
+<td><code>/debug-tool-call</code></td>
+<td>—</td>
+<td>—</td>
+<td>Automation</td>
+<td>✗</td>
+<td>重放上一次工具调用</td>
+<td>commands/lib.rs:251</td>
+</tr>
+<tr>
+<td><code>/export</code></td>
+<td>—</td>
+<td><code>[file]</code></td>
+<td>Session</td>
+<td>✓</td>
+<td>导出对话</td>
+<td>commands/lib.rs:259</td>
+</tr>
+<tr>
+<td><code>/session</code></td>
+<td>—</td>
+<td><code>[list|switch &lt;id&gt;]</code></td>
+<td>Session</td>
+<td>✗</td>
+<td>会话管理</td>
+<td>commands/lib.rs:267</td>
+</tr>
+<tr>
+<td><code>/plugin</code></td>
+<td><code>/plugins</code>、<code>/marketplace</code></td>
+<td><code>[list|install PATH|enable NAME|disable NAME|uninstall ID|update ID]</code></td>
+<td>Automation</td>
+<td>✗</td>
+<td>插件生命周期</td>
+<td>commands/lib.rs:275</td>
+</tr>
+<tr>
+<td><code>/agents</code></td>
+<td>—</td>
+<td>—</td>
+<td>Automation</td>
+<td>✓</td>
+<td>列出 agent</td>
+<td>commands/lib.rs:285</td>
+</tr>
+<tr>
+<td><code>/skills</code></td>
+<td>—</td>
+<td>—</td>
+<td>Automation</td>
+<td>✓</td>
+<td>列出 skill</td>
+<td>commands/lib.rs:293</td>
+</tr>
+</tbody>
+</table>
+<h1 id="handler-位置">Handler 位置</h1>
+<table>
+<thead>
+<tr>
+<th>归属</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crates/commands/src/lib.rs</code>（在库内实现）</td>
+<td><code>/compact</code>、<code>/help</code>、<code>/plugin</code>（692–801）、<code>/branch</code>（835–872）、<code>/worktree</code>（874–927）、<code>/commit</code>（929–954）、<code>/commit-push-pr</code>（955–1060）、<code>/agents</code>（803–814）、<code>/skills</code>（815–825）</td>
+</tr>
+<tr>
+<td>CLI / 客户端（命令返回 <code>None</code>，分发器处理）</td>
+<td>其他全部</td>
+</tr>
+</tbody>
+</table>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

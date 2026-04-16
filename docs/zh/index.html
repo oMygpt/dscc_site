@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DSCC Documentation · DSCC 文档</title>
+<link rel="stylesheet" href="../../styles.css?v=7">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/zh/">文档</a>
+      <a href="../../docs/zh/cookbook/">案例</a>
+      <a href="../../docs/zh/reference/cli.html">CLI</a>
+      <a href="../../docs/zh/verification/registry.html">验证</a>
+      <a href="../../docs/index.html" class="back-home">EN</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">主页</a></div>
+<h1 id="dscc-documentation">DSCC Documentation</h1>
+<blockquote>
+<p>双语文档：每个英文页面都有结构一致的中文镜像版本，位于
+<code>zh/</code> 目录下。</p>
+</blockquote>
+<p>DSCC 是用安全 Rust 写成的本地 coding-agent
+CLI。本文档覆盖安装、日常使用、完整命令与工具面，以及通过 agents /
+skills / plugins 扩展 DSCC 的方法。</p>
+<hr />
+<h2 id="目录">目录</h2>
+<h3 id="入门">入门</h3>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="getting-started/installation.html">installation.md</a></td>
+<td>依赖与安装、<code>cargo install</code>、预编译二进制</td>
+</tr>
+<tr>
+<td><a
+href="getting-started/authentication.html">authentication.md</a></td>
+<td>API key、OAuth、Provider 路由</td>
+</tr>
+<tr>
+<td><a
+href="getting-started/model-selection.html">model-selection.md</a></td>
+<td><code>--model</code>、<code>DSCC_MODEL</code>、模型注册表</td>
+</tr>
+<tr>
+<td><a href="getting-started/first-session.html">first-session.md</a></td>
+<td>第一个 REPL 会话与一次性 prompt</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用指南">使用指南</h3>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="guides/interactive-mode.html">interactive-mode.md</a></td>
+<td>REPL 键位、vim 模式、历史记录、补全</td>
+</tr>
+<tr>
+<td><a href="guides/one-shot-mode.html">one-shot-mode.md</a></td>
+<td><code>dscc prompt ...</code>、JSON 输出、脚本化</td>
+</tr>
+<tr>
+<td><a href="guides/slash-commands.html">slash-commands.md</a></td>
+<td>如何发现并使用 <code>/</code> 命令</td>
+</tr>
+<tr>
+<td><a href="guides/sessions.html">sessions.md</a></td>
+<td>会话保存、恢复、导出、压缩</td>
+</tr>
+<tr>
+<td><a href="guides/permissions.html">permissions.md</a></td>
+<td>权限模式与工具闸门</td>
+</tr>
+<tr>
+<td><a href="guides/hooks.html">hooks.md</a></td>
+<td>PreToolUse / PostToolUse 钩子</td>
+</tr>
+<tr>
+<td><a href="guides/config-files.html">config-files.md</a></td>
+<td><code>DSCC.md</code>、<code>.dscc.json</code>、<code>settings.json</code>
+优先级</td>
+</tr>
+<tr>
+<td><a href="guides/mcp-servers.html">mcp-servers.md</a></td>
+<td>连接 stdio / sse / http / ws MCP 服务器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="参考手册">参考手册</h3>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="reference/cli.html">cli.md</a></td>
+<td>全部子命令与参数</td>
+</tr>
+<tr>
+<td><a href="reference/slash-commands.html">slash-commands.md</a></td>
+<td>全部 <code>/</code> 命令与参数</td>
+</tr>
+<tr>
+<td><a href="reference/tools.html">tools.md</a></td>
+<td>内置工具、输入 schema、权限</td>
+</tr>
+<tr>
+<td><a href="reference/env-vars.html">env-vars.md</a></td>
+<td>DSCC 读取的所有环境变量</td>
+</tr>
+<tr>
+<td><a href="reference/config-schema.html">config-schema.md</a></td>
+<td><code>.dscc.json</code> / <code>settings.json</code> 完整
+schema</td>
+</tr>
+</tbody>
+</table>
+<h3 id="扩展">扩展</h3>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="extending/agents.html">agents.md</a></td>
+<td>在 <code>.dscc/agents/*.toml</code> 中编写 agent</td>
+</tr>
+<tr>
+<td><a href="extending/skills.html">skills.md</a></td>
+<td>用 <code>SKILL.md</code> 编写 skill</td>
+</tr>
+<tr>
+<td><a href="extending/plugins.html">plugins.md</a></td>
+<td>插件 manifest、工具、钩子、生命周期</td>
+</tr>
+</tbody>
+</table>
+<h3 id="案例库">案例库</h3>
+<p>详见 <a
+href="cookbook/index.html">cookbook/README.md</a>：可复现的端到端场景，附
+prompt、预期输出与点评。</p>
+<hr />
+<h2 id="文档风格">文档风格</h2>
+<ul>
+<li><strong>事实优先</strong>：不显然的结论都要给出文件路径或
+<code>file:line</code> 引用，读者可复核。</li>
+<li><strong>少废话</strong>：能用表格就不用散文，句子用祈使式。</li>
+<li><strong>双语规范</strong>：英文在前，<code>### 中文</code>
+小节跟在后面，结构保持一致。代码块、路径、命令不翻译。</li>
+<li><strong>命令验证</strong>：未在真实设备上验证过的 shell 命令用
+<code># [待验证]</code> 标注；贡献者验证通过后再去掉。</li>
+</ul>
+<hr />
+<h2 id="版本">版本</h2>
+<p>本文档面向 DSCC <code>0.1.x</code>。当前版本说明在 <a
+href="releases/0.1.0.html">releases/0.1.0.md</a>。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/zh/">文档</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

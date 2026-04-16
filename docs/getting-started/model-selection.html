@@ -4,25 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Model selection · DSCC Docs</title>
-<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="stylesheet" href="../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
 </head>
 <body class="doc">
 <header class="doc-nav">
   <div class="doc-nav-inner">
-    <a class="brand" href="../../">DSCC</a>
+    <a class="brand" href="../../en/">DSCC</a>
     <nav class="doc-nav-links">
       <a href="../../docs/">Docs</a>
       <a href="../../docs/cookbook/">Cookbook</a>
       <a href="../../docs/reference/cli.html">CLI</a>
       <a href="../../docs/verification/registry.html">Verification</a>
-      <a href="../../" class="back-home">← Home</a>
+      <a href="../../docs/zh/getting-started/model-selection.html" class="back-home">中文</a>
     </nav>
   </div>
 </header>
 <main class="doc-body">
-<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/getting-started/">getting-started</a> / <span>model-selection</span></div>
+<div class="doc-crumb"><a href="../../en/">home</a> / <a href="../../docs/getting-started/">getting-started</a> / <span>model-selection</span></div>
 <h1 id="model-selection">Model selection</h1>
 <p>DSCC has no hard-coded default model. Every launch must supply a
 model id; otherwise DSCC prints a bilingual error and exits
@@ -140,125 +140,12 @@ dscc --model gpt-4o prompt &quot;hello&quot;</code></pre>
 <li><a href="first-session.html">first-session.md</a> — run your first
 REPL and one-shot against the model you just chose.</li>
 </ul>
-<hr />
-<h3 id="中文">中文</h3>
-<p>DSCC 没有硬编码默认模型。每次启动都必须提供模型 id，否则 DSCC
-输出双语报错并退出（<code>crates/dscc-cli/src/main.rs:384-411</code>）。</p>
-<h4 id="规则">规则</h4>
-<p>下列两种方式必须恰好用一种：</p>
-<table>
-<thead>
-<tr>
-<th>来源</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--model</code> 参数</td>
-<td><code>dscc --model claude-opus-4-6</code></td>
-</tr>
-<tr>
-<td><code>DSCC_MODEL</code> 环境变量</td>
-<td><code>export DSCC_MODEL=claude-sonnet-4-6</code></td>
-</tr>
-</tbody>
-</table>
-<p>同时设置时 <code>--model</code> 优先；两者都缺失则 DSCC
-直接报错退出。</p>
-<h4 id="provider-解析">Provider 解析</h4>
-<p>DSCC 通过静态
-registry（<code>crates/api/src/providers/mod.rs</code>）把模型 id 映射到
-provider，id 前缀决定路由：</p>
-<table>
-<thead>
-<tr>
-<th>id 前缀 / 形态</th>
-<th>Provider</th>
-<th>所需 key</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>claude-*</code>、<code>opus</code>、<code>sonnet</code>、<code>haiku</code></td>
-<td>Anthropic</td>
-<td><code>ANTHROPIC_API_KEY</code>（或 OAuth）</td>
-</tr>
-<tr>
-<td><code>grok-*</code></td>
-<td>xAI</td>
-<td><code>XAI_API_KEY</code></td>
-</tr>
-<tr>
-<td><code>deepseek-*</code></td>
-<td>DeepSeek</td>
-<td><code>DEEPSEEK_API_KEY</code></td>
-</tr>
-<tr>
-<td>其他 id</td>
-<td>通用 OpenAI 兼容</td>
-<td><code>DSCC_API_KEY</code> + <code>DSCC_BASE_URL</code></td>
-</tr>
-</tbody>
-</table>
-<p>通用路径是兜底——如果模型 id 不匹配任何已注册前缀，DSCC 会按 OpenAI
-兼容协议调用，并要求同时设置 <code>DSCC_API_KEY</code> 与
-<code>DSCC_BASE_URL</code>。</p>
-<h4 id="常用模型-id">常用模型 id</h4>
-<table>
-<thead>
-<tr>
-<th>Provider</th>
-<th>模型 id</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Anthropic</td>
-<td><code>claude-opus-4-6</code>、<code>claude-sonnet-4-6</code>、<code>claude-haiku-4-5-20251213</code></td>
-</tr>
-<tr>
-<td>xAI</td>
-<td><code>grok-3</code>、<code>grok-4</code></td>
-</tr>
-<tr>
-<td>DeepSeek</td>
-<td><code>deepseek-chat</code>、<code>deepseek-coder</code>、<code>deepseek-reasoner</code></td>
-</tr>
-<tr>
-<td>通用</td>
-<td>任意 provider 特定 id（如 <code>doubao-seed-1-6-250615</code>）</td>
-</tr>
-</tbody>
-</table>
-<p>完整参数清单见 <a
-href="../reference/cli.html">reference/cli.md</a>。</p>
-<h4 id="调用示例">调用示例</h4>
-<pre class="bash"><code># 显式指定模型进入 REPL                                # [交互] 进入 REPL
-dscc --model claude-opus-4-6
-
-# 使用环境变量兜底                                     # [交互] 进入 REPL
-export DSCC_MODEL=claude-sonnet-4-6
-dscc
-
-# 单次 prompt
-dscc --model claude-sonnet-4-6 prompt &quot;summarize crates/runtime&quot;
-
-# 通用 provider（必须提供 base URL）
-export DSCC_API_KEY=&quot;...&quot;
-export DSCC_BASE_URL=&quot;https://api.openai.com/v1&quot;
-dscc --model gpt-4o prompt &quot;hello&quot;</code></pre>
-<h4 id="下一步">下一步</h4>
-<ul>
-<li><a href="first-session.html">first-session.md</a> —
-用选好的模型跑第一个 REPL 和 one-shot。</li>
-</ul>
 
 </main>
 <footer class="footer">
   <div class="footer-inner">
     <span>© 2026 DSCC</span>
-    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+    <span><a href="../../en/">home</a> · <a href="../../docs/">Docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
   </div>
 </footer>
 </body>
