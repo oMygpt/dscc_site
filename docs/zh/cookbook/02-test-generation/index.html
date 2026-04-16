@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Test Generation · DSCC 文档</title>
+<title>02 · Test Generation · DSCC 文档</title>
 <link rel="stylesheet" href="../../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
@@ -23,18 +23,18 @@
 </header>
 <main class="doc-body">
 <div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <span>02-test-generation</span></div>
-<h1 id="test-generation">Test Generation</h1>
+<h1 id="02--test-generation">02 · Test Generation</h1>
 <p>无副作用的纯函数最适合让 AI 写测试：输入输出都可观察、无需
 mock。本案例让 DSCC
 读一个源文件，生成表驱动的测试文件，覆盖正常、边界、错误三类用例。</p>
-<h1 id="演示能力">演示能力</h1>
+<h2 id="演示能力">演示能力</h2>
 <ul>
 <li>对源文件 <code>read_file</code>。</li>
 <li>对工作区内新路径 <code>write_file</code>。</li>
 <li><code>WorkspaceWrite</code> 权限：只能写 <code>cwd</code> 之内，见
 <a href="../../guides/permissions.html">guides/permissions.md</a>。</li>
 </ul>
-<h1 id="准备">准备</h1>
+<h2 id="准备">准备</h2>
 <p>在 Rust 项目里（<code>cargo new --lib util_demo</code>
 新建即可）建目标函数：</p>
 <pre class="bash"><code>cat &gt; src/utils.rs &lt;&lt;&#39;RS&#39;
@@ -54,7 +54,7 @@ pub fn parse_duration(s: &amp;str) -&gt; Option&lt;Duration&gt; {
 }
 RS
 echo &#39;pub mod utils;&#39; &gt;&gt; src/lib.rs</code></pre>
-<h1 id="运行命令">运行命令</h1>
+<h2 id="运行命令">运行命令</h2>
 <pre class="bash"><code>dscc --model claude-sonnet-4-6 \
   --permission-mode workspace-write \
   prompt &quot;$(cat docs/cookbook/02-test-generation/PROMPT.md)&quot;</code></pre>
@@ -68,7 +68,7 @@ href="generated_utils_test.rs"><code>generated_utils_test.rs</code></a>。</p>
 <code>PreToolUse</code> 钩子自动放行 <code>cargo *</code>）；模型会通过
 <code>cargo test</code> 自查。</p>
 </blockquote>
-<h1 id="预期行为">预期行为</h1>
+<h2 id="预期行为">预期行为</h2>
 <p>模型通常会：</p>
 <ol type="1">
 <li><code>read_file</code> 读 <code>src/utils.rs</code>。</li>
@@ -78,7 +78,7 @@ href="generated_utils_test.rs"><code>generated_utils_test.rs</code></a>。</p>
 <code>#[test]</code> 函数组织表格。</li>
 </ol>
 <p>不应改动 <code>src/utils.rs</code>。</p>
-<h1 id="验收">验收</h1>
+<h2 id="验收">验收</h2>
 <ul>
 <li><code>cargo test</code> 通过。</li>
 <li><code>tests/utils_test.rs</code> 存在，至少 5 条用例（正常 + 边界 +

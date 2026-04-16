@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Refactor — Rename — run artifact · DSCC 文档</title>
+<title>03 · Refactor — Rename — run artifact · DSCC 文档</title>
 <link rel="stylesheet" href="../../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
@@ -23,7 +23,7 @@
 </header>
 <main class="doc-body">
 <div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/03-refactor-rename/">03-refactor-rename</a> / <span>report_dscc</span></div>
-<h1 id="refactor--rename--run-artifact">Refactor — Rename — run
+<h1 id="03--refactor--rename--run-artifact">03 · Refactor — Rename — run
 artifact</h1>
 <p>2026-04-16 真机捕获。原始日志见 <a
 href="dscc_run.log"><code>dscc_run.log</code></a>，完整 diff 见 <a
@@ -62,12 +62,12 @@ href="diff.patch"><code>diff.patch</code></a>。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="diff-摘要">diff 摘要</h1>
+<h2 id="diff-摘要">diff 摘要</h2>
 <p>见上文 <code>git diff --stat</code>。模型改完后自查
 <code>git grep load_config</code>，无输出；<code>git grep load_settings</code>
 返回 7 条（定义 + 6 处调用，比 README 里的 4 条多出的两条来自
 <code>src/lib.rs</code> 同时有 <code>pub use</code> 与内部调用）。</p>
-<h1 id="对照验收">对照验收</h1>
+<h2 id="对照验收">对照验收</h2>
 <ul>
 <li><code>git grep load_config</code> 为空。✅</li>
 <li><code>git grep load_settings</code> 7 条。✅</li>

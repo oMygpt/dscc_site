@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Data Analysis on CSVs · DSCC 文档</title>
+<title>05 · Data Analysis on CSVs · DSCC 文档</title>
 <link rel="stylesheet" href="../../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
@@ -23,14 +23,14 @@
 </header>
 <main class="doc-body">
 <div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <span>05-data-analysis</span></div>
-<h1 id="data-analysis-on-csvs">Data Analysis on CSVs</h1>
+<h1 id="05--data-analysis-on-csvs">05 · Data Analysis on CSVs</h1>
 <p>最重的一个案例：25 000 行用户数据 + 18 行平台聚合 + 4 道非平凡分析题
 + 1 份 Markdown 报告。DSCC 要自己挑工具（pandas、polars、awk
 随它），通过 <code>bash</code> 驱动，然后产出数字正确的表格。</p>
 <p>直接复用 <a
 href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>
 下的真实数据。</p>
-<h1 id="演示能力">演示能力</h1>
+<h2 id="演示能力">演示能力</h2>
 <ul>
 <li><code>bash</code> 跑分析管道（pandas / awk）。</li>
 <li><code>read_file</code> / <code>write_file</code> 产出报告。</li>
@@ -39,7 +39,7 @@ href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</c
 href="../../guides/permissions.html">guides/permissions.md</a>
 关于何时使用该模式。</li>
 </ul>
-<h1 id="准备">准备</h1>
+<h2 id="准备">准备</h2>
 <p>数据在 <code>/tmp/social_analysis/</code>：</p>
 <ul>
 <li><code>social_media_user_behavior.csv</code> — 25 000
@@ -50,7 +50,7 @@ href="../../guides/permissions.html">guides/permissions.md</a>
 href="../../../demo/social_media_analysis/PROMPT.html"><code>demo/social_media_analysis/PROMPT.md</code></a>，不在此处重复。</p>
 <p>Python 3 + <code>pandas</code> 最省事；有 <code>awk</code> +
 <code>sort</code> 也够。</p>
-<h1 id="运行命令">运行命令</h1>
+<h2 id="运行命令">运行命令</h2>
 <pre class="bash"><code>dscc --model claude-opus-4-6 \
   --permission-mode danger-full-access \
   prompt &quot;$(cat demo/social_media_analysis/PROMPT.md)&quot;</code></pre>
@@ -60,7 +60,7 @@ href="report_dscc.html"><code>report_dscc.md</code></a>（模型实际写到
 href="dscc_run.log"><code>dscc_run.log</code></a>，同步自 <a
 href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>
 下的权威副本。</p>
-<h1 id="预期行为">预期行为</h1>
+<h2 id="预期行为">预期行为</h2>
 <p>模型通常会：</p>
 <ol type="1">
 <li><code>bash</code> <code>ls /tmp/social_analysis/</code> 加几次
@@ -74,7 +74,7 @@ href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</c
 <li><code>write_file</code>（或 <code>bash</code> 重定向）把 Markdown
 报告写到 <code>/tmp/social_analysis/report_dscc.md</code>。</li>
 </ol>
-<h1 id="验收">验收</h1>
+<h2 id="验收">验收</h2>
 <ul>
 <li><code>/tmp/social_analysis/report_dscc.md</code> 存在。</li>
 <li>报告依次包含：成瘾分组、平台排名、年龄组网暴、一行结论。</li>

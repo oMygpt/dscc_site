@@ -27,7 +27,7 @@
 <p>插件把工具、钩子、生命周期脚本打包在一个 <code>plugin.json</code>
 背后。DSCC 启动时发现插件，把它们的工具并入 agent
 工具面，并把钩子与用户钩子一起执行。</p>
-<h1 id="清单位置">清单位置</h1>
+<h2 id="清单位置">清单位置</h2>
 <table>
 <thead>
 <tr>
@@ -47,7 +47,7 @@
 </tbody>
 </table>
 <p>解析位置：<code>crates/plugins/src/lib.rs:107–122</code>。</p>
-<h1 id="清单-schema">清单 schema</h1>
+<h2 id="清单-schema">清单 schema</h2>
 <table>
 <thead>
 <tr>
@@ -114,7 +114,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="工具条目">工具条目</h1>
+<h3 id="工具条目">工具条目</h3>
 <pre class="json"><code>{
   &quot;name&quot;: &quot;my-tool&quot;,
   &quot;description&quot;: &quot;...&quot;,
@@ -125,7 +125,7 @@
 }</code></pre>
 <p>合法
 <code>requiredPermission</code>：<code>read-only</code>、<code>workspace-write</code>、<code>danger-full-access</code>。</p>
-<h1 id="插件种类">插件种类</h1>
+<h2 id="插件种类">插件种类</h2>
 <p>来自 <code>plugins/lib.rs:25–50</code>。</p>
 <table>
 <thead>
@@ -149,7 +149,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="发现">发现</h1>
+<h2 id="发现">发现</h2>
 <p>由 <code>plugins/lib.rs:1097–1150</code> 解析：</p>
 <ol type="1">
 <li>扫描 <code>install_root</code>（默认
@@ -159,7 +159,7 @@ stale。</li>
 <li>从配置中的 <code>plugins.externalDirectories</code> 加载。</li>
 <li>按插件 id 去重。</li>
 </ol>
-<h1 id="生命周期-cli">生命周期 CLI</h1>
+<h2 id="生命周期-cli">生命周期 CLI</h2>
 <p>来自 <code>commands/lib.rs:692–801</code>。</p>
 <table>
 <thead>
@@ -196,7 +196,7 @@ stale。</li>
 </tr>
 </tbody>
 </table>
-<h1 id="钩子">钩子</h1>
+<h2 id="钩子">钩子</h2>
 <p>定义于 <code>plugins/hooks.rs:11–22</code>。事件、stdin
 负载、环境变量与运行时钩子一致（见 <a
 href="../guides/hooks.html">guides/hooks.md</a>）。</p>
@@ -222,7 +222,7 @@ href="../guides/hooks.html">guides/hooks.md</a>）。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="最小可用示例">最小可用示例</h1>
+<h2 id="最小可用示例">最小可用示例</h2>
 <p><code>./my-plugin/plugin.json</code>：</p>
 <pre class="json"><code>{
   &quot;name&quot;: &quot;hello-plugin&quot;,
@@ -235,7 +235,7 @@ href="../guides/hooks.html">guides/hooks.md</a>）。</p>
   &quot;hooks&quot;: {&quot;PreToolUse&quot;: [&quot;./hooks/audit.sh&quot;]}
 }</code></pre>
 <p>脚本用相对路径时，以插件根目录为基准解析。</p>
-<h1 id="测试你的插件">测试你的插件</h1>
+<h2 id="测试你的插件">测试你的插件</h2>
 <p>插件安装走 REPL 斜杠命令，<strong>没有</strong>
 <code>dscc plugin …</code> CLI 子命令（见
 <code>crates/commands/src/lib.rs:692-801</code>）。</p>
@@ -263,7 +263,7 @@ href="../guides/hooks.html">guides/hooks.md</a>）。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="另见">另见</h1>
+<h2 id="另见">另见</h2>
 <ul>
 <li><a href="../guides/hooks.html">guides/hooks.md</a> ——
 钩子完整契约（stdin、env、exit）。</li>

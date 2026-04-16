@@ -27,7 +27,7 @@
 <p>Skill 是带 YAML frontmatter 的 Markdown 文件。模型调用某个 skill
 时，DSCC 会把 Markdown 正文注入会话 —— 用 skill 打包可复用的
 prompt、清单和领域知识。</p>
-<h1 id="发现路径">发现路径</h1>
+<h2 id="发现路径">发现路径</h2>
 <p>由 <code>crates/commands/src/lib.rs:1306–1391</code> 的
 <code>discover_skill_roots</code> 解析。兼容历史的
 <code>commands/</code> 目录。</p>
@@ -62,7 +62,7 @@ prompt、清单和领域知识。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="文件布局">文件布局</h1>
+<h2 id="文件布局">文件布局</h2>
 <table>
 <thead>
 <tr>
@@ -82,7 +82,7 @@ prompt、清单和领域知识。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="schemamarkdown-frontmatter">Schema（Markdown frontmatter）</h1>
+<h2 id="schemamarkdown-frontmatter">Schema（Markdown frontmatter）</h2>
 <pre class="markdown"><code>---
 name: my-skill
 description: Brief one-line purpose
@@ -93,7 +93,7 @@ description: Brief one-line purpose
 <p>由 <code>parse_skill_frontmatter</code> 解析。<code>name</code> 和
 <code>description</code> 都可省；<code>name</code> 缺省时回退到文件名
 stem（或目录名）。</p>
-<h1 id="最小可用示例">最小可用示例</h1>
+<h2 id="最小可用示例">最小可用示例</h2>
 <p><code>.dscc/skills/commit-msg/SKILL.md</code>：</p>
 <pre class="markdown"><code>---
 name: commit-msg
@@ -105,7 +105,7 @@ description: Write a Conventional Commit message for the current diff
 1. Run `git diff --staged`.
 2. Summarise the change in one line using `type(scope): subject`.
 3. Print the message only, no extra commentary.</code></pre>
-<h1 id="调用">调用</h1>
+<h2 id="调用">调用</h2>
 <table>
 <thead>
 <tr>
@@ -127,12 +127,12 @@ description: Write a Conventional Commit message for the current diff
 </tr>
 </tbody>
 </table>
-<h1 id="验证发现">验证发现</h1>
+<h2 id="验证发现">验证发现</h2>
 <p>在 DSCC 中运行
 <code>/skills</code>，看列表是否出现。<code># [交互]</code>（REPL
 斜杠命令；等价的 <code>dscc skills</code> CLI
 子命令可脚本化、无需标记。）</p>
-<h1 id="skill-对比-agent">Skill 对比 Agent</h1>
+<h2 id="skill-对比-agent">Skill 对比 Agent</h2>
 <table>
 <thead>
 <tr>
@@ -168,7 +168,7 @@ description: Write a Conventional Commit message for the current diff
 <p>经验法则：当前这轮需要“加知识或流程“用
 <strong>skill</strong>；工作应该跑在独立线程、用不同工具白名单，用
 <strong>agent</strong>。</p>
-<h1 id="另见">另见</h1>
+<h2 id="另见">另见</h2>
 <ul>
 <li><a href="agents.html">agents.md</a> —— 子进程式 agent。</li>
 <li><a href="../guides/slash-commands.html">guides/slash-commands.md</a>

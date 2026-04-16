@@ -27,7 +27,7 @@
 <p>Agent 是一个具名的 prompt + 模型预设，主模型可以通过
 <code>Agent</code> 工具把它作为子进程式的 worker 拉起。DSCC 从磁盘的
 TOML 文件里发现 agent 定义。</p>
-<h1 id="发现路径">发现路径</h1>
+<h2 id="发现路径">发现路径</h2>
 <p>由 <code>crates/commands/src/lib.rs:1265–1304</code> 的
 <code>discover_definition_roots</code>
 解析。按顺序搜索；同一小写名字，先命中的源胜出。</p>
@@ -60,7 +60,7 @@ TOML 文件里发现 agent 定义。</p>
 <p>加载器：<code>commands/lib.rs:1418–1459</code> 的
 <code>load_agents_from_roots</code>。用 <code>parse_toml_string</code>
 解析；文件名的 stem 作为默认 name。</p>
-<h1 id="文件格式">文件格式</h1>
+<h2 id="文件格式">文件格式</h2>
 <p>TOML，一文件一 agent。</p>
 <table>
 <thead>
@@ -98,12 +98,12 @@ TOML 文件里发现 agent 定义。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="最小示例">最小示例</h1>
+<h3 id="最小示例">最小示例</h3>
 <p><code>.dscc/agents/verify-branch.toml</code>：</p>
 <pre class="toml"><code>name = &quot;verify-the-branch&quot;
 description = &quot;Verify that the current branch builds, tests, and lints cleanly&quot;
 model = &quot;claude-sonnet-4-6&quot;</code></pre>
-<h1 id="列出与覆盖">列出与覆盖</h1>
+<h2 id="列出与覆盖">列出与覆盖</h2>
 <table>
 <thead>
 <tr>
@@ -124,7 +124,7 @@ model = &quot;claude-sonnet-4-6&quot;</code></pre>
 </table>
 <p>同一小写名字两源冲突时，先命中者胜出；后者记录在胜出条目的
 <code>shadowed_by</code> 中。</p>
-<h1 id="子-agent-类型">子 agent 类型</h1>
+<h2 id="子-agent-类型">子 agent 类型</h2>
 <p>来自 <code>tools.rs:1687–1766</code>。模型调用 <code>Agent</code>
 工具时用 <code>subagent_type</code> 指定。每种类型自带工具白名单。</p>
 <table>
@@ -161,16 +161,16 @@ model = &quot;claude-sonnet-4-6&quot;</code></pre>
 </tr>
 </tbody>
 </table>
-<h1 id="调用">调用</h1>
+<h2 id="调用">调用</h2>
 <p>模型调用 <code>Agent</code> 工具（<code>tools.rs:394–406</code>），传
 <code>subagent_type</code> 与 <code>prompt</code>。后台线程在
 <code>DangerFullAccess</code> 权限下执行子 agent。</p>
-<h1 id="运行产物">运行产物</h1>
+<h2 id="运行产物">运行产物</h2>
 <p>每次运行都会在 <code>.dscc-agents/agent-&lt;timestamp&gt;.json</code>
 / <code>.md</code> 写入一对 JSON +
 Markdown（<code>tools.rs:408–423</code>）。JSON 含
 <code>agentId</code>、<code>name</code>、<code>subagentType</code>、<code>model</code>、<code>status</code>、<code>createdAt</code>、<code>completedAt</code>、<code>outputFile</code>、<code>manifestFile</code>、<code>error</code>。由运行时写入，不要手改。</p>
-<h1 id="添加一个新-agent">添加一个新 agent</h1>
+<h2 id="添加一个新-agent">添加一个新 agent</h2>
 <ol type="1">
 <li>在 <code>.dscc/agents/myagent.toml</code> 至少填
 <code>description</code>（参考上面示例）。</li>
@@ -179,7 +179,7 @@ Markdown（<code>tools.rs:408–423</code>）。JSON 含
 <code>dscc agents</code> CLI 子命令可脚本化、无需标记。）</li>
 <li>模型即可通过 <code>Agent</code> 工具请求它。</li>
 </ol>
-<h1 id="另见">另见</h1>
+<h2 id="另见">另见</h2>
 <ul>
 <li><a href="skills.html">skills.md</a> —— 更轻量的 prompt 片段，不拉子
 agent。</li>

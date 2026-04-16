@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Code Review — run artifact · DSCC 文档</title>
+<title>01 · Code Review — run artifact · DSCC 文档</title>
 <link rel="stylesheet" href="../../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
@@ -23,7 +23,8 @@
 </header>
 <main class="doc-body">
 <div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/01-code-review/">01-code-review</a> / <span>report_dscc</span></div>
-<h1 id="code-review--run-artifact">Code Review — run artifact</h1>
+<h1 id="01--code-review--run-artifact">01 · Code Review — run
+artifact</h1>
 <p>2026-04-16 真机运行捕获。完整日志见 <a
 href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
 <table>
@@ -54,7 +55,7 @@ href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="模型返回的审阅表">模型返回的审阅表</h1>
+<h2 id="模型返回的审阅表">模型返回的审阅表</h2>
 <table>
 <thead>
 <tr>
@@ -91,13 +92,13 @@ panic，缺少容错。</td>
 <p><strong>总评</strong>（模型）：<em><code>first_word</code>
 存在致命逻辑 bug，且 <code>unwrap()</code>
 用得过度，不宜上生产。</em></p>
-<h1 id="对照验收标准">对照验收标准</h1>
+<h2 id="对照验收标准">对照验收标准</h2>
 <ul>
 <li>两处预埋 bug 都被找到。</li>
 <li>每行都有严重度。</li>
 <li>未尝试任何写类工具；<code>read-only</code> 权限生效。</li>
 </ul>
-<h1 id="模型选择说明">模型选择说明</h1>
+<h2 id="模型选择说明">模型选择说明</h2>
 <p>README 里建议 <code>claude-sonnet-4-6</code>；真实运行因手头 key
 限制，改用 <code>doubao-seed-2.0-code</code>。行为与预期一致：同时返回
 <code>StructuredOutput</code> 和 Markdown 表。</p>

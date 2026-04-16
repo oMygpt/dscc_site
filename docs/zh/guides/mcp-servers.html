@@ -27,7 +27,7 @@
 <p>DSCC 通过 MCP（Model Context Protocol）服务器扩展工具面。在
 <code>settings.mcpServers.&lt;name&gt;</code>
 下配置（<code>crates/runtime/src/config.rs:531–550</code>）。</p>
-<h1 id="传输类型">传输类型</h1>
+<h2 id="传输类型">传输类型</h2>
 <p>支持的传输（<code>config.rs:75–83</code>、<code>mcp_client.rs:7–46</code>）：</p>
 <table>
 <thead>
@@ -63,7 +63,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="stdio-示例">Stdio 示例</h1>
+<h2 id="stdio-示例">Stdio 示例</h2>
 <pre class="json"><code>{
   &quot;mcpServers&quot;: {
     &quot;my-server&quot;: {
@@ -74,7 +74,7 @@
     }
   }
 }</code></pre>
-<h1 id="远程字段">远程字段</h1>
+<h2 id="远程字段">远程字段</h2>
 <p>适用于 <code>sse</code>、<code>http</code>、<code>ws</code>：</p>
 <table>
 <thead>
@@ -105,18 +105,18 @@
 <p><code>oauth</code> 块支持通过
 <code>oauth.authServerMetadataUrl</code> 做 OIDC metadata 发现，并指定
 callback 端口和 client id。</p>
-<h1 id="工具名归一化">工具名归一化</h1>
+<h2 id="工具名归一化">工具名归一化</h2>
 <p>来自 <code>crates/runtime/src/mcp.rs:6–37</code>：</p>
 <ol type="1">
 <li>服务器名中的非字母数字字符全部替换为 <code>_</code>。</li>
 <li>暴露给模型的工具名为
 <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>。</li>
 </ol>
-<h1 id="作用域与覆盖">作用域与覆盖</h1>
+<h2 id="作用域与覆盖">作用域与覆盖</h2>
 <p>每个服务器记录作用域（User / Project /
 Local）。后加载的作用域覆盖先加载的（<code>mcp.rs:84</code>），与 <a
 href="config-files.html">config-files.md</a> 中的配置优先级一致。</p>
-<h1 id="相关">相关</h1>
+<h2 id="相关">相关</h2>
 <ul>
 <li><a href="config-files.html">config-files.md</a> 配置优先级。</li>
 <li><code>docs/reference/config-schema.md</code> 完整的

@@ -27,7 +27,7 @@
 <p>交互 REPL 是 DSCC 的默认模式。在 TTY 环境下运行
 <code>dscc</code>（不带子命令）即可进入。输入编辑器位于
 <code>crates/dscc-cli/src/input.rs</code>（1193 行）。</p>
-<h1 id="编辑器模式">编辑器模式</h1>
+<h2 id="编辑器模式">编辑器模式</h2>
 <p>DSCC 自带编辑器，支持可选的 vim 绑定。运行时用 <code>/vim</code> 切换
 vim 开关（input.rs:549–553）。</p>
 <table>
@@ -73,7 +73,7 @@ vim 开关（input.rs:549–553）。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="按键绑定">按键绑定</h1>
+<h2 id="按键绑定">按键绑定</h2>
 <table>
 <thead>
 <tr>
@@ -141,11 +141,11 @@ vim 开关（input.rs:549–553）。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="非-tty-回退">非 TTY 回退</h1>
+<h2 id="非-tty-回退">非 TTY 回退</h2>
 <p>当 stdin 不是终端（管道、CI、重定向）时，DSCC
 退化为逐行读取，无提示符、无历史、无补全（input.rs:334–366）。脚本场景建议改用
 <code>dscc prompt ...</code>。</p>
-<h1 id="相关">相关</h1>
+<h2 id="相关">相关</h2>
 <ul>
 <li><a href="one-shot-mode.html">one-shot-mode.md</a> 非交互调用。</li>
 <li><a href="slash-commands.html">slash-commands.md</a> <code>Tab</code>

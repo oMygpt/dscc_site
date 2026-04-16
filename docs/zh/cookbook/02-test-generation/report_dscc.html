@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Test Generation — run artifact · DSCC 文档</title>
+<title>02 · Test Generation — run artifact · DSCC 文档</title>
 <link rel="stylesheet" href="../../../../styles.css?v=7">
 <link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
 <meta name="theme-color" content="#0b0d12">
@@ -23,7 +23,7 @@
 </header>
 <main class="doc-body">
 <div class="doc-crumb"><a href="../../../../">主页</a> / <a href="../../../../docs/zh/cookbook/">cookbook</a> / <a href="../../../../docs/zh/cookbook/02-test-generation/">02-test-generation</a> / <span>report_dscc</span></div>
-<h1 id="test-generation--run-artifact">Test Generation — run
+<h1 id="02--test-generation--run-artifact">02 · Test Generation — run
 artifact</h1>
 <p>2026-04-16 真机捕获。完整日志见 <a
 href="dscc_run.log"><code>dscc_run.log</code></a>，生成的测试文件原样镜像在
@@ -66,10 +66,10 @@ href="generated_utils_test.rs"><code>generated_utils_test.rs</code></a>。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="验证">验证</h1>
+<h2 id="验证">验证</h2>
 <pre class="text"><code>$ cargo test
 ... Running tests/utils_test.rs ... ok (1 passed)</code></pre>
-<h1 id="三段覆盖">三段覆盖</h1>
+<h2 id="三段覆盖">三段覆盖</h2>
 <table>
 <thead>
 <tr>
@@ -116,7 +116,7 @@ href="generated_utils_test.rs"><code>generated_utils_test.rs</code></a>。</p>
 </tr>
 </tbody>
 </table>
-<h1 id="对照验收标准">对照验收标准</h1>
+<h2 id="对照验收标准">对照验收标准</h2>
 <ul>
 <li><code>cargo test</code> 通过。</li>
 <li><code>tests/utils_test.rs</code> 存在，表驱动 19 行（要求 ≥

@@ -26,7 +26,7 @@
 <h1 id="权限体系">权限体系</h1>
 <p>DSCC 的每次工具调用都要经过权限模式裁决。模式定义在
 <code>crates/runtime/src/permissions.rs:4–23</code>。</p>
-<h1 id="模式">模式</h1>
+<h2 id="模式">模式</h2>
 <table>
 <thead>
 <tr>
@@ -63,7 +63,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="裁决逻辑">裁决逻辑</h1>
+<h2 id="裁决逻辑">裁决逻辑</h2>
 <p>来自 <code>permissions.rs:88–135</code>：</p>
 <ol type="1">
 <li>当前模式 <code>≥</code> 所需模式 → 放行。</li>
@@ -73,11 +73,11 @@
 <code>DangerFullAccess</code> → 询问。</li>
 <li>其他 → 拒绝。</li>
 </ol>
-<h1 id="每工具要求">每工具要求</h1>
+<h2 id="每工具要求">每工具要求</h2>
 <p>各工具通过
 <code>PermissionPolicy.tool_requirements: BTreeMap&lt;String, PermissionMode&gt;</code>（<code>permissions.rs:50–73</code>）声明所需模式。未知工具的默认回退是
 <code>DangerFullAccess</code>。</p>
-<h1 id="设置模式的方式">设置模式的方式</h1>
+<h2 id="设置模式的方式">设置模式的方式</h2>
 <p>自低到高（冲突时高优先级生效）：</p>
 <table>
 <thead>
@@ -105,7 +105,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="相关">相关</h1>
+<h2 id="相关">相关</h2>
 <ul>
 <li><a href="config-files.html">config-files.md</a>
 <code>defaultMode</code> 的配置位置。</li>

@@ -27,7 +27,7 @@
 <p>本文件规定了 DSCC 文档中 shell 命令的验证流程与
 <code># [待验证]</code> 标记的去除规则。</p>
 <hr />
-<h2 id="分层">分层</h2>
+<h4 id="分层">分层</h4>
 <table>
 <thead>
 <tr>
@@ -69,7 +69,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="标记的生命周期">标记的生命周期</h2>
+<h4 id="标记的生命周期">标记的生命周期</h4>
 <ol type="1">
 <li><strong>作者</strong> 编写命令时加 <code># [待验证]</code>。</li>
 <li><strong>验证者</strong> 按上表层级执行。</li>
@@ -81,7 +81,7 @@ registry，并修正文档（命令本身或周围的说法）。</li>
 <code># [交互]</code>。</li>
 </ol>
 <hr />
-<h2 id="日志格式">日志格式</h2>
+<h4 id="日志格式">日志格式</h4>
 <p>每条 Tier 2/3 日志包含：</p>
 <pre><code># &lt;file-relative-path&gt;:&lt;line&gt; — &lt;short description&gt;
 $ &lt;exact command invoked&gt;
@@ -95,7 +95,7 @@ notes: &lt;one-line explanation&gt;</code></pre>
 <p>API key 与敏感 URL <strong>禁止</strong> 落盘。日志里出现时以
 <code>&lt;REDACTED&gt;</code> 替换。</p>
 <hr />
-<h2 id="目录结构">目录结构</h2>
+<h4 id="目录结构">目录结构</h4>
 <pre><code>docs/
 ├── verification.md           # 本文件
 └── verification/

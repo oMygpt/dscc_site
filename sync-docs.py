@@ -85,6 +85,7 @@ ZH_LABELS = {
 }
 
 ZH_MARKER_RE = re.compile(r"^###\s+\u4e2d\u6587\s*$", re.MULTILINE)
+CJK_RE = re.compile(r"[\u3400-\u9fff\uf900-\ufaff]")
 
 
 def rel_prefix(dst_rel: pathlib.Path) -> str:
@@ -115,14 +116,52 @@ def rewrite_md_links(body: str) -> str:
 
 
 def split_title(h1_line: str) -> tuple[str, str]:
-    """Given a bilingual H1 like 'Authentication \u00b7 \u9274\u6743', return (en, zh).
+    """Split a bilingual H1 like 'Authentication \u00b7 \u9274\u6743' into (en, zh).
 
-    Falls back to (h1, h1) if no middot separator.
+    Only splits when the `\u00b7` crosses a script boundary (one side has CJK,
+    the other does not). Otherwise treats the whole line as a single title for
+    both languages — this leaves titles like '01 \u00b7 Code Review' intact.
     """
     if " \u00b7 " in h1_line:
-        en, zh = h1_line.split(" \u00b7 ", 1)
-        return en.strip(), zh.strip()
+        left, right = h1_line.split(" \u00b7 ", 1)
+        left, right = left.strip(), right.strip()
+        left_cjk = bool(CJK_RE.search(left))
+        right_cjk = bool(CJK_RE.search(right))
+        if left_cjk != right_cjk:
+            # Whichever side is CJK-free is the EN title.
+            return (left, right) if not left_cjk else (right, left)
     return h1_line.strip(), h1_line.strip()
+
+
+def min_heading_level(md: str) -> int | None:
+    """Smallest ATX heading level in `md`, skipping fenced code blocks."""
+    in_code = False
+    best: int | None = None
+    for ln in md.splitlines():
+        stripped = ln.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        m = re.match(r"^(#+)\s+\S", ln)
+        if m:
+            lvl = len(m.group(1))
+            if best is None or lvl < best:
+                best = lvl
+    return best
+
+
+def rewrite_en_h1(en_md: str) -> str:
+    """Strip the `\u00b7 <ZH>` half from the first EN-side H1 line."""
+    lines = en_md.splitlines()
+    for i, ln in enumerate(lines):
+        if ln.strip().startswith("# "):
+            title = ln.strip()[2:].strip()
+            en_part, _zh = split_title(title)
+            lines[i] = f"# {en_part}"
+            break
+    return "\n".join(lines)
 
 
 def extract_h1(md: str) -> str:
@@ -174,17 +213,23 @@ def split_bilingual(md: str) -> tuple[str, str, bool]:
     en_tail = re.sub(r"\s*\n---\s*\n\s*$", "\n", en_tail)
     en_tail = en_tail.rstrip() + "\n"
     zh_body = md[m.end():].lstrip("\n")
-    # Promote ZH headings by 2 levels (ZH convention uses #### where EN uses ##).
-    zh_body = demote_headings(zh_body, -2)
-    # If the promoted body already begins with an H1, keep it; otherwise derive
-    # one from the EN H1 (split on \u00b7) to keep the page titled.
+    # Auto-level: normalize so the smallest heading in the ZH section sits at
+    # H2 (or H1 if the source already starts with `# <zh title>`). Files mix
+    # conventions -- guides/* use ##, getting-started/* use ####, reference/cli
+    # starts with #. Hardcoding -2 collapsed everything to H1 on the ## ones.
+    min_lvl = min_heading_level(zh_body)
+    if min_lvl is not None and min_lvl > 2:
+        zh_body = demote_headings(zh_body, 2 - min_lvl)
     if re.match(r"^#\s+\S", zh_body):
         zh_md = zh_body
     else:
         en_h1 = extract_h1(en_tail)
         _en_title, zh_title = split_title(en_h1) if en_h1 else ("", "")
         zh_md = f"# {zh_title}\n\n{zh_body}" if zh_title else zh_body
-    return en_tail, zh_md, True
+    # EN side: strip the `\u00b7 <ZH>` half from the page H1 so EN readers
+    # don't see Chinese in the title.
+    en_md = rewrite_en_h1(en_tail)
+    return en_md, zh_md, True
 
 
 def extract_title(md_text: str) -> str:

@@ -26,7 +26,7 @@
 <h1 id="单次执行">单次执行</h1>
 <p>单次执行模式运行一条 prompt 后退出，用于脚本、CI
 和管道集成。入口：<code>dscc prompt &lt;text&gt;</code>（main.rs:318）。</p>
-<h1 id="参数">参数</h1>
+<h2 id="参数">参数</h2>
 <table>
 <thead>
 <tr>
@@ -64,7 +64,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="上游兼容参数">上游兼容参数</h1>
+<h2 id="上游兼容参数">上游兼容参数</h2>
 <p>DSCC 保留少量上游 CLI 参数，已有脚本可无改动迁移。</p>
 <table>
 <thead>
@@ -87,9 +87,9 @@
 </tr>
 </tbody>
 </table>
-<h1 id="示例">示例</h1>
+<h2 id="示例">示例</h2>
 <pre class="bash"><code>dscc --model claude-sonnet-4-6 prompt &quot;list failing tests&quot; --output-format json</code></pre>
-<h1 id="提示">提示</h1>
+<h2 id="提示">提示</h2>
 <ul>
 <li><code>--output-format json</code> 仅在 stdout 非 TTY 时生效。</li>
 <li><code>--allowed-tools</code> 支持 <code>Read,Grep,Bash</code> 或
@@ -97,7 +97,7 @@
 <li>权限参数叠加时 <code>--dangerously-skip-permissions</code> 优先于
 <code>--permission-mode</code>。</li>
 </ul>
-<h1 id="相关">相关</h1>
+<h2 id="相关">相关</h2>
 <ul>
 <li><a href="permissions.html">permissions.md</a> 权限模式语义。</li>
 <li><a href="interactive-mode.html">interactive-mode.md</a> REPL

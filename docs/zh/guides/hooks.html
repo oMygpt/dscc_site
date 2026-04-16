@@ -28,7 +28,7 @@
 <code>settings.hooks.PreToolUse[]</code> 和
 <code>settings.hooks.PostToolUse[]</code> 中声明（shell
 命令数组，<code>config.rs:568–572</code>）。</p>
-<h1 id="事件">事件</h1>
+<h2 id="事件">事件</h2>
 <p>定义在 <code>crates/runtime/src/hooks.rs:8–21</code>。</p>
 <table>
 <thead>
@@ -48,7 +48,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="stdin-载荷">Stdin 载荷</h1>
+<h2 id="stdin-载荷">Stdin 载荷</h2>
 <p>每个钩子从 stdin 读取 JSON（<code>hooks.rs:118–126</code>）：</p>
 <pre class="json"><code>{
   &quot;hook_event_name&quot;: &quot;PreToolUse&quot;,
@@ -58,7 +58,7 @@
   &quot;tool_output&quot;: null,
   &quot;tool_result_is_error&quot;: false
 }</code></pre>
-<h1 id="环境变量">环境变量</h1>
+<h2 id="环境变量">环境变量</h2>
 <p>在钩子运行前设置（<code>hooks.rs:169–178</code>）：</p>
 <table>
 <thead>
@@ -90,7 +90,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="退出码">退出码</h1>
+<h2 id="退出码">退出码</h2>
 <p>来自 <code>hooks.rs:164–213</code>：</p>
 <table>
 <thead>
@@ -123,7 +123,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="shell">Shell</h1>
+<h2 id="shell">Shell</h2>
 <table>
 <thead>
 <tr>
@@ -142,7 +142,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="示例--拒绝-rm--rf-">示例 · 拒绝 <code>rm -rf /</code></h1>
+<h2 id="示例--拒绝-rm--rf-">示例 · 拒绝 <code>rm -rf /</code></h2>
 <pre class="json"><code>{
   &quot;hooks&quot;: {
     &quot;PreToolUse&quot;: [
@@ -150,7 +150,7 @@
     ]
   }
 }</code></pre>
-<h1 id="相关">相关</h1>
+<h2 id="相关">相关</h2>
 <ul>
 <li><a href="config-files.html">config-files.md</a>
 <code>settings.hooks</code> 的加载来源。</li>
