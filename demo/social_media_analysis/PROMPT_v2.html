@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>分析任务 v2：社交媒体行为 — 多方法联合分析 · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../demo/">demo</a> / <a href="../../demo/social_media_analysis/">social_media_analysis</a> / <span>PROMPT_v2</span></div>
+<h1 id="分析任务-v2社交媒体行为--多方法联合分析">分析任务
+v2：社交媒体行为 — 多方法联合分析</h1>
+<p>数据集：</p>
+<ul>
+<li><code>/tmp/social_analysis/social_media_user_behavior.csv</code> —
+25000 用户 × 45 列</li>
+<li><code>/tmp/social_analysis/platform_statistics_2026.csv</code> — 18
+平台聚合统计</li>
+</ul>
+<p>请完成以下 6 道题，结果写入
+<code>/tmp/social_analysis/report_v2_&lt;YOUR_NAME&gt;.md</code>（<code>&lt;YOUR_NAME&gt;</code>
+取 <code>dscc</code> 或 <code>claude</code>）。 <strong>所有随机过程
+<code>random_state=42</code>；所有数值保留 4 位小数。</strong>
+你可以自由使用 pandas / numpy / scipy / sklearn。</p>
+<h2 id="q1-跨表一致性检查">Q1. 跨表一致性检查</h2>
+<p>以 <code>primary_platform</code> 为键，把用户级
+<code>daily_screen_time_minutes</code> 的均值与
+<code>platform_statistics_2026.csv</code> 的
+<code>avg_daily_time_minutes</code> 对齐，仅保留两表都有的平台。</p>
+<ol type="1">
+<li>给出 18 行左右（或交集行数）的对照表：平台 / 用户均值 / 平台表值 /
+差值</li>
+<li>报告两列的 <strong>Pearson 相关系数</strong></li>
+<li>指出 <strong>用户自报均值 − 平台表值</strong> 绝对差最大的 3
+个平台</li>
+</ol>
+<h2 id="q2-独立性检验">Q2. 独立性检验</h2>
+<p>构造 <code>is_content_creator × has_purchased_via_social</code> 的
+2×2 列联表，做 <strong>chi-square 独立性检验</strong>。输出：</p>
+<ul>
+<li>2×2 列联表（原始计数）</li>
+<li><code>chi2</code>, <code>dof</code>, <code>p_value</code></li>
+<li>结论（α=0.05）：是否拒绝独立性</li>
+</ul>
+<h2 id="q3-逻辑回归预测是否通过社交平台购买过">Q3.
+逻辑回归：预测是否通过社交平台购买过</h2>
+<p>目标
+<code>has_purchased_via_social</code>（布尔）。特征（按此顺序）：</p>
+<pre><code>numeric:  age, daily_screen_time_minutes, num_platforms_used,
+          engagement_rate_pct, monthly_social_spending_usd, posts_per_week,
+          followers_count
+boolean:  follows_influencers, is_content_creator, uses_ai_features
+categorical (one-hot): ad_click_frequency, income_bracket, primary_platform</code></pre>
+<p>步骤：</p>
+<ol type="1">
+<li>丢弃任一特征缺失的行（如有）</li>
+<li><code>train_test_split(test_size=0.2, random_state=42, stratify=y)</code></li>
+<li><code>StandardScaler</code> 只对 numeric 列；布尔转 0/1；categorical
+用 <code>pd.get_dummies(drop_first=True)</code></li>
+<li><code>LogisticRegression(max_iter=2000, random_state=42)</code></li>
+<li>输出：<strong>train AUC, test AUC, test accuracy</strong></li>
+<li>列出系数绝对值 <strong>top 5
+的特征及其系数</strong>（正负号保留）</li>
+</ol>
+<h2 id="q4-simpsons-风险检查">Q4. Simpson’s 风险检查</h2>
+<p>整体层面计算 <code>addiction_level_1_to_10</code> 与
+<code>sleep_hours_per_night</code> 的 Pearson 相关系数
+<strong>r_all</strong>；再按
+<code>is_content_creator ∈ {True, False}</code> 分两组分别计算
+<strong>r_creator,
+r_non_creator</strong>。报告三个数字并判断是否出现<strong>符号反转或量级减半以上</strong>。</p>
+<h2 id="q5-k-means-行为聚类">Q5. K-Means 行为聚类</h2>
+<p>对以下 4
+个数值特征：<code>daily_screen_time_minutes, engagement_rate_pct, posts_per_week, addiction_level_1_to_10</code></p>
+<ol type="1">
+<li><code>StandardScaler</code> →
+<code>KMeans(n_clusters=4, n_init=10, random_state=42)</code></li>
+<li>输出每簇规模（用户数、占比 %）</li>
+<li>输出每簇在<strong>原始尺度</strong>上的 4 个特征均值</li>
+<li>用一句话给每簇起个业务标签（如 “低活跃观众”、“重度创作者”）</li>
+</ol>
+<h2 id="q6-异常参与度用户">Q6. 异常参与度用户</h2>
+<p>只保留 <code>followers_count &gt;= 1000</code> 的用户。用
+<code>followers_count</code>（<code>log10(1+x)</code> 变换后）预测
+<code>engagement_rate_pct</code>，做一元 OLS 线性回归，找出
+<strong>残差绝对值 top 5</strong>
+的用户。输出：<code>user_id, followers_count, engagement_rate_pct, predicted, residual</code>。</p>
+<h2 id="输出要求">输出要求</h2>
+<p>Markdown 报告，6
+个小节标题与本文件一致（Q1–Q6）。表格用管道符。不要加未要求的额外分析。不要画图。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

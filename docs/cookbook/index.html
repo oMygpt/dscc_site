@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cookbook · 案例库 · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <span>cookbook</span></div>
+<h1 id="cookbook--案例库">Cookbook · 案例库</h1>
+<p>Runnable end-to-end scenarios. Each case is self-contained: a
+<code>PROMPT.md</code> you can pipe into DSCC, a <code>README.md</code>
+that explains setup, expected tool calls, and how to verify the
+result.</p>
+<p>Every case picks one capability, keeps the prompt short, and says
+honestly “the model should typically do X” rather than claiming
+guaranteed behaviour.</p>
+<h2 id="cases">Cases</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Folder</th>
+<th>Hook</th>
+<th>Capability demonstrated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><a href="01-code-review/index.html">01-code-review</a></td>
+<td>Review a Rust file in read-only mode and report planted bugs.</td>
+<td><code>grep_search</code> + <code>read_file</code> +
+<code>StructuredOutput</code>, <code>ReadOnly</code> permission</td>
+</tr>
+<tr>
+<td>02</td>
+<td><a href="02-test-generation/index.html">02-test-generation</a></td>
+<td>Generate table-driven unit tests for an untested helper.</td>
+<td><code>read_file</code> → <code>write_file</code>,
+<code>WorkspaceWrite</code> permission</td>
+</tr>
+<tr>
+<td>03</td>
+<td><a href="03-refactor-rename/index.html">03-refactor-rename</a></td>
+<td>Rename a function across 4 files using grep + edit.</td>
+<td><code>grep_search</code> → <code>edit_file</code> (replace_all),
+<code>WorkspaceWrite</code></td>
+</tr>
+<tr>
+<td>04</td>
+<td><a href="04-web-research/index.html">04-web-research</a></td>
+<td>Summarise an online API reference into a table.</td>
+<td><code>WebSearch</code> + <code>WebFetch</code>,
+<code>ReadOnly</code></td>
+</tr>
+<tr>
+<td>05</td>
+<td><a href="05-data-analysis/index.html">05-data-analysis</a></td>
+<td>Compute statistics from a 25k-row CSV and write a report.</td>
+<td><code>bash</code> + file I/O, <code>DangerFullAccess</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-read-a-case">How to read a case</h2>
+<ol type="1">
+<li>Open the case’s <code>README.md</code> — it has context, setup, the
+exact run command, expected tool sequence, and verification.</li>
+<li>Open <code>PROMPT.md</code> — copy-paste it into
+<code>dscc prompt "$(cat PROMPT.md)"</code> or pipe it in.</li>
+<li>Compare the model’s actual output to the verification checks.</li>
+</ol>
+<h2 id="related-reference">Related reference</h2>
+<ul>
+<li><a href="../guides/permissions.html">guides/permissions.md</a> —
+permission modes referenced in every case.</li>
+<li><a href="../guides/one-shot-mode.html">guides/one-shot-mode.md</a> —
+<code>dscc prompt</code> flag surface.</li>
+<li><a href="../reference/tools.html">reference/tools.md</a> — full tool
+list with input schemas.</li>
+</ul>
+<h3 id="中文">中文</h3>
+<p>可复现的端到端场景。每个案例自成一体：<code>PROMPT.md</code>
+是可直接灌给 DSCC 的 prompt，<code>README.md</code>
+说明准备工作、预期工具调用顺序以及如何验收。</p>
+<p>每个案例只演示一种能力、保持 prompt
+简短，描述模型行为时用“通常会“而非“一定会“。</p>
+<h2 id="案例列表">案例列表</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>目录</th>
+<th>一句话主题</th>
+<th>演示能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><a href="01-code-review/index.html">01-code-review</a></td>
+<td>只读模式复盘一个 Rust 文件，找出预埋的 bug</td>
+<td><code>grep_search</code> + <code>read_file</code> +
+<code>StructuredOutput</code>、<code>ReadOnly</code> 权限</td>
+</tr>
+<tr>
+<td>02</td>
+<td><a href="02-test-generation/index.html">02-test-generation</a></td>
+<td>为无测试的工具函数生成表驱动单测</td>
+<td><code>read_file</code> →
+<code>write_file</code>、<code>WorkspaceWrite</code> 权限</td>
+</tr>
+<tr>
+<td>03</td>
+<td><a href="03-refactor-rename/index.html">03-refactor-rename</a></td>
+<td>grep + edit 在 4 个文件里重命名函数</td>
+<td><code>grep_search</code> →
+<code>edit_file</code>（replace_all）、<code>WorkspaceWrite</code></td>
+</tr>
+<tr>
+<td>04</td>
+<td><a href="04-web-research/index.html">04-web-research</a></td>
+<td>抓取在线 API 参考并汇总成表格</td>
+<td><code>WebSearch</code> +
+<code>WebFetch</code>、<code>ReadOnly</code></td>
+</tr>
+<tr>
+<td>05</td>
+<td><a href="05-data-analysis/index.html">05-data-analysis</a></td>
+<td>对 25000 行 CSV 做统计并输出报告</td>
+<td><code>bash</code> + 文件读写、<code>DangerFullAccess</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="如何阅读">如何阅读</h2>
+<ol type="1">
+<li>打开对应的
+<code>README.md</code>：背景、准备、运行命令、预期工具序列、验收方式。</li>
+<li>打开 <code>PROMPT.md</code>，用
+<code>dscc prompt "$(cat PROMPT.md)"</code> 或管道灌进去。</li>
+<li>对照验收条目检查模型的实际输出。</li>
+</ol>
+<h2 id="相关参考">相关参考</h2>
+<ul>
+<li><a href="../guides/permissions.html">guides/permissions.md</a> —
+每个案例都涉及权限模式。</li>
+<li><a href="../guides/one-shot-mode.html">guides/one-shot-mode.md</a> —
+<code>dscc prompt</code> 参数面。</li>
+<li><a href="../reference/tools.html">reference/tools.md</a> —
+全部工具及输入 schema。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

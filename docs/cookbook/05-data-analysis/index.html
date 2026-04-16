@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 · Data Analysis on CSVs · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/">Docs</a>
+      <a href="../../../docs/cookbook/">Cookbook</a>
+      <a href="../../../docs/reference/cli.html">CLI</a>
+      <a href="../../../docs/verification/registry.html">Verification</a>
+      <a href="../../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <span>05-data-analysis</span></div>
+<h1 id="05--data-analysis-on-csvs">05 · Data Analysis on CSVs</h1>
+<p>The most load-bearing case: 25 000 rows of user-level survey data and
+18 platform aggregates, four non-trivial analytical questions, one
+markdown report. DSCC has to pick a tool (pandas, polars, awk — its
+call), drive it via <code>bash</code>, and produce numerically correct
+tables.</p>
+<p>This case reuses the existing demo assets under <a
+href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>
+so it runs end-to-end against real data.</p>
+<h2 id="capability-demonstrated">Capability demonstrated</h2>
+<ul>
+<li><code>bash</code> to execute analysis pipelines (pandas / awk /
+etc.).</li>
+<li><code>read_file</code> / <code>write_file</code> for the
+report.</li>
+<li><code>DangerFullAccess</code> permission mode — the agent needs to
+write under <code>/tmp/</code> and run arbitrary shell. See <a
+href="../../guides/permissions.html">guides/permissions.md</a> for when
+this is appropriate.</li>
+</ul>
+<h2 id="setup">Setup</h2>
+<p>Datasets must live at <code>/tmp/social_analysis/</code>:</p>
+<ul>
+<li><code>social_media_user_behavior.csv</code> — 25 000 user rows, ~45
+columns.</li>
+<li><code>platform_statistics_2026.csv</code> — 18 platform
+aggregates.</li>
+</ul>
+<p>The prompt lives at <a
+href="../../../demo/social_media_analysis/PROMPT.html"><code>demo/social_media_analysis/PROMPT.md</code></a>
+— it is the literal prompt used in the shipped demo, so we link rather
+than duplicate.</p>
+<p>Python 3 with <code>pandas</code> installed is the easiest dependency
+for the model to use. A working <code>awk</code> + <code>sort</code>
+stack also suffices if you want to test that path.</p>
+<h2 id="run-command">Run command</h2>
+<pre class="bash"><code>dscc --model claude-opus-4-6 \
+  --permission-mode danger-full-access \
+  prompt &quot;$(cat demo/social_media_analysis/PROMPT.md)&quot;</code></pre>
+<p>A live run is preserved at <a
+href="report_dscc.html"><code>report_dscc.md</code></a> (the literal
+markdown the model wrote to
+<code>/tmp/social_analysis/report_dscc.md</code>) and <a
+href="dscc_run.log"><code>dscc_run.log</code></a>. Both are mirrors of
+the authoritative demo artifacts under <a
+href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>.</p>
+<h2 id="expected-behavior">Expected behavior</h2>
+<p>The model should typically:</p>
+<ol type="1">
+<li><code>bash</code> <code>ls /tmp/social_analysis/</code> and a quick
+<code>head</code> on both CSVs to learn the column names.</li>
+<li><code>bash</code> a Python (or awk) pipeline that:
+<ul>
+<li>bins <code>addiction_level_1_to_10</code> into Low/Medium/High;</li>
+<li>ranks platforms by user count;</li>
+<li>computes cyberbullying rate per <code>age_group</code>.</li>
+</ul></li>
+<li><code>write_file</code> (or <code>bash</code>-redirect) the markdown
+report to <code>/tmp/social_analysis/report_dscc.md</code>.</li>
+</ol>
+<h2 id="verification">Verification</h2>
+<ul>
+<li><code>/tmp/social_analysis/report_dscc.md</code> exists.</li>
+<li>Report contains four sections in order: addiction groups, platform
+ranking, age-group cyberbullying, one-line conclusion.</li>
+<li>Numeric values render with two decimals where the prompt requires
+it.</li>
+<li>The conclusion line is at most ~80 Chinese characters.</li>
+</ul>
+<p>Diff against the reference report in <a
+href="../../../demo/social_media_analysis/report_dscc.html"><code>demo/social_media_analysis/report_dscc.md</code></a>
+— numbers should match within rounding.</p>
+<h3 id="中文">中文</h3>
+<p>最重的一个案例：25 000 行用户数据 + 18 行平台聚合 + 4 道非平凡分析题
++ 1 份 Markdown 报告。DSCC 要自己挑工具（pandas、polars、awk
+随它），通过 <code>bash</code> 驱动，然后产出数字正确的表格。</p>
+<p>直接复用 <a
+href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>
+下的真实数据。</p>
+<h2 id="演示能力">演示能力</h2>
+<ul>
+<li><code>bash</code> 跑分析管道（pandas / awk）。</li>
+<li><code>read_file</code> / <code>write_file</code> 产出报告。</li>
+<li><code>DangerFullAccess</code> 权限：需要写
+<code>/tmp/</code>、执行任意 shell，见 <a
+href="../../guides/permissions.html">guides/permissions.md</a>
+关于何时使用该模式。</li>
+</ul>
+<h2 id="准备">准备</h2>
+<p>数据在 <code>/tmp/social_analysis/</code>：</p>
+<ul>
+<li><code>social_media_user_behavior.csv</code> — 25 000
+行用户级数据，约 45 列。</li>
+<li><code>platform_statistics_2026.csv</code> — 18 个平台聚合。</li>
+</ul>
+<p>Prompt 直接用 <a
+href="../../../demo/social_media_analysis/PROMPT.html"><code>demo/social_media_analysis/PROMPT.md</code></a>，不在此处重复。</p>
+<p>Python 3 + <code>pandas</code> 最省事；有 <code>awk</code> +
+<code>sort</code> 也够。</p>
+<h2 id="运行命令">运行命令</h2>
+<pre class="bash"><code>dscc --model claude-opus-4-6 \
+  --permission-mode danger-full-access \
+  prompt &quot;$(cat demo/social_media_analysis/PROMPT.md)&quot;</code></pre>
+<p>真实运行产物镜像在 <a
+href="report_dscc.html"><code>report_dscc.md</code></a>（模型实际写到
+<code>/tmp/social_analysis/report_dscc.md</code> 的 Markdown）与 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>，同步自 <a
+href="../../../demo/social_media_analysis/"><code>demo/social_media_analysis/</code></a>
+下的权威副本。</p>
+<h2 id="预期行为">预期行为</h2>
+<p>模型通常会：</p>
+<ol type="1">
+<li><code>bash</code> <code>ls /tmp/social_analysis/</code> 加几次
+<code>head</code> 了解列名。</li>
+<li><code>bash</code> 跑 Python（或 awk）管道：
+<ul>
+<li>把 <code>addiction_level_1_to_10</code> 分为 Low/Medium/High；</li>
+<li>按用户数给平台排序前 5；</li>
+<li>按 <code>age_group</code> 算网暴率。</li>
+</ul></li>
+<li><code>write_file</code>（或 <code>bash</code> 重定向）把 Markdown
+报告写到 <code>/tmp/social_analysis/report_dscc.md</code>。</li>
+</ol>
+<h2 id="验收">验收</h2>
+<ul>
+<li><code>/tmp/social_analysis/report_dscc.md</code> 存在。</li>
+<li>报告依次包含：成瘾分组、平台排名、年龄组网暴、一行结论。</li>
+<li>数字按 prompt 要求保留两位小数。</li>
+<li>结论不超过 80 字。</li>
+</ul>
+<p>与参考报告 <a
+href="../../../demo/social_media_analysis/report_dscc.html"><code>demo/social_media_analysis/report_dscc.md</code></a>
+对比，数字应在舍入范围内一致。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

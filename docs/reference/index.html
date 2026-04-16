@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>reference · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body doc-index">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <span>reference</span></div>
+<h1>reference/</h1>
+<ul class="doc-index-list">
+<li><span class="kind">doc</span><a href="cli.html">CLI Reference</a><span class="desc">Every dscc subcommand and global flag. Source of truth: crates/dscc-cli/src/main.rs.</span></li>
+<li><span class="kind">doc</span><a href="config-schema.html">Config Schema</a><span class="desc">Full schema for .dscc.json / .dscc/settings.json / .dscc/settings.local.json. Source of truth: crates/runtime/src/config.rs (1294 lines).</span></li>
+<li><span class="kind">doc</span><a href="env-vars.html">Environment Variables</a><span class="desc">Every environment variable DSCC reads. Citations point to the source module that consumes the value.</span></li>
+<li><span class="kind">doc</span><a href="slash-commands.html">Slash Commands Reference</a><span class="desc">All 31 slash commands. Registry: crates/commands/src/lib.rs:73–300. Parser: SlashCommand::parse() at commands/lib.rs:376–462. &quot;Resume&quot; means safe to run inside a resumed session wi…</span></li>
+<li><span class="kind">doc</span><a href="tools.html">Tools Reference</a><span class="desc">19 built-in tools. Source: crates/tools/src/lib.rs (4645 lines). Dispatcher execute_tool(name, input) at tools.rs:548–573. Registry ToolRegistry at tools.rs:35–49.</span></li>
+</ul>
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

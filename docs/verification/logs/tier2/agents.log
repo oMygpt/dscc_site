@@ -1,0 +1,7 @@
+# reference/cli.md — dscc agents
+$ dscc agents
+No agents found.
+---
+exit: 0
+verdict: PASS
+notes: 'No agents found.' is the correct empty-state message

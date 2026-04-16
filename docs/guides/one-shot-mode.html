@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One-Shot Mode · 单次执行 · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/guides/">guides</a> / <span>one-shot-mode</span></div>
+<h1 id="one-shot-mode--单次执行">One-Shot Mode · 单次执行</h1>
+<p>One-shot mode runs a single prompt and exits. Use it for scripting,
+CI, and piping DSCC into other tools. Entry point:
+<code>dscc prompt &lt;text&gt;</code> (main.rs:318).</p>
+<h2 id="flags">Flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Purpose</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--model &lt;id&gt;</code></td>
+<td>Model ID, required unless <code>DSCC_MODEL</code> is set</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--output-format text|json</code></td>
+<td>Output format, default <code>text</code>. Non-interactive only</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--allowed-tools &lt;names&gt;</code></td>
+<td>Comma- or space-separated tool whitelist</td>
+<td>main.rs:263–277</td>
+</tr>
+<tr>
+<td><code>--permission-mode &lt;mode&gt;</code></td>
+<td><code>read-only</code> | <code>workspace-write</code> |
+<code>danger-full-access</code></td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>Alias for <code>--permission-mode danger-full-access</code></td>
+<td>main.rs:240–242</td>
+</tr>
+</tbody>
+</table>
+<h2 id="upstream-compatible-flags">Upstream-compatible flags</h2>
+<p>DSCC accepts a small set of flags that mirror upstream CLIs so
+existing scripts port without changes.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Equivalent</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-p &lt;text&gt;</code></td>
+<td><code>prompt &lt;text&gt;</code></td>
+<td>main.rs:244–256</td>
+</tr>
+<tr>
+<td><code>--print</code></td>
+<td>Force non-interactive print mode</td>
+<td>main.rs:258–261</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example">Example</h2>
+<pre class="bash"><code>dscc --model claude-sonnet-4-6 prompt &quot;list failing tests&quot; --output-format json</code></pre>
+<h2 id="notes">Notes</h2>
+<ul>
+<li><code>--output-format json</code> only takes effect when stdout is
+not a TTY.</li>
+<li><code>--allowed-tools</code> accepts either
+<code>Read,Grep,Bash</code> or <code>Read Grep Bash</code>.</li>
+<li>Permission flags stack: <code>--dangerously-skip-permissions</code>
+wins over <code>--permission-mode</code>.</li>
+</ul>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="permissions.html">permissions.md</a> for permission mode
+semantics.</li>
+<li><a href="interactive-mode.html">interactive-mode.md</a> for the REPL
+alternative.</li>
+</ul>
+<h3 id="中文">中文</h3>
+<p>单次执行模式运行一条 prompt 后退出，用于脚本、CI
+和管道集成。入口：<code>dscc prompt &lt;text&gt;</code>（main.rs:318）。</p>
+<h2 id="参数">参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--model &lt;id&gt;</code></td>
+<td>模型 ID，若未设置 <code>DSCC_MODEL</code> 则必填</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--output-format text|json</code></td>
+<td>输出格式，默认 <code>text</code>，仅非交互生效</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--allowed-tools &lt;names&gt;</code></td>
+<td>工具白名单，逗号或空格分隔</td>
+<td>main.rs:263–277</td>
+</tr>
+<tr>
+<td><code>--permission-mode &lt;mode&gt;</code></td>
+<td><code>read-only</code> | <code>workspace-write</code> |
+<code>danger-full-access</code></td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>等价于 <code>--permission-mode danger-full-access</code></td>
+<td>main.rs:240–242</td>
+</tr>
+</tbody>
+</table>
+<h2 id="上游兼容参数">上游兼容参数</h2>
+<p>DSCC 保留少量上游 CLI 参数，已有脚本可无改动迁移。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>等价</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-p &lt;text&gt;</code></td>
+<td><code>prompt &lt;text&gt;</code></td>
+<td>main.rs:244–256</td>
+</tr>
+<tr>
+<td><code>--print</code></td>
+<td>强制非交互打印模式</td>
+<td>main.rs:258–261</td>
+</tr>
+</tbody>
+</table>
+<h2 id="示例">示例</h2>
+<pre class="bash"><code>dscc --model claude-sonnet-4-6 prompt &quot;list failing tests&quot; --output-format json</code></pre>
+<h2 id="提示">提示</h2>
+<ul>
+<li><code>--output-format json</code> 仅在 stdout 非 TTY 时生效。</li>
+<li><code>--allowed-tools</code> 支持 <code>Read,Grep,Bash</code> 或
+<code>Read Grep Bash</code> 两种写法。</li>
+<li>权限参数叠加时 <code>--dangerously-skip-permissions</code> 优先于
+<code>--permission-mode</code>。</li>
+</ul>
+<h2 id="相关">相关</h2>
+<ul>
+<li><a href="permissions.html">permissions.md</a> 权限模式语义。</li>
+<li><a href="interactive-mode.html">interactive-mode.md</a> REPL
+替代方案。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

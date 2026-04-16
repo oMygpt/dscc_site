@@ -1,0 +1,7 @@
+# docs/getting-started/authentication.md — dscc logout
+$ dscc logout
+DSCC OAuth credentials cleared.
+---
+exit: 0
+verdict: PASS
+notes: runs without needing an existing session

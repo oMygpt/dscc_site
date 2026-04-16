@@ -1,0 +1,164 @@
+7[1G[2K[38;5;12m⠋ 🦀 Thinking...[0m8我先查看一下数据集文件的位置和内容。
+[38;5;245m╭─ [1;36mbash[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [48;5;236;38;5;255m $ ls -la /tmp/social_analysis/ [0m
+[38;5;245m╰────────────╯[0m
+[1;32m✓[0m [38;5;245mbash[0m
+
+total 14904
+drwxr-xr-x@  9 alone  wheel      288 Apr 15 17:14 .
+drwxrwxrwt  16 root   wheel      512 Apr 15 17:14 ..
+drwxr-xr-x@  3 alone  wheel       96 Apr 15 17:13 .dscc
+drwxr-xr-x@  2 alone  wheel       64 Apr 15 17:14 .sandbox-home
+drwxr-xr-x@  2 alone  wheel       64 Apr 15 17:14 .sandbox-tmp
+-rw-r–r–@  1 alone  wheel      289 Apr 15 17:14 dscc_run.log
+-rw-r–r–@  1 alone  wheel     1428 Apr 15 17:11 platform_statistics_2026.csv
+-rw-r–r–@  1 alone  wheel     1450 Apr 15 17:13 PROMPT.md
+-rw-r–r–@  1 alone  wheel  7615906 Apr 15 17:11 social_media_user_behavior.csv
+让我先查看一下用户行为数据的结构和前几行。
+[38;5;245m╭─ [1;36mread_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [2m📄 Reading /tmp/social_analysis/social_media_user_behavior.csv…[0m
+[38;5;245m╰─────────────────╯[0m
+[1;32m✓[0m [2m📄 Read /private/tmp/social_analysis/social_media_user_behavior.csv (lines 1-5 of 25001)[0m
+user_id,age,age_group,gender,country,occupation,education_level,income_bracket,relationship_status,primary_platform,num_platforms_used,daily_screen_time_minutes,weekly_sessions,avg_session_duration_minutes,preferred_content_type,primary_device,usage_purpose,posts_per_week,likes_per_day,comments_per_day,shares_per_week,followers_count,following_count,engagement_rate_pct,video_consumption_daily_minutes,has_purchased_via_social,follows_influencers,ad_click_frequency,monthly_social_spending_usd,uses_privacy_settings,experienced_cyberbullying,reports_fake_news_frequency,self_reported_mental_health_effect,sleep_hours_per_night,addiction_level_1_to_10,productivity_impact,platform_satisfaction,account_created_date,account_age_years,is_verified_account,is_content_creator,uses_ai_features,daily_notifications,checks_phone_first_morning,uses_screen_time_limits
+USR-000001,22,18-24,Non-Binary,Philippines,Teacher/Educator,Doctoral/Professional,100K-150K,Married,Facebook,6,89,6,89.0,Story/Reel,Desktop,Brand Marketing,0,29,2,6,238,42,0.54,61,False,True,Sometimes,0.59,False,True,Never,Neutral,9.1,1,No Change,Dissatisfied,2025-05-14,0.9,False,False,False,20,True,False
+USR-000002,31,25-34,Prefer Not to Say,United Kingdom,Marketing Professional,High School or Below,50K-75K,In a Relationship,TikTok,6,161,12,93.9,Short-Form Video,Tablet,Dating/Relationships,0,40,0,0,20,2845,2.44,95,True,False,Rarely,8.81,True,True,Never,Neutral,5.5,2,No Change,Dissatisfied,2019-07-18,6.7,False,False,False,31,True,False
+USR-000003,21,18-24,Female,UAE,Legal Professional,High School or Below,25K-50K,Single,Instagram,6,342,22,108.8,Short-Form Video,Tablet,Social Networking,9,4,0,1,14,58,1.67,211,False,True,Sometimes,23.14,False,False,Sometimes,Neutral,4.9,7,Decreased,Neutral,2026-01-10,0.2,False,False,False,47,True,False
+USR-000004,33,25-34,Female,Saudi Arabia,Unemployed,Some College,25K-50K,Single,Instagram,5,157,14,78.5,Story/Reel,Smartphone,Brand Marketing,3,10,2,0,23,216,2.06,76,False,False,Rarely,9.16,True,False,Rarely,Mostly Negative,7.0,1,Decreased,Neutral,2019-09-28,6.5,False,False,False,28,True,False
+好的，现在我用Python来分析数据。让我创建一个分析脚本。
+[38;5;245m╭─ [1;36mwrite_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [1;32m✏️ Writing /tmp/social_analysis/analyze.py[0m [2m(110 lines)[0m
+[38;5;245m╰──────────────────╯[0m
+[1;32m✓[0m [1;32m✏️ Wrote /private/tmp/social_analysis/analyze.py[0m [2m(110 lines)[0m
+现在运行分析脚本：
+[38;5;245m╭─ [1;36mbash[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [48;5;236;38;5;255m $ cd /tmp/social_analysis && python3 analyze.py [0m
+[38;5;245m╰────────────╯[0m
+[1;32m✓[0m [38;5;245mbash[0m exit_code:1
+
+[38;5;203mTraceback (most recent call last):
+File “/private/tmp/social_analysis/analyze.py”, line 2, in <module>
+import pandas as pd
+ModuleNotFoundError: No module named ’pandas’[0m
+我用纯Python来处理数据，不依赖pandas：
+[38;5;245m╭─ [1;36mwrite_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [1;32m✏️ Writing /tmp/social_analysis/analyze.py[0m [2m(142 lines)[0m
+[38;5;245m╰──────────────────╯[0m
+[1;32m✓[0m [1;32m✏️ Updated /private/tmp/social_analysis/analyze.py[0m [2m(142 lines)[0m
+现在运行这个分析脚本：
+[38;5;245m╭─ [1;36mbash[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [48;5;236;38;5;255m $ cd /tmp/social_analysis && python3 analyze.py [0m
+[38;5;245m╰────────────╯[0m
+[1;32m✓[0m [38;5;245mbash[0m
+
+Analysis complete. Report written to /tmp/social_analysis/report_dscc.md
+现在让我查看生成的报告：
+[38;5;245m╭─ [1;36mread_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [2m📄 Reading /tmp/social_analysis/report_dscc.md…[0m
+[38;5;245m╰─────────────────╯[0m
+[1;32m✓[0m [2m📄 Read /private/tmp/social_analysis/report_dscc.md (lines 1-37 of 37)[0m
+
+
+[38;5;14m[1m社交媒体使用强度与心理健康分析报告[0m
+
+
+[38;5;15m[1m1. 成瘾分组对比[0m
+
+[38;5;6m│[39m [38;5;14m[1m成瘾分组[0m   [38;5;6m│[39m [38;5;14m[1m用户数[0m   [38;5;6m│[39m [38;5;14m[1m占比(%)[0m [38;5;6m│[39m [38;5;14m[1m日均屏幕时间(分钟)[0m [38;5;6m│[39m [38;5;14m[1m平均睡眠(小时)[0m [38;5;6m│[39m [38;5;14m[1m负面影响占比(%)[0m [38;5;6m│[39m
+[38;5;6m│[39m────────[38;5;6m┼[39m───────[38;5;6m┼[39m───────[38;5;6m┼[39m────────────[38;5;6m┼[39m──────────[38;5;6m┼[39m───────────[38;5;6m│[39m
+[38;5;6m│[39m Low    [38;5;6m│[39m 16655 [38;5;6m│[39m 66.62 [38;5;6m│[39m 115.10     [38;5;6m│[39m 7.23     [38;5;6m│[39m 1.54      [38;5;6m│[39m
+[38;5;6m│[39m Medium [38;5;6m│[39m 7579  [38;5;6m│[39m 30.32 [38;5;6m│[39m 186.62     [38;5;6m│[39m 6.67     [38;5;6m│[39m 6.87      [38;5;6m│[39m
+[38;5;6m│[39m High   [38;5;6m│[39m 766   [38;5;6m│[39m 3.06  [38;5;6m│[39m 256.86     [38;5;6m│[39m 6.11     [38;5;6m│[39m 15.80     [38;5;6m│[39m
+
+
+[38;5;15m[1m2. 平台排名 (用户数前5)[0m
+
+[38;5;6m│[39m [38;5;14m[1m平台[0m          [38;5;6m│[39m [38;5;14m[1m平均成瘾得分[0m [38;5;6m│[39m [38;5;14m[1m负面影响占比(%)[0m [38;5;6m│[39m [38;5;14m[1m日均屏幕时间(分钟)[0m [38;5;6m│[39m
+[38;5;6m│[39m─────────────[38;5;6m┼[39m────────[38;5;6m┼[39m───────────[38;5;6m┼[39m────────────[38;5;6m│[39m
+[38;5;6m│[39m Instagram   [38;5;6m│[39m 2.86   [38;5;6m│[39m 3.88      [38;5;6m│[39m 140.06     [38;5;6m│[39m
+[38;5;6m│[39m Facebook    [38;5;6m│[39m 2.87   [38;5;6m│[39m 3.33      [38;5;6m│[39m 140.22     [38;5;6m│[39m
+[38;5;6m│[39m YouTube     [38;5;6m│[39m 2.88   [38;5;6m│[39m 3.35      [38;5;6m│[39m 141.17     [38;5;6m│[39m
+[38;5;6m│[39m TikTok      [38;5;6m│[39m 2.94   [38;5;6m│[39m 3.90      [38;5;6m│[39m 142.57     [38;5;6m│[39m
+[38;5;6m│[39m X (Twitter) [38;5;6m│[39m 2.86   [38;5;6m│[39m 4.15      [38;5;6m│[39m 140.67     [38;5;6m│[39m
+
+
+[38;5;15m[1m3. 年龄组网暴风险[0m
+
+[38;5;6m│[39m [38;5;14m[1m年龄组[0m   [38;5;6m│[39m [38;5;14m[1m遭遇网暴比例(%)[0m [38;5;6m│[39m
+[38;5;6m│[39m───────[38;5;6m┼[39m───────────[38;5;6m│[39m
+[38;5;6m│[39m 13-17 [38;5;6m│[39m 17.53     [38;5;6m│[39m
+[38;5;6m│[39m 18-24 [38;5;6m│[39m 17.94     [38;5;6m│[39m
+[38;5;6m│[39m 25-34 [38;5;6m│[39m 18.33     [38;5;6m│[39m
+[38;5;6m│[39m 35-44 [38;5;6m│[39m 18.94     [38;5;6m│[39m
+[38;5;6m│[39m 45-54 [38;5;6m│[39m 18.05     [38;5;6m│[39m
+[38;5;6m│[39m 55-64 [38;5;6m│[39m 18.48     [38;5;6m│[39m
+[38;5;6m│[39m 65+   [38;5;6m│[39m 16.86     [38;5;6m│[39m
+
+风险最高的年龄组: 35-44 (18.94%)
+
+
+[38;5;15m[1m4. 结论[0m
+
+社交媒体成瘾程度越高，日均屏幕时间越长、睡眠越少、心理健康负面影响占比越高；年轻用户群体网暴风险显著更高。
+我需要修正一下结论，数据显示网暴风险最高的年龄组是35-44，并非年轻用户群体。让我更新报告：
+[38;5;245m╭─ [1;36medit_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [1;33m📝 Editing /tmp/social_analysis/report_dscc.md[0m
+[38;5;203m- 社交媒体成瘾程度越高，日均屏幕时间越长、睡眠越少、心理健康负面影响占比越高；年轻用户群体网暴风险显著更高。[0m
+[38;5;70m+ 社交媒体成瘾程度越高，日均屏幕时间越长、睡眠越少、心理健康负面影响占比越高；35-44岁年龄组网暴风险相对最高。[0m
+[38;5;245m╰─────────────────╯[0m
+[1;32m✓[0m [1;33m📝 Edited /private/tmp/social_analysis/report_dscc.md[0m
+[38;5;203m-# 社交媒体使用强度与心理健康分析报告[0m
+[38;5;203m-[0m
+[38;5;203m-## 1. 成瘾分组对比[0m
+[38;5;203m-[0m
+[38;5;203m-| 成瘾分组 | 用户数 | 占比(%) | 日均屏幕时间(分钟) | 平均睡眠(小时) | 负面影响占比(%) |[0m
+[38;5;203m-|–––––|––––|———|––––––––––|––––––––|——————|[0m
+让我再看一下最终的报告：
+[38;5;245m╭─ [1;36mread_file[0;38;5;245m ─╮[0m
+[38;5;245m│[0m [2m📄 Reading /tmp/social_analysis/report_dscc.md…[0m
+[38;5;245m╰─────────────────╯[0m
+[1;32m✓[0m [2m📄 Read /private/tmp/social_analysis/report_dscc.md (lines 1-37 of 37)[0m
+
+
+[38;5;14m[1m社交媒体使用强度与心理健康分析报告[0m
+
+
+[38;5;15m[1m1. 成瘾分组对比[0m
+
+[38;5;6m│[39m [38;5;14m[1m成瘾分组[0m   [38;5;6m│[39m [38;5;14m[1m用户数[0m   [38;5;6m│[39m [38;5;14m[1m占比(%)[0m [38;5;6m│[39m [38;5;14m[1m日均屏幕时间(分钟)[0m [38;5;6m│[39m [38;5;14m[1m平均睡眠(小时)[0m [38;5;6m│[39m [38;5;14m[1m负面影响占比(%)[0m [38;5;6m│[39m
+[38;5;6m│[39m────────[38;5;6m┼[39m───────[38;5;6m┼[39m───────[38;5;6m┼[39m────────────[38;5;6m┼[39m──────────[38;5;6m┼[39m───────────[38;5;6m│[39m
+[38;5;6m│[39m Low    [38;5;6m│[39m 16655 [38;5;6m│[39m 66.62 [38;5;6m│[39m 115.10     [38;5;6m│[39m 7.23     [38;5;6m│[39m 1.54      [38;5;6m│[39m
+[38;5;6m│[39m Medium [38;5;6m│[39m 7579  [38;5;6m│[39m 30.32 [38;5;6m│[39m 186.62     [38;5;6m│[39m 6.67     [38;5;6m│[39m 6.87      [38;5;6m│[39m
+[38;5;6m│[39m High   [38;5;6m│[39m 766   [38;5;6m│[39m 3.06  [38;5;6m│[39m 256.86     [38;5;6m│[39m 6.11     [38;5;6m│[39m 15.80     [38;5;6m│[39m
+
+
+[38;5;15m[1m2. 平台排名 (用户数前5)[0m
+
+[38;5;6m│[39m [38;5;14m[1m平台[0m          [38;5;6m│[39m [38;5;14m[1m平均成瘾得分[0m [38;5;6m│[39m [38;5;14m[1m负面影响占比(%)[0m [38;5;6m│[39m [38;5;14m[1m日均屏幕时间(分钟)[0m [38;5;6m│[39m
+[38;5;6m│[39m─────────────[38;5;6m┼[39m────────[38;5;6m┼[39m───────────[38;5;6m┼[39m────────────[38;5;6m│[39m
+[38;5;6m│[39m Instagram   [38;5;6m│[39m 2.86   [38;5;6m│[39m 3.88      [38;5;6m│[39m 140.06     [38;5;6m│[39m
+[38;5;6m│[39m Facebook    [38;5;6m│[39m 2.87   [38;5;6m│[39m 3.33      [38;5;6m│[39m 140.22     [38;5;6m│[39m
+[38;5;6m│[39m YouTube     [38;5;6m│[39m 2.88   [38;5;6m│[39m 3.35      [38;5;6m│[39m 141.17     [38;5;6m│[39m
+[38;5;6m│[39m TikTok      [38;5;6m│[39m 2.94   [38;5;6m│[39m 3.90      [38;5;6m│[39m 142.57     [38;5;6m│[39m
+[38;5;6m│[39m X (Twitter) [38;5;6m│[39m 2.86   [38;5;6m│[39m 4.15      [38;5;6m│[39m 140.67     [38;5;6m│[39m
+
+
+[38;5;15m[1m3. 年龄组网暴风险[0m
+
+[38;5;6m│[39m [38;5;14m[1m年龄组[0m   [38;5;6m│[39m [38;5;14m[1m遭遇网暴比例(%)[0m [38;5;6m│[39m
+[38;5;6m│[39m───────[38;5;6m┼[39m───────────[38;5;6m│[39m
+[38;5;6m│[39m 13-17 [38;5;6m│[39m 17.53     [38;5;6m│[39m
+[38;5;6m│[39m 18-24 [38;5;6m│[39m 17.94     [38;5;6m│[39m
+[38;5;6m│[39m 25-34 [38;5;6m│[39m 18.33     [38;5;6m│[39m
+[38;5;6m│[39m 35-44 [38;5;6m│[39m 18.94     [38;5;6m│[39m
+[38;5;6m│[39m 45-54 [38;5;6m│[39m 18.05     [38;5;6m│[39m
+[38;5;6m│[39m 55-64 [38;5;6m│[39m 18.48     [38;5;6m│[39m
+[38;5;6m│[39m 65+   [38;5;6m│[39m 16.86     [38;5;6m│[39m
+
+风险最高的年龄组: 35-44 (18.94%)
+
+
+[38;5;15m[1m4. 结论[0m
+
+社交媒体成瘾程度越高，日均屏幕时间越长、睡眠越少、心理健康负面影响占比越高；35-44岁年龄组网暴风险相对最高。
+分析已完成，报告已生成在 [38;5;10m`/tmp/social_analysis/report_dscc.md`[39m。[1G[2K[38;5;10m✔ ✨ Done
+[0m

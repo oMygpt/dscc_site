@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMPT · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/">Docs</a>
+      <a href="../../../docs/cookbook/">Cookbook</a>
+      <a href="../../../docs/reference/cli.html">CLI</a>
+      <a href="../../../docs/verification/registry.html">Verification</a>
+      <a href="../../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <a href="../../../docs/cookbook/03-refactor-rename/">03-refactor-rename</a> / <span>PROMPT</span></div>
+<!-- cookbook case: 03-refactor-rename -->
+
+<p>Rename the function <code>load_config</code> to
+<code>load_settings</code> across the entire codebase.</p>
+<p>Steps:</p>
+<ol type="1">
+<li>Use grep to find every call site and the definition.</li>
+<li>Update the definition and all callers. Preserve argument order and
+doc comments.</li>
+<li>Do not change unrelated code.</li>
+</ol>
+<p>When done, summarise which files you changed and confirm that
+<code>git grep load_config</code> returns no matches.</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

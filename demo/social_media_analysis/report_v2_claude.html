@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>社交媒体行为分析报告 · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../demo/">demo</a> / <a href="../../demo/social_media_analysis/">social_media_analysis</a> / <span>report_v2_claude</span></div>
+<h1 id="社交媒体行为分析报告">社交媒体行为分析报告</h1>
+<h2 id="q1-跨表一致性检查">Q1. 跨表一致性检查</h2>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>用户均值</th>
+<th>平台表值</th>
+<th>差值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bluesky</td>
+<td>142.4854</td>
+<td>8.0000</td>
+<td>134.4854</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>146.5087</td>
+<td>40.0000</td>
+<td>106.5087</td>
+</tr>
+<tr>
+<td>Facebook</td>
+<td>140.2221</td>
+<td>33.0000</td>
+<td>107.2221</td>
+</tr>
+<tr>
+<td>Instagram</td>
+<td>140.0627</td>
+<td>35.0000</td>
+<td>105.0627</td>
+</tr>
+<tr>
+<td>LinkedIn</td>
+<td>140.3275</td>
+<td>11.0000</td>
+<td>129.3275</td>
+</tr>
+<tr>
+<td>Pinterest</td>
+<td>141.9667</td>
+<td>14.0000</td>
+<td>127.9667</td>
+</tr>
+<tr>
+<td>RedNote</td>
+<td>141.2082</td>
+<td>25.0000</td>
+<td>116.2082</td>
+</tr>
+<tr>
+<td>Reddit</td>
+<td>141.7874</td>
+<td>24.0000</td>
+<td>117.7874</td>
+</tr>
+<tr>
+<td>Snapchat</td>
+<td>141.2541</td>
+<td>30.0000</td>
+<td>111.2541</td>
+</tr>
+<tr>
+<td>Telegram</td>
+<td>142.3301</td>
+<td>18.0000</td>
+<td>124.3301</td>
+</tr>
+<tr>
+<td>Threads</td>
+<td>137.7528</td>
+<td>12.0000</td>
+<td>125.7528</td>
+</tr>
+<tr>
+<td>TikTok</td>
+<td>142.5701</td>
+<td>58.0000</td>
+<td>84.5701</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>143.4046</td>
+<td>28.0000</td>
+<td>115.4046</td>
+</tr>
+<tr>
+<td>X (Twitter)</td>
+<td>140.6729</td>
+<td>22.0000</td>
+<td>118.6729</td>
+</tr>
+<tr>
+<td>YouTube</td>
+<td>141.1732</td>
+<td>48.0000</td>
+<td>93.1732</td>
+</tr>
+</tbody>
+</table>
+<p>Pearson 相关系数: 0.3143</p>
+<p>绝对差最大的 3 个平台:</p>
+<ol type="1">
+<li>Bluesky: 绝对差 = 134.4854</li>
+<li>LinkedIn: 绝对差 = 129.3275</li>
+<li>Pinterest: 绝对差 = 127.9667</li>
+</ol>
+<h2 id="q2-独立性检验">Q2. 独立性检验</h2>
+<p>2×2 列联表:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>has_purchased_via_social=False</th>
+<th>has_purchased_via_social=True</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_content_creator=False</td>
+<td>13048</td>
+<td>8160</td>
+</tr>
+<tr>
+<td>is_content_creator=True</td>
+<td>2340</td>
+<td>1452</td>
+</tr>
+</tbody>
+</table>
+<p>chi2 = 0.0390, dof = 1, p_value = 0.8435</p>
+<p>结论: 在 α=0.05 水平上，无法拒绝独立性假设</p>
+<h2 id="q3-逻辑回归预测是否通过社交平台购买过">Q3.
+逻辑回归：预测是否通过社交平台购买过</h2>
+<p>Train AUC: 0.5220 Test AUC: 0.5006 Test Accuracy: 0.6156</p>
+<p>系数绝对值 Top 5 的特征:</p>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>系数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>primary_platform_Threads</td>
+<td>0.1585</td>
+</tr>
+<tr>
+<td>income_bracket_$150K+</td>
+<td>-0.1203</td>
+</tr>
+<tr>
+<td>primary_platform_WhatsApp</td>
+<td>0.1056</td>
+</tr>
+<tr>
+<td>primary_platform_TikTok</td>
+<td>0.1035</td>
+</tr>
+<tr>
+<td>primary_platform_Snapchat</td>
+<td>0.1025</td>
+</tr>
+</tbody>
+</table>
+<h2 id="q4-simpsons-风险检查">Q4. Simpson’s 风险检查</h2>
+<p>r_all (整体): -0.3698 r_creator (创作者): -0.3615 r_non_creator
+(非创作者): -0.3713</p>
+<p>符号反转或量级减半以上检查:</p>
+<ul>
+<li>未检测到符号反转或量级减半以上</li>
+</ul>
+<h2 id="q5-k-means-行为聚类">Q5. K-Means 行为聚类</h2>
+<p>每簇规模:</p>
+<table>
+<thead>
+<tr>
+<th>簇</th>
+<th>用户数</th>
+<th>占比(%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>6585</td>
+<td>26.3400</td>
+</tr>
+<tr>
+<td>1</td>
+<td>7136</td>
+<td>28.5440</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2658</td>
+<td>10.6320</td>
+</tr>
+<tr>
+<td>3</td>
+<td>8621</td>
+<td>34.4840</td>
+</tr>
+</tbody>
+</table>
+<p>每簇原始特征均值:</p>
+<table>
+<thead>
+<tr>
+<th>簇</th>
+<th>daily_screen_time_minutes</th>
+<th>engagement_rate_pct</th>
+<th>posts_per_week</th>
+<th>addiction_level_1_to_10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>116.6691</td>
+<td>2.9098</td>
+<td>2.1001</td>
+<td>2.1072</td>
+</tr>
+<tr>
+<td>1</td>
+<td>207.9937</td>
+<td>1.7783</td>
+<td>2.2190</td>
+<td>4.8065</td>
+</tr>
+<tr>
+<td>2</td>
+<td>141.5662</td>
+<td>1.8286</td>
+<td>10.5779</td>
+<td>3.0899</td>
+</tr>
+<tr>
+<td>3</td>
+<td>104.3116</td>
+<td>1.1635</td>
+<td>2.0220</td>
+<td>1.8397</td>
+</tr>
+</tbody>
+</table>
+<p>业务标签:</p>
+<ul>
+<li>簇 0: 高参与观众</li>
+<li>簇 1: 高强度沉迷用户</li>
+<li>簇 2: 重度创作者</li>
+<li>簇 3: 低活跃普通用户</li>
+</ul>
+<h2 id="q6-异常参与度用户">Q6. 异常参与度用户</h2>
+<p>残差绝对值 Top 5 用户:</p>
+<table>
+<thead>
+<tr>
+<th>user_id</th>
+<th>followers_count</th>
+<th>engagement_rate_pct</th>
+<th>predicted</th>
+<th>residual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USR-020194</td>
+<td>1025</td>
+<td>6.1200</td>
+<td>1.8388</td>
+<td>4.2812</td>
+</tr>
+<tr>
+<td>USR-020577</td>
+<td>1733</td>
+<td>5.9400</td>
+<td>1.8455</td>
+<td>4.0945</td>
+</tr>
+<tr>
+<td>USR-010877</td>
+<td>1581</td>
+<td>5.7100</td>
+<td>1.8443</td>
+<td>3.8657</td>
+</tr>
+<tr>
+<td>USR-005491</td>
+<td>1324</td>
+<td>5.6000</td>
+<td>1.8420</td>
+<td>3.7580</td>
+</tr>
+<tr>
+<td>USR-001540</td>
+<td>5706</td>
+<td>5.5300</td>
+<td>1.8608</td>
+<td>3.6692</td>
+</tr>
+</tbody>
+</table>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

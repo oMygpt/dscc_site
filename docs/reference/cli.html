@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CLI Reference · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/reference/">reference</a> / <span>cli</span></div>
+<h1 id="cli-reference">CLI Reference</h1>
+<p>Every <code>dscc</code> subcommand and global flag. Source of truth:
+<code>crates/dscc-cli/src/main.rs</code>.</p>
+<h2 id="subcommands">Subcommands</h2>
+<table>
+<thead>
+<tr>
+<th>Subcommand</th>
+<th>Purpose</th>
+<th>Args / flags</th>
+<th>File:line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt &lt;text&gt;</code></td>
+<td>One-shot prompt</td>
+<td><code>--model</code>, <code>--output-format</code>,
+<code>--allowed-tools</code>, <code>--permission-mode</code></td>
+<td>main.rs:318</td>
+</tr>
+<tr>
+<td><code>login</code></td>
+<td>OAuth login; browser flow on port 4545</td>
+<td>none</td>
+<td>main.rs:315</td>
+</tr>
+<tr>
+<td><code>logout</code></td>
+<td>Clear OAuth credentials</td>
+<td>none</td>
+<td>main.rs:315</td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>Initialize repo with DSCC files</td>
+<td>none</td>
+<td>main.rs:317</td>
+</tr>
+<tr>
+<td><code>agents [args]</code></td>
+<td>List configured agents</td>
+<td>filter args</td>
+<td>main.rs:308–309</td>
+</tr>
+<tr>
+<td><code>skills [args]</code></td>
+<td>List available skills</td>
+<td>filter args</td>
+<td>main.rs:311–312</td>
+</tr>
+<tr>
+<td><code>system-prompt</code></td>
+<td>Print composed system prompt (debug)</td>
+<td><code>--cwd PATH</code>, <code>--date YYYY-MM-DD</code></td>
+<td>main.rs:314, 462–488</td>
+</tr>
+<tr>
+<td><code>dump-manifests</code></td>
+<td>Dump internal manifests (debug)</td>
+<td>none</td>
+<td>main.rs:306</td>
+</tr>
+<tr>
+<td><code>bootstrap-plan</code></td>
+<td>Print bootstrap plan (debug)</td>
+<td>none</td>
+<td>main.rs:307</td>
+</tr>
+<tr>
+<td><em>(default, no subcmd)</em></td>
+<td>Interactive REPL</td>
+<td>model/tools/permission flags</td>
+<td>main.rs:291–296</td>
+</tr>
+<tr>
+<td><code>--help</code> / <code>-h</code></td>
+<td>Help</td>
+<td>—</td>
+<td>main.rs:298–299</td>
+</tr>
+<tr>
+<td><code>--resume &lt;file.json&gt; [/cmd...]</code></td>
+<td>Resume session and optionally dispatch <code>/</code> commands</td>
+<td>trailing args must start with <code>/</code></td>
+<td>main.rs:301–302, 490–506</td>
+</tr>
+</tbody>
+</table>
+<h2 id="global-flags">Global flags</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Takes value</th>
+<th>Default</th>
+<th>Purpose</th>
+<th>File:line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--model</code> / <code>--model=VALUE</code></td>
+<td>yes</td>
+<td><code>DSCC_MODEL</code> env or error</td>
+<td>Model id</td>
+<td>main.rs:384–411</td>
+</tr>
+<tr>
+<td><code>--api-key</code> / <code>--api-key=VALUE</code></td>
+<td>yes</td>
+<td>env</td>
+<td>Sets <code>DSCC_API_KEY</code></td>
+<td>main.rs:195–205</td>
+</tr>
+<tr>
+<td><code>--base-url</code> / <code>--base-url=VALUE</code></td>
+<td>yes</td>
+<td>provider default</td>
+<td>Sets <code>DSCC_BASE_URL</code></td>
+<td>main.rs:207–216</td>
+</tr>
+<tr>
+<td><code>--output-format [text|json]</code></td>
+<td>yes</td>
+<td><code>text</code></td>
+<td>Non-interactive only</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--permission-mode [read-only|workspace-write|danger-full-access]</code></td>
+<td>yes</td>
+<td><code>DSCC_PERMISSION_MODE</code> or
+<code>danger-full-access</code></td>
+<td>Gate tools</td>
+<td>main.rs:428–452</td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>no</td>
+<td>off</td>
+<td>Alias for <code>--permission-mode danger-full-access</code></td>
+<td>main.rs:240–242</td>
+</tr>
+<tr>
+<td><code>--allowedTools</code> / <code>--allowed-tools</code></td>
+<td>yes</td>
+<td>all</td>
+<td>Comma/space-separated allowlist</td>
+<td>main.rs:263–277</td>
+</tr>
+<tr>
+<td><code>-p &lt;text&gt;</code></td>
+<td>yes</td>
+<td>—</td>
+<td>Non-interactive compat; remainder is the prompt</td>
+<td>main.rs:244–256</td>
+</tr>
+<tr>
+<td><code>--print</code></td>
+<td>no</td>
+<td>—</td>
+<td>Non-interactive marker</td>
+<td>main.rs:258–261</td>
+</tr>
+<tr>
+<td><code>-V</code> / <code>--version</code></td>
+<td>no</td>
+<td>—</td>
+<td>Print version and exit</td>
+<td>main.rs:180–182</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">Examples</h2>
+<pre class="sh"><code># Interactive REPL with a specific model                                    # [交互] opens the REPL; Ctrl-D to exit
+dscc --model claude-opus-4-6
+
+# One-shot prompt, JSON output, only the read tools
+dscc prompt &quot;summarize README&quot; \
+  --output-format json \
+  --allowed-tools read_file,glob_search,grep_search
+
+# Resume a saved session and run /status right after loading                 # [待验证]
+dscc --resume ./session.json /status
+
+# Print the exact composed system prompt for debugging
+dscc system-prompt --cwd /tmp/repo --date 2026-04-16</code></pre>
+<hr />
+<h3 id="中文">中文</h3>
+<p><code>dscc</code>
+的全部子命令与全局参数。源头：<code>crates/dscc-cli/src/main.rs</code>。</p>
+<h2 id="子命令">子命令</h2>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>作用</th>
+<th>参数 / 标志</th>
+<th>File:line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt &lt;text&gt;</code></td>
+<td>一次性 prompt</td>
+<td><code>--model</code>、<code>--output-format</code>、<code>--allowed-tools</code>、<code>--permission-mode</code></td>
+<td>main.rs:318</td>
+</tr>
+<tr>
+<td><code>login</code></td>
+<td>OAuth 登录；浏览器回调端口 4545</td>
+<td>无</td>
+<td>main.rs:315</td>
+</tr>
+<tr>
+<td><code>logout</code></td>
+<td>清除 OAuth 凭据</td>
+<td>无</td>
+<td>main.rs:315</td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>在仓库写入 DSCC 初始文件</td>
+<td>无</td>
+<td>main.rs:317</td>
+</tr>
+<tr>
+<td><code>agents [args]</code></td>
+<td>列出已配置的 agent</td>
+<td>过滤参数</td>
+<td>main.rs:308–309</td>
+</tr>
+<tr>
+<td><code>skills [args]</code></td>
+<td>列出可用 skill</td>
+<td>过滤参数</td>
+<td>main.rs:311–312</td>
+</tr>
+<tr>
+<td><code>system-prompt</code></td>
+<td>打印组合后的 system prompt（调试）</td>
+<td><code>--cwd PATH</code>、<code>--date YYYY-MM-DD</code></td>
+<td>main.rs:314, 462–488</td>
+</tr>
+<tr>
+<td><code>dump-manifests</code></td>
+<td>打印内部 manifest（调试）</td>
+<td>无</td>
+<td>main.rs:306</td>
+</tr>
+<tr>
+<td><code>bootstrap-plan</code></td>
+<td>打印启动计划（调试）</td>
+<td>无</td>
+<td>main.rs:307</td>
+</tr>
+<tr>
+<td><em>（无子命令）</em></td>
+<td>进入交互 REPL</td>
+<td>model / tools / permission 相关参数</td>
+<td>main.rs:291–296</td>
+</tr>
+<tr>
+<td><code>--help</code> / <code>-h</code></td>
+<td>帮助</td>
+<td>—</td>
+<td>main.rs:298–299</td>
+</tr>
+<tr>
+<td><code>--resume &lt;file.json&gt; [/cmd...]</code></td>
+<td>恢复会话并可追加 <code>/</code> 命令</td>
+<td>余下参数必须以 <code>/</code> 开头</td>
+<td>main.rs:301–302, 490–506</td>
+</tr>
+</tbody>
+</table>
+<h2 id="全局参数">全局参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>是否带值</th>
+<th>默认值</th>
+<th>作用</th>
+<th>File:line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--model</code> / <code>--model=VALUE</code></td>
+<td>是</td>
+<td><code>DSCC_MODEL</code> 或报错</td>
+<td>模型 id</td>
+<td>main.rs:384–411</td>
+</tr>
+<tr>
+<td><code>--api-key</code> / <code>--api-key=VALUE</code></td>
+<td>是</td>
+<td>环境变量</td>
+<td>写入 <code>DSCC_API_KEY</code></td>
+<td>main.rs:195–205</td>
+</tr>
+<tr>
+<td><code>--base-url</code> / <code>--base-url=VALUE</code></td>
+<td>是</td>
+<td>provider 默认</td>
+<td>写入 <code>DSCC_BASE_URL</code></td>
+<td>main.rs:207–216</td>
+</tr>
+<tr>
+<td><code>--output-format [text|json]</code></td>
+<td>是</td>
+<td><code>text</code></td>
+<td>仅非交互模式</td>
+<td>main.rs</td>
+</tr>
+<tr>
+<td><code>--permission-mode [read-only|workspace-write|danger-full-access]</code></td>
+<td>是</td>
+<td><code>DSCC_PERMISSION_MODE</code> 或
+<code>danger-full-access</code></td>
+<td>工具权限闸门</td>
+<td>main.rs:428–452</td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>否</td>
+<td>关</td>
+<td>等同于 <code>--permission-mode danger-full-access</code></td>
+<td>main.rs:240–242</td>
+</tr>
+<tr>
+<td><code>--allowedTools</code> / <code>--allowed-tools</code></td>
+<td>是</td>
+<td>全部允许</td>
+<td>逗号或空格分隔的工具白名单</td>
+<td>main.rs:263–277</td>
+</tr>
+<tr>
+<td><code>-p &lt;text&gt;</code></td>
+<td>是</td>
+<td>—</td>
+<td>非交互兼容；余下即为 prompt</td>
+<td>main.rs:244–256</td>
+</tr>
+<tr>
+<td><code>--print</code></td>
+<td>否</td>
+<td>—</td>
+<td>非交互标记</td>
+<td>main.rs:258–261</td>
+</tr>
+<tr>
+<td><code>-V</code> / <code>--version</code></td>
+<td>否</td>
+<td>—</td>
+<td>打印版本号</td>
+<td>main.rs:180–182</td>
+</tr>
+</tbody>
+</table>
+<h2 id="示例">示例</h2>
+<pre class="sh"><code># 指定模型进入交互 REPL                                                      # [交互] 进入 REPL，Ctrl-D 退出
+dscc --model claude-opus-4-6
+
+# 一次性 prompt，JSON 输出，只启用读类工具
+dscc prompt &quot;summarize README&quot; \
+  --output-format json \
+  --allowed-tools read_file,glob_search,grep_search
+
+# 恢复会话并在加载后立即执行 /status                                          # [待验证]
+dscc --resume ./session.json /status
+
+# 打印组合后的 system prompt 供调试
+dscc system-prompt --cwd /tmp/repo --date 2026-04-16</code></pre>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

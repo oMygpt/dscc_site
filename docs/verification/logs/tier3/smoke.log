@@ -1,0 +1,36 @@
+# smoke test — provider routing (Volces ARK / doubao)
+
+## Run 1 — 2026-04-16 (FAIL, malformed key)
+
+$ DSCC_API_KEY=<REDACTED> DSCC_BASE_URL=<REDACTED>
+$ dscc --model doubao-seed-2.0-code --permission-mode read-only prompt "Reply with the single word: hello"
+
+⠋ 🦀 Thinking...
+✘ ❌ Request failed
+Error
+  Problem   api returned 401 Unauthorized (Unauthorized): The API key format is incorrect.
+            Request id: 021776310375267e9332e432e361cc65cb87413ba317661719864
+  Help      dscc --help
+
+---
+exit: 0 (CLI exited cleanly; server rejected credentials)
+model: doubao-seed-2.0-code
+verdict: FAIL
+notes: Key had 7 chars in the first dash-segment (expected 8 for UUID). Re-paste requested.
+
+## Run 2 — 2026-04-16 (PASS, valid key)
+
+$ DSCC_API_KEY=<REDACTED> DSCC_BASE_URL=<REDACTED>
+$ dscc --model doubao-seed-2.0-code prompt "Reply with a single short sentence: hello from dscc smoke test."
+
+⠋ 🦀 Thinking...
+hello from dscc smoke test.
+✔ ✨ Done
+
+---
+exit: 0
+duration: ~3s
+model: doubao-seed-2.0-code
+provider: Volces ARK (OpenAI-compatible generic path)
+verdict: PASS
+notes: Tier 3 path is live. Unblocks cookbook runs and remaining Tier 3 markers.

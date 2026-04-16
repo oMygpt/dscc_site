@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DSCC — Dispatch · Scaffold · Compose · Commit</title>
+<meta name="description" content="DSCC = Dispatch · Scaffold · Compose · Commit. A safe-Rust local coding agent that runs the whole coding loop inside one dscc binary — dispatch the task, scaffold the workspace, compose the work, commit it back. Anthropic Messages API and OpenAI-compatible providers." />
+<link rel="alternate" hreflang="en" href="https://ds.jupyter.pro/en/" />
+<link rel="alternate" hreflang="zh-CN" href="https://ds.jupyter.pro/" />
+<link rel="alternate" hreflang="x-default" href="https://ds.jupyter.pro/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="mask-icon" href="/favicon.svg" color="#ff7a45" />
+<meta name="theme-color" content="#0b0d12" />
+<link rel="preconnect" href="https://github.com" />
+<link rel="stylesheet" href="/styles.css?v=6" />
+</head>
+<body>
+<header class="hero">
+  <nav class="nav">
+    <a class="brand" href="/en/">DSCC</a>
+    <div class="nav-links">
+      <a href="#loop">Loop</a>
+      <a href="#demo">Demo</a>
+      <a href="#install">Install</a>
+      <a href="#usage">Usage</a>
+      <a href="/docs/">Docs</a>
+      <a class="lang-toggle" href="/" hreflang="zh-CN">中文</a>
+    </div>
+  </nav>
+  <div class="hero-inner">
+    <span class="badge">v0.1.0 · Safe Rust · AGPL-3.0</span>
+    <p class="slogan">CC on your own API — faster, zero install, just as good.</p>
+    <h1 class="tagline">Dispatch · Scaffold · Compose · Commit</h1>
+    <p class="lede">
+      DSCC spells out the coding loop. A safe-Rust <code>dscc</code> binary
+      <em>dispatches</em> the task to the right model, <em>scaffolds</em> the workspace,
+      <em>composes</em> the work across turns, and <em>commits</em> it back to your tree —
+      wire-compatible with the Anthropic Messages API and OpenAI-compatible providers.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="#download">Download v0.1.0</a>
+      <a class="btn ghost" href="#loop">The DSCC loop</a>
+      <a class="btn ghost" href="https://github.com/oMygpt/dscc" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <pre class="hero-snippet"><code>export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/coding/v3"
+dscc --model doubao-seed-2.0-code prompt "summarize this workspace"</code></pre>
+  </div>
+</header>
+
+<main>
+<section id="loop" class="section alt">
+  <h2>The DSCC loop</h2>
+  <p class="muted">Four verbs, one binary. Every coding task walks the same cycle.</p>
+  <div class="grid four">
+    <div class="loop-card">
+      <span class="loop-num">01 · DISPATCH</span>
+      <h3>Dispatch the task</h3>
+      <p>Route work to the right model and provider — doubao, Qwen, a local Ollama, or any OpenAI-compatible endpoint. No hard-coded default, the choice is yours.</p>
+<pre><code>dscc --model doubao-seed-2.0-code
+export DSCC_MODEL=qwen3-coder
+dscc --model llama3:8b   # via Ollama</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">02 · SCAFFOLD</span>
+      <h3>Scaffold the workspace</h3>
+      <p>Read the tree, load <code>DSCC.md</code> and <code>.dscc/</code>, discover local agents and skills — all the context the tools will need downstream.</p>
+<pre><code>dscc agents
+dscc skills
+# DSCC.md / .dscc/settings.json</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">03 · COMPOSE</span>
+      <h3>Compose across turns</h3>
+      <p>Iterate inside a REPL, save and resume sessions, compact history when it grows, and bring in plugins as you go.</p>
+<pre><code>/session  /compact
+/config   /export
+/agents   /skills</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">04 · COMMIT</span>
+      <h3>Commit it back</h3>
+      <p>Review diffs, export artifacts, and land changes through the built-in shell and edit tools — closing the loop back into the repo.</p>
+<pre><code>/diff
+git add -p
+git commit</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="section">
+  <h2>Same task, same answer sheet</h2>
+  <p class="lede">
+    On 25,000 real users × <strong>six statistical questions</strong> (cross-table reconciliation,
+    chi-square, logistic regression, a Simpson's check, k-means clustering, OLS residual outliers),
+    <strong>dscc (doubao-seed-2.0-code) and Claude Code (claude-opus-4-6) produced results that
+    match to four decimal places</strong> — two independent scripts, two vendor models, one answer
+    sheet you can reconcile.
+  </p>
+
+  <div class="demo-sublabel">One command to reproduce it</div>
+<pre><code>export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/coding/v3"
+dscc --model doubao-seed-2.0-code \
+     --permission-mode workspace-write \
+     prompt "$(cat PROMPT_v2.md)"</code></pre>
+
+  <div class="demo-observe">
+    <h3>Three-sentence takeaway</h3>
+    <ul>
+      <li><strong>The numbers line up exactly.</strong> Pearson <code>0.3143</code>, chi-square
+        <code>p 0.8435</code>, logistic <code>test AUC 0.5006 · acc 0.6156</code>, Simpson's check
+        <code>-0.3698 / -0.3615 / -0.3713</code>, k-means cluster sizes
+        <code>26.34 / 28.54 / 10.63 / 34.48%</code>, and in Q6 the same five user_ids in the same
+        order with the same residuals. Six sections, not a single digit off.</li>
+      <li><strong>dscc fixes itself.</strong> The sandbox had no pandas/scipy, so dscc ran
+        <code>pip3 install</code> on its own; the first pass then hit <code>KeyError: 0</code>
+        because it treated <code>pearsonr</code>'s return as a scalar — dscc read the traceback,
+        edited the script to <code>r, _ = pearsonr(...)</code>, and re-ran successfully. A
+        traceback is input to the next turn, not a terminal state.</li>
+      <li><strong>Divergence lives only in the prose.</strong> For k-means cluster 1 (screen
+        207.99 min, addiction 4.81), dscc labeled it "medium-usual" and Claude Code labeled it
+        "high-intensity addict" — same rows, same centroids, two narrative picks. That's exactly
+        the line a serious agent stack should draw between <em>numbers</em> and
+        <em>narration</em>.</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>Expand: full prompt (all six questions)</summary>
+<pre><code>Dataset: /tmp/social_analysis/{social_media_user_behavior.csv, platform_statistics_2026.csv}
+All RNG: random_state=42. All numbers: 4 decimals.
+
+Q1. Cross-table consistency: user-level mean daily_screen_time_minutes by primary_platform
+    vs platform_statistics_2026.avg_daily_time_minutes → reconciliation table, Pearson r,
+    top 3 platforms by absolute gap.
+Q2. 2×2 contingency is_content_creator × has_purchased_via_social → chi2 / dof / p.
+Q3. Logistic regression for has_purchased_via_social. 7 numeric + 3 boolean + 3 one-hot
+    categorical. StandardScaler on numeric only. train_test_split(0.2, stratify=y).
+    Report train AUC / test AUC / test accuracy + top-5 coefficients by |value|.
+Q4. Overall Pearson(addiction, sleep) vs Pearson split by is_content_creator
+    — Simpson's reversal / halving check.
+Q5. 4 features → StandardScaler → KMeans(n=4, n_init=10) → cluster sizes +
+    original-scale means per cluster.
+Q6. followers_count ≥ 1000 users, log10(1+x) → predict engagement_rate_pct
+    (simple OLS), list top-5 users by |residual|.</code></pre>
+  </details>
+
+  <details>
+    <summary>Expand: dscc execution trace + analyze_v2.py + key numbers</summary>
+    <div class="demo-sublabel">Trace</div>
+<pre><code>$ head -5 social_media_user_behavior.csv   # scaffold: peek at schema
+✏️  write analyze_v2.py (pandas + scipy + sklearn)
+$ python3 analyze_v2.py                     # ModuleNotFoundError: pandas
+✏️  try stdlib rewrite                        # scipy / sklearn needed → abandon
+$ pip3 install pandas numpy scipy scikit-learn statsmodels -q
+$ python3 analyze_v2.py                     # KeyError: 0 — pearsonr unpack bug
+📝  edit: r, _ = pearsonr(...)                # fix the tuple handling
+$ python3 analyze_v2.py                     # clean pass, writes report_v2_dscc.md</code></pre>
+
+    <div class="demo-sublabel">analyze_v2.py (core excerpt)</div>
+<pre><code>import pandas as pd, numpy as np
+from scipy.stats import chi2_contingency, pearsonr
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.cluster import KMeans
+
+RS = 42
+u = pd.read_csv(".../social_media_user_behavior.csv")
+p = pd.read_csv(".../platform_statistics_2026.csv")
+
+# Q1 cross-table reconciliation
+user_mean = u.groupby("primary_platform")["daily_screen_time_minutes"].mean()
+merged = pd.DataFrame({"user_mean": user_mean}).join(
+    p.set_index("platform")["avg_daily_time_minutes"].rename("table_val"),
+    how="inner",
+)
+merged["gap"] = merged["user_mean"] - merged["table_val"]
+r, _ = pearsonr(merged["user_mean"], merged["table_val"])  # ← initially missed `_`
+
+# Q3 logistic (excerpt)
+num = ["age","daily_screen_time_minutes","num_platforms_used", ...]
+boo = ["follows_influencers","is_content_creator","uses_ai_features"]
+cat = ["ad_click_frequency","income_bracket","primary_platform"]
+X = pd.concat([u[num], u[boo].astype(int),
+               pd.get_dummies(u[cat], drop_first=True)], axis=1)
+y = u["has_purchased_via_social"].astype(int)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2,
+                                      random_state=RS, stratify=y)
+scaler = StandardScaler().fit(Xtr[num])
+Xtr_s = Xtr.copy(); Xtr_s[num] = scaler.transform(Xtr[num])
+Xte_s = Xte.copy(); Xte_s[num] = scaler.transform(Xte[num])
+clf = LogisticRegression(max_iter=2000, random_state=RS).fit(Xtr_s, ytr)</code></pre>
+
+    <div class="demo-sublabel">report_v2_dscc.md (key numbers)</div>
+<pre><code># Q1  Pearson r = 0.3143
+#     top gaps: Bluesky 134.4854 / LinkedIn 129.3275 / Pinterest 127.9667
+
+# Q2  chi2 = 0.0390  dof = 1  p = 0.8435  → fail to reject independence
+
+# Q3  train AUC 0.5220  test AUC 0.5006  test acc 0.6156
+#     top coefs: Threads +0.1585 / income $150K+ -0.1203 / WhatsApp +0.1056
+
+# Q4  r_all = -0.3698   r_creator = -0.3615   r_non = -0.3713
+#     no Simpson reversal
+
+# Q5  cluster %: 26.3400 / 28.5440 / 10.6320 / 34.4840
+#     cluster 1 means: screen 207.99 / eng 1.78 / posts 2.22 / addict 4.81
+#     labels: heavy viewer · medium-usual · heavy creator · low-activity
+
+# Q6  top residual: USR-020194 followers 1025 eng 6.12 → resid 4.2812</code></pre>
+  </details>
+
+  <details>
+    <summary>Expand: Claude Code execution trace + run_claude_v2.py + key numbers</summary>
+    <div class="demo-sublabel">Trace</div>
+<pre><code>Read   PROMPT_v2.md
+Read   social_media_user_behavior.csv   # schema check
+Read   platform_statistics_2026.csv
+Write  run_claude_v2.py   # single script, Q1–Q6, ~180 lines
+Bash   python3 run_claude_v2.py   # host pandas/scipy/sklearn in place, one-shot
+Write  report_v2_claude.md</code></pre>
+
+    <div class="demo-sublabel">run_claude_v2.py (core excerpt)</div>
+<pre><code>import pandas as pd, numpy as np
+from scipy.stats import chi2_contingency, pearsonr
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.cluster import KMeans
+
+RS = 42
+u = pd.read_csv("/tmp/social_analysis/social_media_user_behavior.csv")
+p = pd.read_csv("/tmp/social_analysis/platform_statistics_2026.csv")
+
+# Q1
+user_mean = u.groupby("primary_platform")["daily_screen_time_minutes"].mean().round(4)
+merged = pd.DataFrame({"user_mean": user_mean}).join(
+    p.set_index("platform")["avg_daily_time_minutes"].rename("table_val"),
+    how="inner",
+)
+merged["gap"] = (merged["user_mean"] - merged["table_val"]).round(4)
+r, _ = pearsonr(merged["user_mean"], merged["table_val"])
+top3 = merged["gap"].abs().sort_values(ascending=False).head(3)
+
+# Q5
+feats = ["daily_screen_time_minutes","engagement_rate_pct",
+         "posts_per_week","addiction_level_1_to_10"]
+Xk = StandardScaler().fit_transform(u[feats])
+km = KMeans(n_clusters=4, n_init=10, random_state=RS).fit(Xk)
+u["cluster"] = km.labels_
+sizes = u["cluster"].value_counts().sort_index()
+means = u.groupby("cluster")[feats].mean().round(4)</code></pre>
+
+    <div class="demo-sublabel">report_v2_claude.md (key numbers)</div>
+<pre><code># Q1  Pearson r = 0.3143
+#     top gaps: Bluesky 134.4854 / LinkedIn 129.3275 / Pinterest 127.9667
+
+# Q2  chi2 = 0.0390  dof = 1  p = 0.8435  → fail to reject independence
+
+# Q3  train AUC 0.5220  test AUC 0.5006  test acc 0.6156
+#     top coefs: Threads +0.1585 / income $150K+ -0.1203 / WhatsApp +0.1056
+
+# Q4  r_all = -0.3698   r_creator = -0.3615   r_non = -0.3713
+#     no Simpson reversal
+
+# Q5  cluster %: 26.3400 / 28.5440 / 10.6320 / 34.4840
+#     cluster 1 means: screen 207.99 / eng 1.78 / posts 2.22 / addict 4.81
+#     labels: heavy viewer · high-intensity addict · heavy creator · low-activity
+
+# Q6  top residual: USR-020194 followers 1025 eng 6.12 → resid 4.2812</code></pre>
+  </details>
+
+  <p class="muted small" style="margin-top:1.5rem">
+    This demo doubles as the recorded artifact for
+    <a href="/docs/cookbook/05-data-analysis/">docs/cookbook/05-data-analysis</a>
+    (ships with <code>dscc_run.log</code> and <code>report_dscc.md</code>). The other four cookbook cases —
+    <a href="/docs/cookbook/01-code-review/">01 code review</a> ·
+    <a href="/docs/cookbook/02-test-generation/">02 test generation</a> ·
+    <a href="/docs/cookbook/03-refactor-rename/">03 rename refactor</a> ·
+    <a href="/docs/cookbook/04-web-research/">04 web research</a>
+    — each ship a real run log and verification entry in the
+    <a href="/docs/verification/registry.html">verification registry</a>.
+  </p>
+</section>
+
+<section id="download" class="section">
+  <h2>Download</h2>
+  <p class="muted">Pre-built binaries for macOS, Linux and Windows. Unpack the archive and run <code>dscc</code>.</p>
+  <div class="grid dl-grid">
+    <a class="card dl" href="/dl/dscc-v0.1.0-aarch64-apple-darwin.tar.gz">
+      <div class="dl-title">macOS · Apple Silicon</div>
+      <div class="dl-meta">aarch64-apple-darwin · 4.4 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-apple-darwin.tar.gz">
+      <div class="dl-title">macOS · Intel</div>
+      <div class="dl-meta">x86_64-apple-darwin · 4.6 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-unknown-linux-gnu.tar.gz">
+      <div class="dl-title">Linux · x86_64 (glibc)</div>
+      <div class="dl-meta">x86_64-unknown-linux-gnu · 4.8 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-unknown-linux-musl.tar.gz">
+      <div class="dl-title">Linux · x86_64 (musl, static)</div>
+      <div class="dl-meta">x86_64-unknown-linux-musl · 5.0 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-aarch64-unknown-linux-gnu.tar.gz">
+      <div class="dl-title">Linux · ARM64</div>
+      <div class="dl-meta">aarch64-unknown-linux-gnu · 4.7 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-pc-windows-msvc.zip">
+      <div class="dl-title">Windows · x86_64</div>
+      <div class="dl-meta">x86_64-pc-windows-msvc · 4.1 MB · zip</div>
+    </a>
+  </div>
+  <p class="muted small">
+    All assets, checksums and signatures: <a href="https://github.com/oMygpt/dscc/releases/tag/v0.1.0" target="_blank" rel="noopener">release page</a>.
+    Source build: <code>cargo install --path crates/dscc-cli --locked</code>.
+  </p>
+</section>
+
+<section id="install" class="section alt">
+  <h2>Install</h2>
+  <div class="grid two">
+    <div>
+      <h3>macOS / Linux</h3>
+<pre><code>curl -LO /dl/dscc-v0.1.0-aarch64-apple-darwin.tar.gz
+tar -xzf dscc-v0.1.0-aarch64-apple-darwin.tar.gz
+sudo mv dscc /usr/local/bin/
+dscc --version</code></pre>
+    </div>
+    <div>
+      <h3>Windows (PowerShell)</h3>
+<pre><code>iwr /dl/dscc-v0.1.0-x86_64-pc-windows-msvc.zip -OutFile dscc.zip
+Expand-Archive .\dscc.zip -DestinationPath .
+.\dscc.exe --version</code></pre>
+    </div>
+    <div>
+      <h3>From source (Cargo)</h3>
+<pre><code>git clone https://github.com/oMygpt/dscc.git
+cd dscc
+cargo install --path crates/dscc-cli --locked</code></pre>
+    </div>
+    <div>
+      <h3>Authenticate</h3>
+<pre><code># Anthropic-compatible
+export ANTHROPIC_API_KEY="..."
+
+# xAI / Grok
+export XAI_API_KEY="..."
+
+# Generic OpenAI-compatible
+export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="usage" class="section">
+  <h2>Usage</h2>
+  <p class="muted">
+    DSCC has <strong>no hard-coded default model</strong>. Pick one via <code>--model</code> or
+    <code>DSCC_MODEL</code>; a bilingual error fires if both are missing.
+  </p>
+  <div class="grid two">
+    <div>
+      <h3>Interactive session</h3>
+<pre><code>dscc --model doubao-seed-2.0-code</code></pre>
+      <h3>One-shot prompt</h3>
+<pre><code>dscc --model qwen3-coder \
+  prompt "summarize crates/runtime"</code></pre>
+    </div>
+    <div>
+      <h3>Local Ollama (zero setup)</h3>
+<pre><code>export DSCC_BASE_URL="http://localhost:11434/v1"
+export DSCC_API_KEY="ollama"   # any string
+dscc --model qwen3-coder:7b \
+  prompt "explain this workspace"</code></pre>
+      <h3>Slash commands</h3>
+<pre><code>/status   /config   /diff    /compact
+/export   /session  /agents  /skills</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section alt">
+  <h2>Features</h2>
+  <div class="grid three">
+    <div class="feat"><span class="feat-label">DISPATCH</span><h3>Provider-agnostic</h3><p>Anthropic Messages API, xAI/Grok, and OpenAI-compatible endpoints — all from one binary, with an explicit model choice.</p></div>
+    <div class="feat"><span class="feat-label">SCAFFOLD</span><h3>Workspace-aware config</h3><p>Loads <code>DSCC.md</code>, <code>.dscc.json</code>, <code>.dscc/settings.json</code>, permissions, and plugin settings.</p></div>
+    <div class="feat"><span class="feat-label">SCAFFOLD</span><h3>Plugins, agents, skills</h3><p>Local discovery and management via <code>dscc agents</code>, <code>dscc skills</code>, and plugin surfaces.</p></div>
+    <div class="feat"><span class="feat-label">COMPOSE</span><h3>Interactive &amp; one-shot</h3><p>REPL for exploration, <code>prompt</code> subcommand for scripts and CI — same toolchain, two shapes.</p></div>
+    <div class="feat"><span class="feat-label">COMPOSE</span><h3>Sessions &amp; compaction</h3><p>Save, inspect, resume, and compact conversations with built-in slash commands.</p></div>
+    <div class="feat"><span class="feat-label">COMMIT</span><h3>Tools that ship</h3><p>Shell, file read/write/edit, search, web fetch/search, todos, notebook updates — the surface that lands work back in the repo.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>About</h2>
+  <p>
+    <strong>DSCC = Dispatch · Scaffold · Compose · Commit</strong>.
+    Four verbs for one coding loop: dispatch the task to the right model, scaffold the workspace,
+    compose the work across turns, and commit it back to your tree.
+  </p>
+  <p class="muted">
+    Dual-licensed: <a href="https://github.com/oMygpt/dscc/blob/main/LICENSE">AGPL-3.0-only</a>
+    for open source; for a commercial license, contact <a href="mailto:admin@swufe8.org">admin@swufe8.org</a>.
+  </p>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="https://github.com/oMygpt/dscc">oMygpt/dscc</a> · <a href="https://github.com/oMygpt/dscc/releases/tag/v0.1.0">v0.1.0 release</a> · <a href="/docs/">docs</a> · <a href="/docs/cookbook/">cookbook</a></span>
+  </div>
+</footer>
+</body>
+</html>

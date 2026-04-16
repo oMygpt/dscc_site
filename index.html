@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DSCC — 调度 · 搭建 · 编排 · 提交</title>
+<meta name="description" content="DSCC = Dispatch · Scaffold · Compose · Commit。用安全 Rust 编写的本地编码代理命令行工具，在一个 dscc 二进制里贯穿「调度任务 → 搭建骨架 → 编排内容 → 落地提交」的完整编码循环，兼容 Anthropic Messages API 与 OpenAI 协议的各类提供商。" />
+<link rel="alternate" hreflang="zh-CN" href="https://ds.jupyter.pro/" />
+<link rel="alternate" hreflang="en" href="https://ds.jupyter.pro/en/" />
+<link rel="alternate" hreflang="x-default" href="https://ds.jupyter.pro/" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="mask-icon" href="/favicon.svg" color="#ff7a45" />
+<meta name="theme-color" content="#0b0d12" />
+<link rel="preconnect" href="https://github.com" />
+<link rel="stylesheet" href="/styles.css?v=6" />
+</head>
+<body>
+<header class="hero">
+  <nav class="nav">
+    <a class="brand" href="/">DSCC</a>
+    <div class="nav-links">
+      <a href="#loop">循环</a>
+      <a href="#demo">演示</a>
+      <a href="#install">安装</a>
+      <a href="#usage">用法</a>
+      <a href="/docs/">文档</a>
+      <a class="lang-toggle" href="/en/" hreflang="en">EN</a>
+    </div>
+  </nav>
+  <div class="hero-inner">
+    <span class="badge">v0.1.0 · Safe Rust · AGPL-3.0</span>
+    <p class="slogan">本地 API 用 CC，更快、零安装、一样好用。</p>
+    <h1 class="tagline">调度任务 · 搭建骨架 · 编排内容 · 落地提交</h1>
+    <p class="lede">
+      DSCC = <em>Dispatch · Scaffold · Compose · Commit</em>。
+      一个用安全 Rust 编写的本地编码代理，在一个 <code>dscc</code> 二进制里跑完整个编码循环 ——
+      把任务调度给合适的模型，搭起工作区的骨架，在多轮对话里编排内容，最后把改动落地到仓库。
+      协议兼容 Anthropic Messages API 与 OpenAI 兼容的各类提供商。
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="#download">下载 v0.1.0</a>
+      <a class="btn ghost" href="#loop">了解 DSCC 循环</a>
+      <a class="btn ghost" href="https://github.com/oMygpt/dscc" target="_blank" rel="noopener">在 GitHub 上查看</a>
+    </div>
+    <pre class="hero-snippet"><code>export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/coding/v3"
+dscc --model doubao-seed-2.0-code prompt "总结这个工作区"</code></pre>
+  </div>
+</header>
+
+<main>
+<section id="loop" class="section alt">
+  <h2>DSCC 循环</h2>
+  <p class="muted">四个动词，一个二进制。每一次编码任务都走同一条循环。</p>
+  <div class="grid four">
+    <div class="loop-card">
+      <span class="loop-num">01 · DISPATCH</span>
+      <h3>调度任务</h3>
+      <p>把任务路由到合适的模型与提供商 —— doubao、Qwen、本地 Ollama，或任意 OpenAI 兼容端点。没有硬编码默认模型，选择权在你。</p>
+<pre><code>dscc --model doubao-seed-2.0-code
+export DSCC_MODEL=qwen3-coder
+dscc --model llama3:8b   # 经 Ollama</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">02 · SCAFFOLD</span>
+      <h3>搭建骨架</h3>
+      <p>读取工作区、加载 <code>DSCC.md</code> 与 <code>.dscc/</code>，发现本地 agents 与 skills，准备好后续所有工具调用的上下文。</p>
+<pre><code>dscc agents
+dscc skills
+# DSCC.md / .dscc/settings.json</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">03 · COMPOSE</span>
+      <h3>编排内容</h3>
+      <p>在 REPL、sessions、compaction、plugins 之间多轮迭代 —— 记得进度、能压缩历史、可导出与恢复。</p>
+<pre><code>/session  /compact
+/config   /export
+/agents   /skills</code></pre>
+    </div>
+    <div class="loop-card">
+      <span class="loop-num">04 · COMMIT</span>
+      <h3>落地提交</h3>
+      <p>通过内建 shell、编辑、搜索工具查看 diff、导出产物，把改动真正落地回仓库，形成闭环。</p>
+<pre><code>/diff
+git add -p
+git commit</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="section">
+  <h2>同样的任务，同一份答卷</h2>
+  <p class="lede">
+    在 25,000 行真实用户数据 × <strong>6 道统计题</strong>（跨表一致性、卡方独立性、Logistic 回归、
+    Simpson 陷阱、K-Means 聚类、OLS 残差异常）上，<strong>dscc（doubao-seed-2.0-code）
+    与 Claude Code（claude-opus-4-6）产出 4 位小数完全一致的结果</strong> ——
+    两套独立脚本、两种不同厂商的模型、一个能对得上的答卷。
+  </p>
+
+  <div class="demo-sublabel">一条命令复现这份答卷</div>
+<pre><code>export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/coding/v3"
+dscc --model doubao-seed-2.0-code \
+     --permission-mode workspace-write \
+     prompt "$(cat PROMPT_v2.md)"</code></pre>
+
+  <div class="demo-observe">
+    <h3>三句话结论</h3>
+    <ul>
+      <li><strong>数字硬对齐。</strong> Pearson <code>0.3143</code>、卡方 <code>p 0.8435</code>、
+        Logistic <code>test AUC 0.5006 · acc 0.6156</code>、Simpson 检查 <code>-0.3698 / -0.3615 / -0.3713</code>、
+        K-Means 簇规模 <code>26.34 / 28.54 / 10.63 / 34.48%</code>、Q6 残差 Top-5 同一批 user_id 同一个排序。
+        6 个小节，两边一字不差。</li>
+      <li><strong>dscc 自己修自己。</strong> 沙箱缺 pandas/scipy → dscc 自动 <code>pip3 install</code>；
+        首跑命中 <code>KeyError: 0</code>（<code>pearsonr</code> 返回 tuple 被当 scalar 用）→ 读堆栈、
+        edit 成 <code>r, _ = pearsonr(...)</code>，再跑就通过。报错是下一轮的输入，不是终点。</li>
+      <li><strong>分歧只在文字层。</strong> K-Means 簇 1 同一批用户（screen 207.99 min、addict 4.81），
+        dscc 起名"中度普通用户"、Claude Code 起名"高强度沉迷用户"。数字硬对齐，叙述有分歧 ——
+        这正是工程化 agent 应该有的边界。</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>展开：完整 prompt（6 道题的细则）</summary>
+<pre><code>数据集：/tmp/social_analysis/{social_media_user_behavior.csv, platform_statistics_2026.csv}
+所有随机过程 random_state=42；所有数值保留 4 位小数。
+
+Q1. 跨表一致性：用户级 daily_screen_time_minutes 按 primary_platform 均值 vs 平台表
+    avg_daily_time_minutes，给对照表 + Pearson 相关 + 绝对差最大的 3 个平台
+Q2. is_content_creator × has_purchased_via_social 2×2 列联表 + chi2/df/p
+Q3. Logistic 回归预测 has_purchased_via_social，10 个数值/布尔 + 3 个 one-hot
+    StandardScaler 只对数值列；train/test split 20%，stratify=y
+    输出 train AUC / test AUC / test accuracy + 系数绝对值 top 5
+Q4. 整体 vs (is_content_creator True/False) 两组的 Pearson(addiction, sleep)
+    —— Simpson 反转或量级减半检查
+Q5. 4 特征 StandardScaler → KMeans(n=4, n_init=10) → 簇规模 + 原始尺度均值
+Q6. followers_count ≥ 1000 的用户，log10(1+x) → 预测 engagement_rate_pct，
+    一元 OLS，给残差绝对值 top 5 用户</code></pre>
+  </details>
+
+  <details>
+    <summary>展开：dscc 的执行轨迹 + analyze_v2.py + 关键数字</summary>
+    <div class="demo-sublabel">运行轨迹</div>
+<pre><code>$ head -5 social_media_user_behavior.csv  # scaffold: 看一眼 schema
+✏️  write analyze_v2.py (pandas + scipy + sklearn)
+$ python3 analyze_v2.py                    # ModuleNotFoundError: pandas
+✏️  try stdlib rewrite                      # 但 Q2/Q3/Q5 需要 scipy/sklearn，放弃
+$ pip3 install pandas numpy scipy scikit-learn statsmodels -q
+$ python3 analyze_v2.py                    # KeyError: 0 —— pearsonr 返回值解包错
+📝  edit: r, _ = pearsonr(...)              # 修掉 Series 索引问题
+$ python3 analyze_v2.py                    # 一次通过，写入 report_v2_dscc.md</code></pre>
+
+    <div class="demo-sublabel">analyze_v2.py（核心片段）</div>
+<pre><code>import pandas as pd, numpy as np
+from scipy.stats import chi2_contingency, pearsonr
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.cluster import KMeans
+
+RS = 42
+u = pd.read_csv(".../social_media_user_behavior.csv")
+p = pd.read_csv(".../platform_statistics_2026.csv")
+
+# Q1 跨表一致性
+user_mean = u.groupby("primary_platform")["daily_screen_time_minutes"].mean()
+merged = pd.DataFrame({"用户均值": user_mean}).join(
+    p.set_index("platform")["avg_daily_time_minutes"].rename("平台表值"),
+    how="inner",
+)
+merged["差值"] = merged["用户均值"] - merged["平台表值"]
+r, _ = pearsonr(merged["用户均值"], merged["平台表值"])  # ← 曾漏掉 `_`
+
+# Q3 Logistic（节选）
+num = ["age","daily_screen_time_minutes","num_platforms_used", ...]
+boo = ["follows_influencers","is_content_creator","uses_ai_features"]
+cat = ["ad_click_frequency","income_bracket","primary_platform"]
+X = pd.concat([u[num], u[boo].astype(int),
+               pd.get_dummies(u[cat], drop_first=True)], axis=1)
+y = u["has_purchased_via_social"].astype(int)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2,
+                                      random_state=RS, stratify=y)
+scaler = StandardScaler().fit(Xtr[num])
+Xtr_s = Xtr.copy(); Xtr_s[num] = scaler.transform(Xtr[num])
+Xte_s = Xte.copy(); Xte_s[num] = scaler.transform(Xte[num])
+clf = LogisticRegression(max_iter=2000, random_state=RS).fit(Xtr_s, ytr)</code></pre>
+
+    <div class="demo-sublabel">report_v2_dscc.md（关键数字）</div>
+<pre><code># Q1  Pearson r = 0.3143
+#     top 差异：Bluesky 134.4854 / LinkedIn 129.3275 / Pinterest 127.9667
+
+# Q2  chi2 = 0.0390  dof = 1  p = 0.8435  → 不拒绝独立性
+
+# Q3  train AUC 0.5220  test AUC 0.5006  test acc 0.6156
+#     top 系数：Threads +0.1585 / income $150K+ -0.1203 / WhatsApp +0.1056
+
+# Q4  r_all = -0.3698   r_creator = -0.3615   r_non = -0.3713
+#     无 Simpson 反转
+
+# Q5  簇规模 %：26.3400 / 28.5440 / 10.6320 / 34.4840
+#     簇 1 均值：screen 207.99 / eng 1.78 / posts 2.22 / addict 4.81
+#     标签：高参与观众 · 中度普通用户 · 重度创作者 · 低活跃
+
+# Q6  残差 top1：USR-020194 followers 1025 eng 6.12 → resid 4.2812</code></pre>
+  </details>
+
+  <details>
+    <summary>展开：Claude Code 的执行轨迹 + run_claude_v2.py + 关键数字</summary>
+    <div class="demo-sublabel">执行轨迹</div>
+<pre><code>Read   PROMPT_v2.md
+Read   social_media_user_behavior.csv   # 抽样看 schema
+Read   platform_statistics_2026.csv
+Write  run_claude_v2.py     # 一个脚本串完 Q1–Q6，~180 行
+Bash   python3 run_claude_v2.py   # 宿主 pandas/scipy/sklearn 已就位，一次通过
+Write  report_v2_claude.md</code></pre>
+
+    <div class="demo-sublabel">run_claude_v2.py（核心片段）</div>
+<pre><code>import pandas as pd, numpy as np
+from scipy.stats import chi2_contingency, pearsonr
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.cluster import KMeans
+
+RS = 42
+u = pd.read_csv("/tmp/social_analysis/social_media_user_behavior.csv")
+p = pd.read_csv("/tmp/social_analysis/platform_statistics_2026.csv")
+
+# Q1
+user_mean = u.groupby("primary_platform")["daily_screen_time_minutes"].mean().round(4)
+merged = pd.DataFrame({"用户均值": user_mean}).join(
+    p.set_index("platform")["avg_daily_time_minutes"].rename("平台表值"),
+    how="inner",
+)
+merged["差值"] = (merged["用户均值"] - merged["平台表值"]).round(4)
+r, _ = pearsonr(merged["用户均值"], merged["平台表值"])
+top3 = merged["差值"].abs().sort_values(ascending=False).head(3)
+
+# Q5
+feats = ["daily_screen_time_minutes","engagement_rate_pct",
+         "posts_per_week","addiction_level_1_to_10"]
+Xk = StandardScaler().fit_transform(u[feats])
+km = KMeans(n_clusters=4, n_init=10, random_state=RS).fit(Xk)
+u["cluster"] = km.labels_
+sizes = u["cluster"].value_counts().sort_index()
+means = u.groupby("cluster")[feats].mean().round(4)</code></pre>
+
+    <div class="demo-sublabel">report_v2_claude.md（关键数字）</div>
+<pre><code># Q1  Pearson r = 0.3143
+#     top 差异：Bluesky 134.4854 / LinkedIn 129.3275 / Pinterest 127.9667
+
+# Q2  chi2 = 0.0390  dof = 1  p = 0.8435  → 不拒绝独立性
+
+# Q3  train AUC 0.5220  test AUC 0.5006  test acc 0.6156
+#     top 系数：Threads +0.1585 / income $150K+ -0.1203 / WhatsApp +0.1056
+
+# Q4  r_all = -0.3698   r_creator = -0.3615   r_non = -0.3713
+#     无 Simpson 反转
+
+# Q5  簇规模 %：26.3400 / 28.5440 / 10.6320 / 34.4840
+#     簇 1 均值：screen 207.99 / eng 1.78 / posts 2.22 / addict 4.81
+#     标签：高参与观众 · 高强度沉迷用户 · 重度创作者 · 低活跃普通
+
+# Q6  残差 top1：USR-020194 followers 1025 eng 6.12 → resid 4.2812</code></pre>
+  </details>
+
+  <p class="muted small" style="margin-top:1.5rem">
+    这一份演示同时作为
+    <a href="/docs/cookbook/05-data-analysis/">docs/cookbook/05-data-analysis</a>
+    的实机产物存档（含 <code>dscc_run.log</code> 与 <code>report_dscc.md</code>）。
+    其余 4 个 cookbook 案例 ——
+    <a href="/docs/cookbook/01-code-review/">01 代码审查</a> ·
+    <a href="/docs/cookbook/02-test-generation/">02 测试生成</a> ·
+    <a href="/docs/cookbook/03-refactor-rename/">03 重命名重构</a> ·
+    <a href="/docs/cookbook/04-web-research/">04 网页调研</a>
+    —— 均附带真实运行日志与验收记录，见
+    <a href="/docs/verification/registry.html">验证登记簿</a>。
+  </p>
+</section>
+
+<section id="download" class="section">
+  <h2>下载</h2>
+  <p class="muted">macOS、Linux、Windows 的预构建二进制。解压后直接运行 <code>dscc</code>。</p>
+  <div class="grid dl-grid">
+    <a class="card dl" href="/dl/dscc-v0.1.0-aarch64-apple-darwin.tar.gz">
+      <div class="dl-title">macOS · Apple Silicon</div>
+      <div class="dl-meta">aarch64-apple-darwin · 4.4 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-apple-darwin.tar.gz">
+      <div class="dl-title">macOS · Intel</div>
+      <div class="dl-meta">x86_64-apple-darwin · 4.6 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-unknown-linux-gnu.tar.gz">
+      <div class="dl-title">Linux · x86_64（glibc）</div>
+      <div class="dl-meta">x86_64-unknown-linux-gnu · 4.8 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-unknown-linux-musl.tar.gz">
+      <div class="dl-title">Linux · x86_64（musl 静态）</div>
+      <div class="dl-meta">x86_64-unknown-linux-musl · 5.0 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-aarch64-unknown-linux-gnu.tar.gz">
+      <div class="dl-title">Linux · ARM64</div>
+      <div class="dl-meta">aarch64-unknown-linux-gnu · 4.7 MB · tar.gz</div>
+    </a>
+    <a class="card dl" href="/dl/dscc-v0.1.0-x86_64-pc-windows-msvc.zip">
+      <div class="dl-title">Windows · x86_64</div>
+      <div class="dl-meta">x86_64-pc-windows-msvc · 4.1 MB · zip</div>
+    </a>
+  </div>
+  <p class="muted small">
+    全部资产、校验值与签名见 <a href="https://github.com/oMygpt/dscc/releases/tag/v0.1.0" target="_blank" rel="noopener">发布页面</a>。
+    源码构建：<code>cargo install --path crates/dscc-cli --locked</code>。
+  </p>
+</section>
+
+<section id="install" class="section alt">
+  <h2>安装</h2>
+  <div class="grid two">
+    <div>
+      <h3>macOS / Linux</h3>
+<pre><code>curl -LO /dl/dscc-v0.1.0-aarch64-apple-darwin.tar.gz
+tar -xzf dscc-v0.1.0-aarch64-apple-darwin.tar.gz
+sudo mv dscc /usr/local/bin/
+dscc --version</code></pre>
+    </div>
+    <div>
+      <h3>Windows（PowerShell）</h3>
+<pre><code>iwr /dl/dscc-v0.1.0-x86_64-pc-windows-msvc.zip -OutFile dscc.zip
+Expand-Archive .\dscc.zip -DestinationPath .
+.\dscc.exe --version</code></pre>
+    </div>
+    <div>
+      <h3>从源码构建（Cargo）</h3>
+<pre><code>git clone https://github.com/oMygpt/dscc.git
+cd dscc
+cargo install --path crates/dscc-cli --locked</code></pre>
+    </div>
+    <div>
+      <h3>配置凭证</h3>
+<pre><code># Anthropic 兼容
+export ANTHROPIC_API_KEY="..."
+
+# xAI / Grok
+export XAI_API_KEY="..."
+
+# 通用 OpenAI 兼容提供商
+export DSCC_API_KEY="..."
+export DSCC_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="usage" class="section">
+  <h2>用法</h2>
+  <p class="muted">
+    DSCC <strong>没有硬编码的默认模型</strong>。通过 <code>--model</code> 或
+    <code>DSCC_MODEL</code> 指定，二者皆缺时会输出中英双语错误并退出。
+  </p>
+  <div class="grid two">
+    <div>
+      <h3>交互式会话</h3>
+<pre><code>dscc --model doubao-seed-2.0-code</code></pre>
+      <h3>一次性提示</h3>
+<pre><code>dscc --model qwen3-coder \
+  prompt "总结 crates/runtime"</code></pre>
+    </div>
+    <div>
+      <h3>本地 Ollama（零配置）</h3>
+<pre><code>export DSCC_BASE_URL="http://localhost:11434/v1"
+export DSCC_API_KEY="ollama"   # 任意字符串
+dscc --model qwen3-coder:7b \
+  prompt "解释这个工作区"</code></pre>
+      <h3>斜杠命令</h3>
+<pre><code>/status   /config   /diff    /compact
+/export   /session  /agents  /skills</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section alt">
+  <h2>功能</h2>
+  <div class="grid three">
+    <div class="feat"><span class="feat-label">DISPATCH</span><h3>协议无关的提供商</h3><p>单个二进制支持 Anthropic Messages API、xAI/Grok 与各类 OpenAI 兼容端点，模型由你显式指定。</p></div>
+    <div class="feat"><span class="feat-label">SCAFFOLD</span><h3>工作区感知配置</h3><p>自动加载 <code>DSCC.md</code>、<code>.dscc.json</code>、<code>.dscc/settings.json</code>、权限与插件设置。</p></div>
+    <div class="feat"><span class="feat-label">SCAFFOLD</span><h3>插件、代理、技能</h3><p>通过 <code>dscc agents</code>、<code>dscc skills</code> 与插件接口进行本地发现和管理。</p></div>
+    <div class="feat"><span class="feat-label">COMPOSE</span><h3>交互与一次性执行</h3><p>REPL 模式用于探索，<code>prompt</code> 子命令用于脚本与 CI，同一套工具链两种形态。</p></div>
+    <div class="feat"><span class="feat-label">COMPOSE</span><h3>会话与压缩</h3><p>通过内建斜杠命令保存、查看、恢复会话，并在上下文变长时自动压缩历史。</p></div>
+    <div class="feat"><span class="feat-label">COMMIT</span><h3>落地用的工作区工具</h3><p>Shell、文件读写与编辑、搜索、网页抓取/搜索、待办、Notebook 更新 —— 把会话结果真正写回仓库。</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>关于</h2>
+  <p>
+    <strong>DSCC = Dispatch · Scaffold · Compose · Commit</strong>。
+    四个动词对应一个完整的本地编码循环：把任务调度给合适的模型、搭起工作区的骨架、在多轮对话里编排内容、最后把改动落地回仓库。
+  </p>
+  <p class="muted">
+    双重许可：开源采用 <a href="https://github.com/oMygpt/dscc/blob/main/LICENSE">AGPL-3.0-only</a>，
+    如需商业许可请通过 <a href="mailto:admin@swufe8.org">admin@swufe8.org</a> 联系。
+  </p>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="https://github.com/oMygpt/dscc">oMygpt/dscc</a> · <a href="https://github.com/oMygpt/dscc/releases/tag/v0.1.0">v0.1.0 发布</a> · <a href="/docs/">文档</a> · <a href="/docs/cookbook/">cookbook</a></span>
+  </div>
+</footer>
+</body>
+</html>

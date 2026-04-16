@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agents · 编写 Agent · DSCC Docs</title>
+<link rel="stylesheet" href="../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../docs/">Docs</a>
+      <a href="../../docs/cookbook/">Cookbook</a>
+      <a href="../../docs/reference/cli.html">CLI</a>
+      <a href="../../docs/verification/registry.html">Verification</a>
+      <a href="../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../">home</a> / <a href="../../docs/">docs</a> / <a href="../../docs/extending/">extending</a> / <span>agents</span></div>
+<h1 id="agents--编写-agent">Agents · 编写 Agent</h1>
+<p>An agent is a named prompt + model preset that the main model can
+spawn as a subprocess-like worker via the <code>Agent</code> tool. DSCC
+discovers agent definitions from TOML files on disk.</p>
+<h2 id="discovery-paths">Discovery paths</h2>
+<p>Resolved by <code>discover_definition_roots</code> at
+<code>crates/commands/src/lib.rs:1265–1304</code>. Roots are searched in
+order; the first source that defines a given lowercase name wins.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Source</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Project ancestors</td>
+<td><code>.codex/agents/</code>, <code>.dscc/agents/</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>$CODEX_HOME</code></td>
+<td><code>$CODEX_HOME/agents/</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>User home</td>
+<td><code>~/.codex/agents/</code>, <code>~/.dscc/agents/</code></td>
+</tr>
+</tbody>
+</table>
+<p>Loader: <code>load_agents_from_roots</code> at
+<code>commands/lib.rs:1418–1459</code>. Files are parsed with
+<code>parse_toml_string</code>; the filename stem becomes the default
+name.</p>
+<h2 id="file-format">File format</h2>
+<p>TOML, one agent per file.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>no (falls back to filename stem)</td>
+<td>string</td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>no</td>
+<td>string</td>
+<td>One-line purpose</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>no</td>
+<td>string</td>
+<td>Model id</td>
+</tr>
+<tr>
+<td><code>model_reasoning_effort</code></td>
+<td>no</td>
+<td>string</td>
+<td>Reasoning budget hint</td>
+</tr>
+</tbody>
+</table>
+<h3 id="minimal-example">Minimal example</h3>
+<p><code>.dscc/agents/verify-branch.toml</code>:</p>
+<pre class="toml"><code>name = &quot;verify-the-branch&quot;
+description = &quot;Verify that the current branch builds, tests, and lints cleanly&quot;
+model = &quot;claude-sonnet-4-6&quot;</code></pre>
+<h2 id="listing-and-shadowing">Listing and shadowing</h2>
+<table>
+<thead>
+<tr>
+<th>How</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/agents</code> (slash)</td>
+<td>All discovered agents</td>
+</tr>
+<tr>
+<td><code>dscc agents</code> (CLI)</td>
+<td>Same list from the CLI</td>
+</tr>
+</tbody>
+</table>
+<p>If two sources define the same lowercase name, the earlier source
+wins; the later is recorded in <code>shadowed_by</code> on the winning
+entry.</p>
+<h2 id="subagent-types">Subagent types</h2>
+<p>From <code>tools.rs:1687–1766</code>. The model picks one when it
+invokes the <code>Agent</code> tool via <code>subagent_type</code>. Each
+type has a curated tool allowlist.</p>
+<table>
+<thead>
+<tr>
+<th>Subagent type</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Explore</code></td>
+<td>Read-only codebase scouting</td>
+</tr>
+<tr>
+<td><code>Plan</code></td>
+<td>Draft an execution plan</td>
+</tr>
+<tr>
+<td><code>Verification</code></td>
+<td>Run checks on completed work</td>
+</tr>
+<tr>
+<td><code>dscc-guide</code></td>
+<td>Answer questions about DSCC itself</td>
+</tr>
+<tr>
+<td><code>statusline-setup</code></td>
+<td>Configure the statusline</td>
+</tr>
+<tr>
+<td><code>general-purpose</code> (default)</td>
+<td>Broad tasks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="invocation">Invocation</h2>
+<p>The model calls the <code>Agent</code> tool
+(<code>tools.rs:394–406</code>) with <code>subagent_type</code> and
+<code>prompt</code>. A background thread runs the subagent under
+<code>DangerFullAccess</code> permission.</p>
+<h2 id="on-disk-run-artifacts">On-disk run artifacts</h2>
+<p>Each run writes a JSON + Markdown pair to
+<code>.dscc-agents/agent-&lt;timestamp&gt;.json</code> /
+<code>.md</code> (<code>tools.rs:408–423</code>). The JSON carries
+<code>agentId</code>, <code>name</code>, <code>subagentType</code>,
+<code>model</code>, <code>status</code>, <code>createdAt</code>,
+<code>completedAt</code>, <code>outputFile</code>,
+<code>manifestFile</code>, <code>error</code>. These are written by the
+runtime; do not hand-edit.</p>
+<h2 id="adding-a-new-agent">Adding a new agent</h2>
+<ol type="1">
+<li>Create <code>.dscc/agents/myagent.toml</code> with at least
+<code>description</code> (see example above).</li>
+<li>Run <code>/agents</code> inside DSCC to confirm it appears.
+<code># [交互]</code> (REPL slash command; the CLI equivalent
+<code>dscc agents</code> is scriptable and unmarked.)</li>
+<li>The model can now request it via the <code>Agent</code> tool.</li>
+</ol>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="skills.html">skills.md</a> — lighter-weight prompt fragments
+that don’t spawn a subagent.</li>
+<li><a href="../reference/tools.html">reference/tools.md</a> — full
+<code>Agent</code> tool schema.</li>
+</ul>
+<hr />
+<h3 id="中文">中文</h3>
+<p>Agent 是一个具名的 prompt + 模型预设，主模型可以通过
+<code>Agent</code> 工具把它作为子进程式的 worker 拉起。DSCC 从磁盘的
+TOML 文件里发现 agent 定义。</p>
+<h2 id="发现路径">发现路径</h2>
+<p>由 <code>crates/commands/src/lib.rs:1265–1304</code> 的
+<code>discover_definition_roots</code>
+解析。按顺序搜索；同一小写名字，先命中的源胜出。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>来源</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>项目祖先目录</td>
+<td><code>.codex/agents/</code>、<code>.dscc/agents/</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>$CODEX_HOME</code></td>
+<td><code>$CODEX_HOME/agents/</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>用户 home</td>
+<td><code>~/.codex/agents/</code>、<code>~/.dscc/agents/</code></td>
+</tr>
+</tbody>
+</table>
+<p>加载器：<code>commands/lib.rs:1418–1459</code> 的
+<code>load_agents_from_roots</code>。用 <code>parse_toml_string</code>
+解析；文件名的 stem 作为默认 name。</p>
+<h2 id="文件格式">文件格式</h2>
+<p>TOML，一文件一 agent。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填</th>
+<th>类型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>否（默认取文件名 stem）</td>
+<td>string</td>
+<td>显示名</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>否</td>
+<td>string</td>
+<td>一行描述</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>否</td>
+<td>string</td>
+<td>模型 id</td>
+</tr>
+<tr>
+<td><code>model_reasoning_effort</code></td>
+<td>否</td>
+<td>string</td>
+<td>推理预算提示</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最小示例">最小示例</h3>
+<p><code>.dscc/agents/verify-branch.toml</code>：</p>
+<pre class="toml"><code>name = &quot;verify-the-branch&quot;
+description = &quot;Verify that the current branch builds, tests, and lints cleanly&quot;
+model = &quot;claude-sonnet-4-6&quot;</code></pre>
+<h2 id="列出与覆盖">列出与覆盖</h2>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/agents</code>（斜杠）</td>
+<td>列出全部已发现 agent</td>
+</tr>
+<tr>
+<td><code>dscc agents</code>（CLI）</td>
+<td>CLI 中的同一列表</td>
+</tr>
+</tbody>
+</table>
+<p>同一小写名字两源冲突时，先命中者胜出；后者记录在胜出条目的
+<code>shadowed_by</code> 中。</p>
+<h2 id="子-agent-类型">子 agent 类型</h2>
+<p>来自 <code>tools.rs:1687–1766</code>。模型调用 <code>Agent</code>
+工具时用 <code>subagent_type</code> 指定。每种类型自带工具白名单。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Explore</code></td>
+<td>只读的代码库侦查</td>
+</tr>
+<tr>
+<td><code>Plan</code></td>
+<td>起草执行计划</td>
+</tr>
+<tr>
+<td><code>Verification</code></td>
+<td>完成后运行检查</td>
+</tr>
+<tr>
+<td><code>dscc-guide</code></td>
+<td>回答 DSCC 自身的问题</td>
+</tr>
+<tr>
+<td><code>statusline-setup</code></td>
+<td>配置状态栏</td>
+</tr>
+<tr>
+<td><code>general-purpose</code>（默认）</td>
+<td>通用任务</td>
+</tr>
+</tbody>
+</table>
+<h2 id="调用">调用</h2>
+<p>模型调用 <code>Agent</code> 工具（<code>tools.rs:394–406</code>），传
+<code>subagent_type</code> 与 <code>prompt</code>。后台线程在
+<code>DangerFullAccess</code> 权限下执行子 agent。</p>
+<h2 id="运行产物">运行产物</h2>
+<p>每次运行都会在 <code>.dscc-agents/agent-&lt;timestamp&gt;.json</code>
+/ <code>.md</code> 写入一对 JSON +
+Markdown（<code>tools.rs:408–423</code>）。JSON 含
+<code>agentId</code>、<code>name</code>、<code>subagentType</code>、<code>model</code>、<code>status</code>、<code>createdAt</code>、<code>completedAt</code>、<code>outputFile</code>、<code>manifestFile</code>、<code>error</code>。由运行时写入，不要手改。</p>
+<h2 id="添加一个新-agent">添加一个新 agent</h2>
+<ol type="1">
+<li>在 <code>.dscc/agents/myagent.toml</code> 至少填
+<code>description</code>（参考上面示例）。</li>
+<li>DSCC 里运行 <code>/agents</code>
+确认已出现。<code># [交互]</code>（REPL 斜杠命令；等价的
+<code>dscc agents</code> CLI 子命令可脚本化、无需标记。）</li>
+<li>模型即可通过 <code>Agent</code> 工具请求它。</li>
+</ol>
+<h2 id="另见">另见</h2>
+<ul>
+<li><a href="skills.html">skills.md</a> —— 更轻量的 prompt 片段，不拉子
+agent。</li>
+<li><a href="../reference/tools.html">reference/tools.md</a> ——
+<code>Agent</code> 工具完整 schema。</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../">home</a> · <a href="../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

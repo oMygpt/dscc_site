@@ -1,0 +1,7 @@
+# reference/cli.md — dscc dump-manifests
+$ dscc dump-manifests
+failed to extract manifests: No such file or directory (os error 2)
+---
+exit: 1
+verdict: FAIL
+notes: requires upstream TS sources at $CARGO_MANIFEST_DIR/../.. (dev-only debug command)

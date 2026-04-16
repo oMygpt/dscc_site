@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 · Web Research — run artifact · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/">Docs</a>
+      <a href="../../../docs/cookbook/">Cookbook</a>
+      <a href="../../../docs/reference/cli.html">CLI</a>
+      <a href="../../../docs/verification/registry.html">Verification</a>
+      <a href="../../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <a href="../../../docs/cookbook/04-web-research/">04-web-research</a> / <span>report_dscc</span></div>
+<h1 id="04--web-research--run-artifact">04 · Web Research — run
+artifact</h1>
+<p>Captured from the live <code>dscc</code> run on 2026-04-16. Raw
+transcript in <a href="dscc_run.log"><code>dscc_run.log</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>doubao-seed-2.0-code</code> (Volces ARK)</td>
+</tr>
+<tr>
+<td>Permission mode</td>
+<td><code>read-only</code></td>
+</tr>
+<tr>
+<td>Tools the model actually used</td>
+<td><code>WebSearch</code>, <code>WebFetch</code> (5×), no filesystem
+writes</td>
+</tr>
+<tr>
+<td>Source the model cited</td>
+<td><code>https://docs.anthropic.com/en/api/messages</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="output--three-dense-tables-as-produced-by-the-model">Output —
+three dense tables (as produced by the model)</h2>
+<p>Source: <a
+href="https://docs.anthropic.com/en/api/messages">https://docs.anthropic.com/en/api/messages</a></p>
+<h3 id="request-body-schema">Request body schema</h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The model that will complete your prompt.</td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td>array</td>
+<td>Yes</td>
+<td>Input messages, alternating between user and assistant turns.</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>Maximum number of tokens to generate before stopping.</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>object</td>
+<td>No</td>
+<td>Metadata about the request, including <code>user_id</code> for
+end-user tracking.</td>
+</tr>
+<tr>
+<td><code>stop_sequences</code></td>
+<td>array</td>
+<td>No</td>
+<td>Custom text sequences that will cause the model to stop
+generating.</td>
+</tr>
+<tr>
+<td><code>stream</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Whether to incrementally stream the response using server-sent
+events.</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>string</td>
+<td>No</td>
+<td>System prompt setting context, personality, or instructions.</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>float</td>
+<td>No</td>
+<td>Amount of randomness injected into the response (0.0–1.0).</td>
+</tr>
+<tr>
+<td><code>tool_choice</code></td>
+<td>object</td>
+<td>No</td>
+<td>How the model should use tools (auto, any, or specific tool).</td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>array</td>
+<td>No</td>
+<td>Definitions of tools the model may call.</td>
+</tr>
+<tr>
+<td><code>top_k</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Sample from only the top K options for each subsequent token.</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>float</td>
+<td>No</td>
+<td>Use nucleus sampling with cumulative probability threshold.</td>
+</tr>
+<tr>
+<td><code>thinking</code></td>
+<td>object</td>
+<td>No</td>
+<td>Configure extended thinking mode for complex reasoning.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="streaming-event-types">Streaming event types</h3>
+<table>
+<thead>
+<tr>
+<th>Event Name</th>
+<th>When It Fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>message_start</code></td>
+<td>When the message object is first created, with initial
+metadata.</td>
+</tr>
+<tr>
+<td><code>content_block_start</code></td>
+<td>When a new content block starts (text, tool_use, etc.).</td>
+</tr>
+<tr>
+<td><code>content_block_delta</code></td>
+<td>When a piece of content is added to a content block.</td>
+</tr>
+<tr>
+<td><code>content_block_stop</code></td>
+<td>When a content block is finished being generated.</td>
+</tr>
+<tr>
+<td><code>message_delta</code></td>
+<td>When top-level message fields change (stop reason, usage).</td>
+</tr>
+<tr>
+<td><code>message_stop</code></td>
+<td>When the entire message is complete and the stream ends.</td>
+</tr>
+<tr>
+<td><code>ping</code></td>
+<td>Periodically to keep the connection alive.</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>When an error occurs, with details about what went wrong.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rate-limit-headers">Rate-limit headers</h3>
+<table>
+<thead>
+<tr>
+<th>Header Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>anthropic-ratelimit-requests-limit</code></td>
+<td>Maximum requests allowed per rate-limit window.</td>
+</tr>
+<tr>
+<td><code>anthropic-ratelimit-requests-remaining</code></td>
+<td>Requests remaining in the current window.</td>
+</tr>
+<tr>
+<td><code>anthropic-ratelimit-requests-reset</code></td>
+<td>Unix timestamp when the request limit window resets.</td>
+</tr>
+<tr>
+<td><code>anthropic-ratelimit-tokens-limit</code></td>
+<td>Maximum tokens allowed per rate-limit window.</td>
+</tr>
+<tr>
+<td><code>anthropic-ratelimit-tokens-remaining</code></td>
+<td>Tokens remaining in the current window.</td>
+</tr>
+<tr>
+<td><code>anthropic-ratelimit-tokens-reset</code></td>
+<td>Unix timestamp when the token limit window resets.</td>
+</tr>
+<tr>
+<td><code>retry-after</code></td>
+<td>Seconds to wait before retrying when rate-limited.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verdict-vs-cookbook-spec">Verdict vs. cookbook spec</h2>
+<ul>
+<li>Three tables present in the exact order the prompt asks for.</li>
+<li>Request-body table includes <code>model</code>,
+<code>messages</code>, <code>max_tokens</code>.</li>
+<li>Streaming table includes <code>message_start</code>,
+<code>content_block_delta</code>, <code>message_stop</code> (and the
+full set).</li>
+<li>A source URL leads the output.</li>
+<li>No <code>edit_file</code> / <code>write_file</code> /
+<code>bash</code> calls — <code>ReadOnly</code> mode held.</li>
+</ul>
+<h2 id="notes-on-the-run">Notes on the run</h2>
+<ul>
+<li>The model went through several <code>WebFetch</code> attempts
+(<code>/docs/en/build-with-claude/streaming</code>,
+<code>/docs/api-reference/messages</code>, an OpenAPI path,
+<code>api.anthropic.com/</code>). The second URL 404’d and the OpenAPI
+path returned a JS shell, but the first streaming page plus general
+model knowledge were enough to produce complete tables.</li>
+<li>Total elapsed ≈ 30 s. Tool trace preserved in the raw log.</li>
+</ul>
+<hr />
+<h3 id="中文">中文</h3>
+<p>2026-04-16 真机捕获。原始日志见 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型</td>
+<td><code>doubao-seed-2.0-code</code>（Volces ARK）</td>
+</tr>
+<tr>
+<td>权限模式</td>
+<td><code>read-only</code></td>
+</tr>
+<tr>
+<td>实际调用的工具</td>
+<td><code>WebSearch</code>、<code>WebFetch</code>（5
+次），无磁盘写入</td>
+</tr>
+<tr>
+<td>引用源</td>
+<td><code>https://docs.anthropic.com/en/api/messages</code></td>
+</tr>
+</tbody>
+</table>
+<p>模型按 prompt 要求返回三张表（Request Body / Streaming Event /
+Rate-Limit Headers），次序与要求一致；<code>model</code> /
+<code>messages</code> / <code>max_tokens</code> 均在；流式事件包含
+<code>message_start</code> / <code>content_block_delta</code> /
+<code>message_stop</code> 全套；一行 source URL
+置顶；未触发任何写操作，<code>read-only</code> 生效。</p>
+<p>运行过程中模型多次 <code>WebFetch</code>
+不同路径（<code>.../streaming</code>、<code>.../api-reference/messages</code>、OpenAPI
+路径、<code>api.anthropic.com/</code>），部分 404 或返回 JS 外壳，但
+streaming 页加模型自身知识已足以凑齐三张表。总用时约 30
+秒，工具轨迹见原始日志。</p>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 · Refactor — Rename — run artifact · DSCC Docs</title>
+<link rel="stylesheet" href="../../../styles.css?v=6">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<meta name="theme-color" content="#0b0d12">
+</head>
+<body class="doc">
+<header class="doc-nav">
+  <div class="doc-nav-inner">
+    <a class="brand" href="../../../">DSCC</a>
+    <nav class="doc-nav-links">
+      <a href="../../../docs/">Docs</a>
+      <a href="../../../docs/cookbook/">Cookbook</a>
+      <a href="../../../docs/reference/cli.html">CLI</a>
+      <a href="../../../docs/verification/registry.html">Verification</a>
+      <a href="../../../" class="back-home">← Home</a>
+    </nav>
+  </div>
+</header>
+<main class="doc-body">
+<div class="doc-crumb"><a href="../../../">home</a> / <a href="../../../docs/">docs</a> / <a href="../../../docs/cookbook/">cookbook</a> / <a href="../../../docs/cookbook/03-refactor-rename/">03-refactor-rename</a> / <span>report_dscc</span></div>
+<h1 id="03--refactor--rename--run-artifact">03 · Refactor — Rename — run
+artifact</h1>
+<p>Captured from the live <code>dscc</code> run on 2026-04-16. Raw
+transcript in <a href="dscc_run.log"><code>dscc_run.log</code></a>; full
+diff in <a href="diff.patch"><code>diff.patch</code></a>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>doubao-seed-2.0-code</code> (Volces ARK)</td>
+</tr>
+<tr>
+<td>Permission mode</td>
+<td><code>danger-full-access</code> (same caveat as case 02 —
+<code>workspace-write</code> would prompt on the <code>grep</code> /
+<code>git</code> bash calls)</td>
+</tr>
+<tr>
+<td>Tools the model actually used</td>
+<td><code>TodoWrite</code>, <code>grep_search</code>,
+<code>read_file</code>, <code>edit_file</code> (4×), <code>bash</code>
+(<code>git grep</code> verification)</td>
+</tr>
+<tr>
+<td>Files touched</td>
+<td><code>src/config.rs</code>, <code>src/lib.rs</code>,
+<code>src/bin/app.rs</code>, <code>tests/smoke.rs</code> — 4 files, +7 /
+-7 lines</td>
+</tr>
+<tr>
+<td>Unrelated edits</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h2 id="git-diff---stat"><code>git diff --stat</code></h2>
+<pre class="text"><code> src/bin/app.rs | 4 ++--
+ src/config.rs  | 2 +-
+ src/lib.rs     | 4 ++--
+ tests/smoke.rs | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)</code></pre>
+<h2 id="grep-verification">Grep verification</h2>
+<pre class="text"><code>$ git grep load_config
+# (no output)
+
+$ git grep load_settings
+src/bin/app.rs:1:use refactor_demo::load_settings;
+src/bin/app.rs:2:fn main() { println!(&quot;{}&quot;, load_settings()); }
+src/config.rs:1:pub fn load_settings() -&gt; String { &quot;default&quot;.into() }
+src/lib.rs:2:pub use config::load_settings;
+src/lib.rs:5:    format!(&quot;cfg={}&quot;, load_settings())
+tests/smoke.rs:1:use refactor_demo::load_settings;
+tests/smoke.rs:2:#[test] fn it_loads() { assert_eq!(load_settings(), &quot;default&quot;); }</code></pre>
+<h2 id="behaviour-vs-cookbook-spec">Behaviour vs. cookbook spec</h2>
+<ul>
+<li>Before editing, the model enumerated call sites via
+<code>grep_search</code>.</li>
+<li>Issued one <code>edit_file</code> per file with targeted
+replacements — no <code>replace_all</code> misfire.</li>
+<li>Ran <code>git grep load_config</code> at the end to self-verify; got
+empty output.</li>
+<li>No unrelated lines touched.</li>
+</ul>
+<h2 id="verdict">Verdict</h2>
+<ul>
+<li><code>git grep load_config</code> → empty. ✅</li>
+<li><code>git grep load_settings</code> → 7 matches (definition + 6
+callers — one more than the cookbook’s stated 4 because
+<code>src/lib.rs</code> has both the <code>pub use</code> re-export and
+the internal call site). ✅</li>
+<li><code>git diff --stat</code> shows exactly the four expected files.
+✅</li>
+<li><code>cargo check</code> is expected to pass; this repo has no
+<code>Cargo.lock</code>/<code>target</code> cache, so the run log
+captures <code>cargo check</code> exit 0 (see tail of
+<code>dscc_run.log</code>).</li>
+</ul>
+<hr />
+<h3 id="中文">中文</h3>
+<p>2026-04-16 真机捕获。原始日志见 <a
+href="dscc_run.log"><code>dscc_run.log</code></a>，完整 diff 见 <a
+href="diff.patch"><code>diff.patch</code></a>。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型</td>
+<td><code>doubao-seed-2.0-code</code>（Volces ARK）</td>
+</tr>
+<tr>
+<td>权限模式</td>
+<td><code>danger-full-access</code>（同 case
+02，<code>workspace-write</code> 在 <code>git grep</code> 这种 bash
+调用上会弹审批）</td>
+</tr>
+<tr>
+<td>实际调用的工具</td>
+<td><code>TodoWrite</code>、<code>grep_search</code>、<code>read_file</code>、<code>edit_file</code>（4
+次）、<code>bash</code>（<code>git grep</code> 自查）</td>
+</tr>
+<tr>
+<td>改动文件</td>
+<td><code>src/config.rs</code>、<code>src/lib.rs</code>、<code>src/bin/app.rs</code>、<code>tests/smoke.rs</code>
+—— 4 个文件，+7 / -7 行</td>
+</tr>
+<tr>
+<td>无关改动</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diff-摘要">diff 摘要</h2>
+<p>见上文 <code>git diff --stat</code>。模型改完后自查
+<code>git grep load_config</code>，无输出；<code>git grep load_settings</code>
+返回 7 条（定义 + 6 处调用，比 README 里的 4 条多出的两条来自
+<code>src/lib.rs</code> 同时有 <code>pub use</code> 与内部调用）。</p>
+<h2 id="对照验收">对照验收</h2>
+<ul>
+<li><code>git grep load_config</code> 为空。✅</li>
+<li><code>git grep load_settings</code> 7 条。✅</li>
+<li><code>git diff --stat</code> 正好是预期的 4 个文件。✅</li>
+<li><code>cargo check</code> 日志末尾 exit 0。✅</li>
+</ul>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 DSCC</span>
+    <span><a href="../../../">home</a> · <a href="../../../docs/">docs</a> · <a href="https://github.com/oMygpt/dscc">github</a></span>
+  </div>
+</footer>
+</body>
+</html>
